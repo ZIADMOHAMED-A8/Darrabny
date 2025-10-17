@@ -2,8 +2,6 @@
 // src/app/layout.tsx
 import type { ReactNode } from "react";
 import "./globals.css";
-// import { Toaster } from "@/components/ui/sonner";
-// import TokenInitializer from "@/components/token-initializer";
 import { Inter } from "next/font/google";
 import { GeistMono } from "geist/font/mono";
 import { Toaster } from "sonner";

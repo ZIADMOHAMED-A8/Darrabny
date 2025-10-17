@@ -1,5 +1,4 @@
 import { getServerToken } from "@/lib/utils/get-token";
-import Footer from "@/components/shared/footer";
 import Cta from "./_components/cta";
 import HowItWorks from "./_components/how-it-works";
 import Hero from "./_components/hero";
