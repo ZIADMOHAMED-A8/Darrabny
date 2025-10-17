@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { Loader2 } from "lucide-react"
+import { Loader2, Mail } from "lucide-react"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 
@@ -9,7 +9,6 @@ import { Button } from "@/components/ui/button"
 import {
   Card,
   CardContent,
-  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
@@ -29,46 +28,54 @@ import {
   ForgotPasswordValues,
 } from "@/lib/schemas/auth"
 import { forgetPasswordAction } from "../services/auth"
-// import { ForgotPasswordValues } from "@/lib/types/auth"
 
 export default function ForgotPasswordPage() {
+  // 🧠 Setup form validation using Zod + React Hook Form
   const form = useForm<ForgotPasswordValues>({
     resolver: zodResolver(forgotPasswordSchema),
     defaultValues: { email: "" },
   })
 
+  // 🔹 Submit handler
   const onSubmit = async (values: ForgotPasswordValues) => {
     await forgetPasswordAction(values)
   }
 
   return (
-    <div className="flex items-center justify-center min-h-screen">
-      <Card className="w-full border-none max-w-md">
-        <CardHeader>
-          <CardTitle className="text-3xl font-heading font-bold">
+    <div className="min-h-screen flex items-center justify-center">
+      {/* 🧱 Main Card Container */}
+      <Card className="w-full max-w-md bg-card rounded-2xl shadow-sm border-none">
+        <CardHeader className="text-center">
+          <CardTitle className="text-3xl font-bold text-foreground">
             Forgot Password
           </CardTitle>
-          <CardDescription className="text-base">
-            Don’t worry, we will help you recover your account.
-          </CardDescription>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Don’t worry, we’ll help you recover your account.
+          </p>
         </CardHeader>
 
+        {/* 🧩 Form */}
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
             <CardContent className="space-y-4">
+              {/* Email Field */}
               <FormField
                 control={form.control}
                 name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Email</FormLabel>
+                    <FormLabel className="text-sm">Email address</FormLabel>
                     <FormControl>
-                      <Input
-                        type="email"
-                        placeholder="m@example.com"
-                        autoComplete="email"
-                        {...field}
-                      />
+                      <div className="relative">
+                        <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground h-5 w-5" />
+                        <Input
+                          type="email"
+                          placeholder="you@example.com"
+                          autoComplete="email"
+                          className="pl-10 h-11 bg-muted/20 focus:bg-white rounded-xl"
+                          {...field}
+                        />
+                      </div>
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -76,10 +83,11 @@ export default function ForgotPasswordPage() {
               />
             </CardContent>
 
-            <CardFooter className="flex flex-col space-y-4">
+            {/* Footer Buttons */}
+            <CardFooter className="flex flex-col gap-3">
               <Button
                 type="submit"
-                className="w-full rounded-none bg-blue-600 hover:bg-blue-700 text-white"
+                className="w-full h-11 rounded-xl bg-primary hover:bg-primary/90 text-white font-medium transition"
                 disabled={form.formState.isSubmitting}
               >
                 {form.formState.isSubmitting ? (
@@ -92,16 +100,14 @@ export default function ForgotPasswordPage() {
                 )}
               </Button>
 
-              <div className="flex justify-between text-sm text-center text-gray-600">
-                <p className="text-sm text-center text-muted-foreground">
-                  Don’t have an account?{" "}
-                  <Link
-                    href="/register"
-                    className="text-blue-600 hover:underline"
-                  >
-                    Create yours
-                  </Link>
-                </p>
+              <div className="text-center text-sm text-muted-foreground">
+                Don’t have an account?{" "}
+                <Link
+                  href="/signup"
+                  className="text-sm text-primary font-medium hover:underline"
+                >
+                  Create yours
+                </Link>
               </div>
             </CardFooter>
           </form>

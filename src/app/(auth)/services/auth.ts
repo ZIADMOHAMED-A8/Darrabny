@@ -59,26 +59,6 @@ export async function createAccountAction(values: RegisterValues) {
   return res
 }
 
-// export async function forgetPasswordAction(formData: FormData) {
-//     console.log("forgetPasswordAction", Object.fromEntries(formData.entries()));
-//     const email = String(formData.get("email") || "").trim();
-//     const payload = { email };
-  
-//     const res = await callApi("/auth/forgotPassword", "POST", payload);
-//     console.log("forgetPasswordAction-res", res);
-  
-//     if (res.ok) {
-
-//       cookies().set("reset_email", email, {
-//         httpOnly: true,
-//         secure: true,
-//         sameSite: "lax",
-//         path: "/",
-//       });
-//       redirect("/otp");
-//     }
-//     return res;
-//   }
 
 export async function forgetPasswordAction(values: ForgotPasswordValues) {
   console.log("forgetPasswordAction", values)

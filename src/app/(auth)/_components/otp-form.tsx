@@ -28,7 +28,7 @@ export default function OtpPage() {
     <div className="flex items-center justify-center min-h-screen">
       <Card className="w-full max-w-md border-none relative">
         <CardHeader className="text-center">
-          <CardTitle className="text-3xl font-heading font-semibold">
+          <CardTitle className="text-3xl font-heading font-bold">
             Verify OTP
           </CardTitle>
           <CardDescription>
@@ -102,7 +102,7 @@ export default function OtpPage() {
                   <span>Didn’t receive the code?</span>
                   <span
                     onClick={handleResend}
-                    className="text-blue-600 cursor-pointer hover:underline"
+                    className="text-primary font-medium cursor-pointer hover:underline"
                   >
                     Resend Code
                   </span>

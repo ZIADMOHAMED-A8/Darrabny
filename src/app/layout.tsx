@@ -23,7 +23,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
          <QueryProvider>
           {children}
         </QueryProvider>
-        <Toaster />         
+        <Toaster />
       </body>
     </html>
   );

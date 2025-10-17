@@ -1,11 +1,13 @@
 "use client"
 
+// ✅ React & Next imports
 import { useState } from "react"
 import Link from "next/link"
 import { CircleX, Eye, EyeOff } from "lucide-react"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 
+// ✅ UI components (ShadCN)
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -16,7 +18,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-
 import {
   Form,
   FormField,
@@ -25,14 +26,18 @@ import {
   FormControl,
   FormMessage,
 } from "@/components/ui/form"
+
+// ✅ Validation + action logic
 import { registerSchema, RegisterValues } from "@/lib/schemas/auth"
 import { createAccountAction } from "../services/auth"
 
-
 export default function SignupPage() {
+  // 🔹 UI states
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [formError, setFormError] = useState<string | null>(null)
+
+  // 🔹 React Hook Form setup with Zod validation
   const form = useForm<RegisterValues>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
@@ -47,14 +52,17 @@ export default function SignupPage() {
     },
   })
 
+  // 🧠 Handle submit logic
   const onSubmit = async (values: RegisterValues) => {
     const response = await createAccountAction(values)
 
+    // ❌ Validation or server error
     if (response?.ok === false) {
       setFormError(response?.message)
       return
     }
 
+    // ✅ Success → redirect to login
     if (response?.ok) {
       location.href = "/login"
     } else {
@@ -63,28 +71,58 @@ export default function SignupPage() {
   }
 
   return (
-    <Card className="w-full !rounded-none !border-0">
-      <CardHeader className="text-center pb-6">
-        <CardTitle className="text-2xl font-semibold text-gray-900">
-          Create Account
-        </CardTitle>
-      </CardHeader>
+    <div className="min-h-screen flex items-center justify-center">
+      {/* 🧱 Signup card */}
+      <Card className="w-full bg-card border-none">
 
-      <CardContent className="space-y-4">
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4" noValidate>
-            {/* First & Last Name */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        {/* 🔹 Header section */}
+        <CardHeader className="text-center pb-6">
+          <CardTitle className="text-3xl font-bold text-foreground">
+            Create your account
+          </CardTitle>
+          <p className="text-sm text-muted-foreground mt-1">
+            Already have an account?{" "}
+            <Link href="/login" className="text-primary font-medium">
+              Log in
+            </Link>
+          </p>
+        </CardHeader>
+
+        {/* 🧩 Form section */}
+        <CardContent>
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4" noValidate>
+
+              {/* 🧠 Account type selector */}
+              <FormItem>
+                <FormLabel>I am a...</FormLabel>
+                <Select>
+                  <SelectTrigger className="h-11 bg-muted/20">
+                    <SelectValue placeholder="Student" />
+                  </SelectTrigger>
+                  <SelectContent
+                    position="popper"
+                    sideOffset={8}
+                    className="z-[9999] bg-card border border-border shadow-md rounded-lg"
+                  >
+                    <SelectItem value="student">Student</SelectItem>
+                    <SelectItem value="company">Company</SelectItem>
+                    <SelectItem value="supervisor">Supervisor</SelectItem>
+                  </SelectContent>
+                </Select>
+              </FormItem>
+
+              {/* 👤 Full name */}
               <FormField
                 control={form.control}
                 name="firstName"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>First name</FormLabel>
+                    <FormLabel>Full Name</FormLabel>
                     <FormControl>
                       <Input
-                        placeholder="Ahmed"
-                        className="h-12 bg-gray-50 border-gray-200 focus:bg-white"
+                        placeholder="John Doe"
+                        className="h-11 bg-muted/20 focus:bg-white"
                         {...field}
                       />
                     </FormControl>
@@ -93,16 +131,19 @@ export default function SignupPage() {
                 )}
               />
 
+              {/* 📧 Email */}
               <FormField
                 control={form.control}
-                name="lastName"
+                name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Last name</FormLabel>
+                    <FormLabel>Email Address</FormLabel>
                     <FormControl>
                       <Input
-                        placeholder="Abdullah"
-                        className="h-12 bg-gray-50 border-gray-200 focus:bg-white"
+                        type="email"
+                        placeholder="you@example.com"
+                        autoComplete="email"
+                        className="h-11 bg-muted/20 focus:bg-white"
                         {...field}
                       />
                     </FormControl>
@@ -110,200 +151,172 @@ export default function SignupPage() {
                   </FormItem>
                 )}
               />
-            </div>
 
-            {/* Username */}
-            <FormField
-              control={form.control}
-              name="username"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Username</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="user123"
-                      className="h-12 bg-gray-50 border-gray-200 focus:bg-white"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+              {/* 📱 Phone number (code + input) */}
+              <FormItem>
+                <FormLabel>Phone Number</FormLabel>
+                <div className="flex">
+                  {/* Country code selector */}
+                  <FormField
+                    control={form.control}
+                    name="countryCode"
+                    render={({ field }) => (
+                      <FormItem className="w-32">
+                        <FormControl>
+                          <Select value={field.value} onValueChange={field.onChange}>
+                            <SelectTrigger className="h-11 bg-muted/20 rounded-r-none border-r-0">
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent
+                              position="popper"
+                              sideOffset={8}
+                              className="z-[9999] bg-card border border-border shadow-md rounded-lg"
+                            >
+                              <SelectItem value="+20">🇪🇬 EG (+20)</SelectItem>
+                              <SelectItem value="+966">🇸🇦 SA (+966)</SelectItem>
+                              <SelectItem value="+971">🇦🇪 AE (+971)</SelectItem>
+                              <SelectItem value="+44">🇬🇧 UK (+44)</SelectItem>
+                              <SelectItem value="+1">🇺🇸 US (+1)</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
 
-            {/* Email */}
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Email</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="email"
-                      placeholder="user@example.com"
-                      autoComplete="email"
-                      className="h-12 bg-gray-50 border-gray-200 focus:bg-white"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+                  {/* Phone input */}
+                  <FormField
+                    control={form.control}
+                    name="phone"
+                    render={({ field }) => (
+                      <FormItem className="flex-1">
+                        <FormControl>
+                          <Input
+                            type="tel"
+                            placeholder="1012345678"
+                            className="h-11 bg-muted/20 focus:bg-white rounded-l-none"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              </FormItem>
 
-            {/* Phone (Country code + number) */}
-            <FormItem>
-              <FormLabel>Phone</FormLabel>
-              <div className="flex">
-                <FormField
-                  control={form.control}
-                  name="countryCode"
-                  render={({ field }) => (
-                    <FormItem className="w-32">
-                      <FormControl>
-                        <Select value={field.value} onValueChange={field.onChange}>
-                          <SelectTrigger className="h-12 bg-gray-50 border-gray-200 rounded-r-none border-r-0">
-                            <SelectValue />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="+20">🇪🇬 EG (+20)</SelectItem>
-                            <SelectItem value="+1">🇺🇸 US (+1)</SelectItem>
-                            <SelectItem value="+44">🇬🇧 UK (+44)</SelectItem>
-                            <SelectItem value="+971">🇦🇪 AE (+971)</SelectItem>
-                            <SelectItem value="+966">🇸🇦 SA (+966)</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </FormControl>
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="phone"
-                  render={({ field }) => (
-                    <FormItem className="flex-1">
-                      <FormControl>
+              {/* 🔑 Password */}
+              <FormField
+                control={form.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Password</FormLabel>
+                    <FormControl>
+                      <div className="relative">
                         <Input
-                          placeholder="1012345678"
-                          className="h-12 bg-gray-50 border-gray-200 focus:bg-white rounded-l-none"
+                          type={showPassword ? "text" : "password"}
+                          placeholder="••••••••"
+                          autoComplete="new-password"
+                          className="h-11 bg-muted/20 focus:bg-white pr-10"
                           {...field}
                         />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
+                        {/* 👁 Toggle show/hide password */}
+                        <button
+                          type="button"
+                          className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400"
+                          onClick={() => setShowPassword((p) => !p)}
+                          aria-label="Toggle password visibility"
+                        >
+                          {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                        </button>
+                      </div>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              {/* 🔒 Confirm password */}
+              <FormField
+                control={form.control}
+                name="confirmPassword"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Confirm Password</FormLabel>
+                    <FormControl>
+                      <div className="relative">
+                        <Input
+                          type={showConfirmPassword ? "text" : "password"}
+                          placeholder="••••••••"
+                          autoComplete="new-password"
+                          className="h-11 bg-muted/20 focus:bg-white pr-10"
+                          {...field}
+                        />
+                        {/* 👁 Toggle confirm password */}
+                        <button
+                          type="button"
+                          className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400"
+                          onClick={() => setShowConfirmPassword((p) => !p)}
+                          aria-label="Toggle confirm password visibility"
+                        >
+                          {showConfirmPassword ? (
+                            <EyeOff className="h-4 w-4" />
+                          ) : (
+                            <Eye className="h-4 w-4" />
+                          )}
+                        </button>
+                      </div>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              {/* 🎓 University / Major (optional) */}
+              <FormItem>
+                <FormLabel>University / Major (Optional)</FormLabel>
+                <Input
+                  placeholder="State University / Computer Science"
+                  className="h-11 bg-muted/20 focus:bg-white"
                 />
-              </div>
-            </FormItem>
+              </FormItem>
 
-            {/* Password */}
-            <FormField
-              control={form.control}
-              name="password"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Password</FormLabel>
-                  <FormControl>
-                    <div className="relative">
-                      <Input
-                        type={showPassword ? "text" : "password"}
-                        placeholder="••••••••"
-                        autoComplete="new-password"
-                        className="h-12 bg-gray-50 border-gray-200 focus:bg-white pr-10"
-                        {...field}
-                      />
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="sm"
-                        className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
-                        onClick={() => setShowPassword((p) => !p)}
-                        aria-label={showPassword ? "Hide password" : "Show password"}
-                      >
-                        {showPassword ? (
-                          <EyeOff className="h-4 w-4 text-gray-400" />
-                        ) : (
-                          <Eye className="h-4 w-4 text-gray-400" />
-                        )}
-                      </Button>
-                    </div>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
+              {/* ⚠️ Error message display */}
+              {formError && (
+                <div className="relative my-3">
+                  <p
+                    role="alert"
+                    className="p-2 text-sm text-destructive bg-destructive/10 border border-destructive rounded-md text-center"
+                  >
+                    {formError}
+                  </p>
+                  <span
+                    aria-hidden="true"
+                    className="pointer-events-none absolute -top-2 left-1/2 -translate-x-1/2 inline-flex h-5 w-5 items-center justify-center rounded-full bg-card text-destructive"
+                  >
+                    <CircleX className="h-4 w-4" />
+                  </span>
+                </div>
               )}
-            />
 
-            {/* Confirm Password */}
-            <FormField
-              control={form.control}
-              name="confirmPassword"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Confirm Password</FormLabel>
-                  <FormControl>
-                    <div className="relative">
-                      <Input
-                        type={showConfirmPassword ? "text" : "password"}
-                        placeholder="••••••••"
-                        autoComplete="new-password"
-                        className="h-12 bg-gray-50 border-gray-200 focus:bg-white pr-10"
-                        {...field}
-                      />
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="sm"
-                        className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
-                        onClick={() => setShowConfirmPassword((p) => !p)}
-                        aria-label={showConfirmPassword ? "Hide password" : "Show password"}
-                      >
-                        {showConfirmPassword ? (
-                          <EyeOff className="h-4 w-4 text-gray-400" />
-                        ) : (
-                          <Eye className="h-4 w-4 text-gray-400" />
-                        )}
-                      </Button>
-                    </div>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            {formError && (<div className="relative my-3"> <p role="alert" className="p-2 bg-red-50 text-red-600 text-center text-sm border border-red-600 rounded-md" > {formError} </p>
-
-              <span
-                aria-hidden="true"
-                className="pointer-events-none absolute -top-2 left-1/2 -translate-x-1/2 inline-flex h-4 w-4 items-center rounded-full justify-center bg-white text-red-600 "
+              {/* 🚀 Submit button */}
+              <Button
+                type="submit"
+                className="w-full mt-9 h-11 rounded-lg bg-primary hover:bg-primary/90 text-white font-medium "
+                disabled={form.formState.isSubmitting}
               >
-                <CircleX className="h-4 w-4" />
-              </span>
-            </div>)}
+                {form.formState.isSubmitting ? "Signing up..." : "Sign Up"}
+              </Button>
 
-
-            {/* Submit */}
-            <Button
-              type="submit"
-              className="w-full h-12 bg-blue-600 hover:bg-blue-700 text-white font-medium mt-6"
-              disabled={form.formState.isSubmitting}
-            >
-              {form.formState.isSubmitting ? "Creating..." : "Create Account"}
-            </Button>
-          </form>
-        </Form>
-
-        {/* Login Link */}
-        <div className="text-center mt-6">
-          <p className="text-sm text-gray-600">
-            Already have an account?{" "}
-            <Link href="/login" className="text-blue-600 hover:text-blue-700 font-medium">
-              Login
-            </Link>
-          </p>
-        </div>
-      </CardContent>
-    </Card>
+              {/* ℹ️ Small info message */}
+              <p className="text-center text-sm text-muted-foreground mt-3">
+                You’ll receive an email to verify your account.
+              </p>
+            </form>
+          </Form>
+        </CardContent>
+      </Card>
+    </div>
   )
 }
