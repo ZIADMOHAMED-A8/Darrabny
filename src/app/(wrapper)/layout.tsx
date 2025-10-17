@@ -2,7 +2,6 @@ import type { ReactNode } from "react";
 import AuthProvider from "@/context/auth.provider";
 import SiteBreadcrumb from "@/components/site-breadcrumb";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
-import AppSidebar from "@/components/app-sidebar";
 import { Toaster } from "sonner";
 import Footer from "@/components/shared/footer";
 
