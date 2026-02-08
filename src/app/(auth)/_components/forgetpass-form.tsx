@@ -1,19 +1,19 @@
-"use client"
+"use client";
 
-import Link from "next/link"
-import { Loader2, Mail } from "lucide-react"
-import { useForm } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod"
+import Link from "next/link";
+import { Loader2, Mail } from "lucide-react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
 import {
   Form,
   FormField,
@@ -21,73 +21,75 @@ import {
   FormLabel,
   FormControl,
   FormMessage,
-} from "@/components/ui/form"
+} from "@/components/ui/form";
 
 import {
   forgotPasswordSchema,
   ForgotPasswordValues,
-} from "@/lib/schemas/auth"
-import { forgetPasswordAction } from "../services/auth"
+} from "@/lib/schemas/forgot-password-schema";
 
 export default function ForgotPasswordPage() {
-  // 🧠 Setup form validation using Zod + React Hook Form
   const form = useForm<ForgotPasswordValues>({
     resolver: zodResolver(forgotPasswordSchema),
     defaultValues: { email: "" },
-  })
+  });
 
-  // 🔹 Submit handler
   const onSubmit = async (values: ForgotPasswordValues) => {
-    await forgetPasswordAction(values)
-  }
+    // await forgetPasswordAction(values)
+  };
 
   return (
-    <div className="min-h-screen flex items-center justify-center">
-      {/* 🧱 Main Card Container */}
-      <Card className="w-full max-w-md bg-card rounded-2xl shadow-sm border-none">
-        <CardHeader className="text-center">
-          <CardTitle className="text-3xl font-bold text-foreground">
+    <div className="min-h-screen flex items-center justify-center px-4">
+      <Card className="w-full max-w-[520px] rounded-2xl border border-black/10 bg-white shadow-[0_25px_60px_-25px_rgba(15,23,42,.25)]">
+        <CardHeader className="text-center pb-2">
+          <CardTitle className="text-3xl font-semibold leading-tight text-[#0B2A4A]">
             Forgot Password
           </CardTitle>
-          <p className="mt-1 text-sm text-muted-foreground">
+          <p className="mt-3 text-sm text-slate-500">
             Don’t worry, we’ll help you recover your account.
           </p>
         </CardHeader>
 
-        {/* 🧩 Form */}
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
-            <CardContent className="space-y-4">
-              {/* Email Field */}
+            <CardContent className="space-y-6 px-10 pt-4 pb-2">
               <FormField
                 control={form.control}
                 name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-sm">Email address</FormLabel>
+                    <FormLabel className="text-sm font-semibold text-slate-800">
+                      Email address
+                    </FormLabel>
+
                     <FormControl>
                       <div className="relative">
-                        <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground h-5 w-5" />
+                        <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 h-5 w-5" />
                         <Input
                           type="email"
                           placeholder="you@example.com"
                           autoComplete="email"
-                          className="pl-10 h-11 bg-muted/20 focus:bg-white rounded-xl"
+                          className={[
+                            "h-12 rounded-xl pl-12",
+                            "bg-[#F6F9FF] text-slate-900 placeholder:text-slate-400",
+                            "border border-slate-200",
+                            "focus-visible:ring-4 focus-visible:ring-[#0A79C9]/15 focus-visible:border-[#0A79C9]",
+                          ].join(" ")}
                           {...field}
                         />
                       </div>
                     </FormControl>
-                    <FormMessage />
+
+                    <FormMessage className="text-xs" />
                   </FormItem>
                 )}
               />
             </CardContent>
 
-            {/* Footer Buttons */}
-            <CardFooter className="flex flex-col gap-3">
+            <CardFooter className="flex flex-col gap-5 px-10 pb-10 pt-3">
               <Button
                 type="submit"
-                className="w-full h-11 rounded-xl bg-primary hover:bg-primary/90 text-white font-medium transition"
+                className="w-full h-12 rounded-xl bg-[#0A79C9] hover:bg-[#0868AE] text-white font-medium transition"
                 disabled={form.formState.isSubmitting}
               >
                 {form.formState.isSubmitting ? (
@@ -100,11 +102,11 @@ export default function ForgotPasswordPage() {
                 )}
               </Button>
 
-              <div className="text-center text-sm text-muted-foreground">
+              <div className="text-center text-sm text-slate-500">
                 Don’t have an account?{" "}
                 <Link
                   href="/signup"
-                  className="text-sm text-primary font-medium hover:underline"
+                  className="text-sm text-[#0A79C9] font-semibold hover:underline"
                 >
                   Create yours
                 </Link>
@@ -114,5 +116,5 @@ export default function ForgotPasswordPage() {
         </Form>
       </Card>
     </div>
-  )
+  );
 }

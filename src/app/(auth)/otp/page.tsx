@@ -1,6 +1,10 @@
+// src/app/(auth)/verify-otp/page.tsx
+import VerifyOtpForm from "./_components/verify-otp-form";
 
-
-import Component from "../_components/otp-form";
-export default function Page() {
-  return <Component />;
+export default function VerifyOtpPage() {
+  return (
+    <div className="min-h-screen w-full flex items-center justify-center">
+      <VerifyOtpForm email="user@example.com" editHref="/login" />
+    </div>
+  );
 }

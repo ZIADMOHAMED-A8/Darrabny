@@ -1,277 +1,241 @@
 "use client";
-
-// ✅ React + Next.js imports
-import { useState } from "react";
-import Link from "next/link";
-import { signIn } from "next-auth/react";
-
-// ✅ UI + validation imports
-import {
-  Mail,
-  Lock,
-  CircleX,
-  Eye,
-  EyeOff,
-  Loader2,
-  Github,
-} from "lucide-react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
+import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { loginSchema, type LoginValues } from "@/lib/schemas/auth";
-
-// ✅ ShadCN UI components
+import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import {
-  Form,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormControl,
-  FormMessage,
-} from "@/components/ui/form";
-
-export default function LoginForm() {
-  // 🔹 Local states for error & password visibility
-  const [formError, setFormError] = useState<string | null>(null);
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Separator } from "@/components/ui/separator";
+import { Eye, EyeOff, Lock, Mail, Github, Chrome } from "lucide-react";
+/* ================= TYPES ================= */
+type UserType = "trainee" | "company";
+const schema = z.object({
+  userType: z.enum(["trainee", "company"]),
+  email: z.string().email("Invalid email"),
+  password: z.string().min(6, "Minimum 6 characters"),
+  remember: z.boolean().optional(),
+});
+type FormValues = z.infer<typeof schema>;
+type Props = {
+  defaultUserType?: UserType;
+  onSubmit?: (data: FormValues) => void;
+  onForgotPassword?: () => void;
+  onGoogle?: () => void;
+  onGithub?: () => void;
+  onSignUp?: () => void;
+};
+export default function LoginFormCard({
+  defaultUserType = "trainee",
+  onSubmit,
+  onForgotPassword,
+  onGoogle,
+  onGithub,
+  onSignUp,
+}: Props) {
   const [showPassword, setShowPassword] = useState(false);
 
-  // 🔹 Setup React Hook Form with Zod validation
-  const form = useForm<LoginValues>({
-    resolver: zodResolver(loginSchema),
-    defaultValues: { email: "", password: "" },
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    watch,
+    formState: { errors, isSubmitting },
+  } = useForm<FormValues>({
+    resolver: zodResolver(schema),
+    defaultValues: {
+      userType: defaultUserType,
+      email: "",
+      password: "",
+      remember: false,
+    },
   });
 
-  // 🔹 Handle form submit
-  const onSubmit = async (values: LoginValues) => {
-    setFormError(null);
-
-    // 🧠 Use NextAuth credentials provider
-    const response = await signIn("credentials", {
-      email: values.email,
-      password: values.password,
-      redirect: false, // prevent full page reload
-    });
-
-    // ✅ Success → redirect to home
-    if (response?.ok) {
-      location.href = "/";
-    } else {
-      // ❌ Invalid credentials → show error message
-      setFormError("Invalid email or password");
-    }
-  };
+  const userType = watch("userType");
 
   return (
-    <div className="min-h-screen grid place-items-center">
-      {/* 🧱 Login card container */}
-      <Card className="w-full max-w-md bg-card rounded-2xl shadow-sm">
-        {/* 🔹 Header section */}
-        <CardHeader className="text-center pb-6">
-          <CardTitle className="text-3xl font-bold text-foreground">
-            Login
-          </CardTitle>
-        </CardHeader>
+    <Card className="w-full max-w-[520px] rounded-[20px] border border-black/10 bg-white/90 shadow-2xl backdrop-blur">
+      <CardContent className="px-10 pb-10 pt-9">
+        <h2 className="text-center text-3xl font-semibold text-[#0B2A4A]">
+          Login
+        </h2>
 
-        {/* 🧩 Main form */}
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)}>
-            <CardContent className="space-y-4">
-              {/* 📨 Email field */}
-              <FormField
-                control={form.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-sm">Email address</FormLabel>
-                    <FormControl>
-                      <div className="relative">
-                        <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground h-5 w-5" />
-                        <Input
-                          type="email"
-                          placeholder="you@example.com"
-                          autoComplete="email"
-                          className="pl-10 bg-card text-foreground border border-border rounded-xl focus:ring-2 focus:ring-primary/30 focus-visible:ring-primary"
-                          {...field}
-                        />
-                      </div>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
+        {/* Tabs */}
+        <div className="mt-4 flex justify-center">
+          <Tabs
+            value={userType}
+            onValueChange={(value: string) =>
+              setValue("userType", value as UserType)
+            }
+          >
+            <TabsList className="h-auto bg-transparent p-0">
+              <div className="flex items-center gap-4 text-lg">
+                <TabsTrigger
+                  value="trainee"
+                  className={`h-auto bg-transparent px-0 py-0 text-base font-medium ${
+                    userType === "trainee"
+                      ? "text-[#0A79C9] underline underline-offset-[10px]"
+                      : "text-slate-500"
+                  }`}
+                >
+                  Trainee
+                </TabsTrigger>
+
+                <span className="text-slate-400">|</span>
+
+                <TabsTrigger
+                  value="company"
+                  className={`h-auto bg-transparent px-0 py-0 text-base font-medium ${
+                    userType === "company"
+                      ? "text-[#0A79C9] underline underline-offset-[10px]"
+                      : "text-slate-500"
+                  }`}
+                >
+                  Company
+                </TabsTrigger>
+              </div>
+            </TabsList>
+          </Tabs>
+        </div>
+
+        {/* Form */}
+        <form
+          onSubmit={handleSubmit((data) => onSubmit?.(data))}
+          className="mt-7 space-y-5"
+        >
+          {/* Email */}
+          <div>
+            <label className="text-sm font-medium text-[#0B2A4A]">
+              Email address
+            </label>
+
+            <div className="relative mt-2">
+              <Mail className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400" />
+              <Input
+                {...register("email")}
+                placeholder="you@example.com"
+                className="h-12 rounded-[12px] pl-11 border-black/10 bg-white focus-visible:ring-4 focus-visible:ring-[#0A79C9]/20"
               />
+            </div>
 
-              {/* 🔒 Password field with show/hide toggle */}
-              <FormField
-                control={form.control}
-                name="password"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-sm">Password</FormLabel>
-                    <FormControl>
-                      <div className="relative">
-                        <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground h-5 w-5" />
-                        <Input
-                          type={showPassword ? "text" : "password"}
-                          placeholder="••••••••"
-                          autoComplete="current-password"
-                          className="pl-10 pr-10 bg-card text-foreground border border-border rounded-xl focus:ring-2 focus:ring-primary/30 focus-visible:ring-primary"
-                          {...field}
-                        />
-                        {/* 👁 Toggle password visibility */}
-                        <button
-                          type="button"
-                          onClick={() => setShowPassword((s) => !s)}
-                          className="absolute inset-y-0 right-2 flex items-center text-muted-foreground hover:text-foreground"
-                          tabIndex={-1}
-                          aria-label={
-                            showPassword ? "Hide password" : "Show password"
-                          }
-                        >
-                          {showPassword ? (
-                            <EyeOff className="h-4 w-4" />
-                          ) : (
-                            <Eye className="h-4 w-4" />
-                          )}
-                        </button>
-                      </div>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              {/* ⚠️ Error message (invalid login) */}
-              {formError && (
-                <div className="relative my-3">
-                  <p
-                    role="alert"
-                    className="p-2 text-sm text-destructive bg-destructive/10 border border-destructive rounded-md text-center"
-                  >
-                    {formError}
-                  </p>
-                  <span
-                    aria-hidden="true"
-                    className="pointer-events-none absolute -top-2 left-1/2 -translate-x-1/2 inline-flex h-5 w-5 items-center justify-center rounded-full bg-card text-destructive"
-                  >
-                    <CircleX className="h-4 w-4" />
-                  </span>
-                </div>
-              )}
-
-              {/* 🧠 Remember + Forgot Password */}
-              <div className="flex justify-between items-center">
-                <label className="flex items-center gap-2 text-sm text-foreground">
-                  <input
-                    type="checkbox"
-                    className="rounded border-border text-primary focus:ring-primary/30"
-                  />
-                  Remember me
-                </label>
-                <Link
-                  href="/forget-password"
-                  className="text-sm text-primary font-medium hover:opacity-80"
-                >
-                  Forgot your password?
-                </Link>
-              </div>
-            </CardContent>
-
-            {/* 🔹 Footer: buttons & social login */}
-            <CardFooter className="flex flex-col gap-3">
-              {/* 🚀 Submit button */}
-              <Button
-                type="submit"
-                className="w-full rounded-xl bg-primary hover:bg-primary/90 transition"
-                disabled={form.formState.isSubmitting}
-              >
-                {form.formState.isSubmitting ? (
-                  <span className="inline-flex items-center gap-2">
-                    <Loader2 className="h-4 w-4 animate-spin" />
-                    Logging in...
-                  </span>
-                ) : (
-                  "Sign in"
-                )}
-              </Button>
-
-              {/* Divider */}
-              <div className="flex items-center gap-4 w-full">
-                <div className="h-px flex-1 bg-muted" />
-                <span className="text-xs text-muted-foreground">
-                  Or continue with
-                </span>
-                <div className="h-px flex-1 bg-muted" />
-              </div>
-
-              {/* 🌐 Social logins (OAuth) */}
-              <div className="grid grid-cols-2 gap-3 w-full">
-                {/* Google */}
-                <Button
-                  type="button"
-                  variant="outline"
-                  className="rounded-xl border border-border bg-card text-foreground hover:bg-primary/10 flex items-center justify-center gap-2"
-                  onClick={() => signIn("google")}
-                >
-                  {/* Google Icon */}
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 48 48"
-                    className="h-4 w-4"
-                  >
-                    <path
-                      fill="#EA4335"
-                      d="M24 9.5c3.94 0 6.64 1.7 8.16 3.13l6-6C34.89 3.52 29.92 1.5 24 1.5 14.81 1.5 7.02 6.95 3.44 14.66l7.25 5.63C12.09 14.91 17.52 9.5 24 9.5z"
-                    />
-                    <path
-                      fill="#34A853"
-                      d="M46.08 24.52c0-1.63-.15-3.19-.43-4.7H24v9.05h12.45c-.54 2.93-2.19 5.42-4.69 7.1l7.25 5.62C43.75 37.45 46.08 31.44 46.08 24.52z"
-                    />
-                    <path
-                      fill="#4A90E2"
-                      d="M10.69 28.35c-.48-1.42-.74-2.94-.74-4.49s.26-3.07.74-4.49L3.44 13.7C1.9 17.1 1 20.93 1 24.86c0 3.93.9 7.76 2.44 11.16l7.25-5.67z"
-                    />
-                    <path
-                      fill="#FBBC05"
-                      d="M24 46.2c6.53 0 12.03-2.15 16.03-5.86l-7.25-5.62c-2 1.33-4.57 2.12-8.78 2.12-6.48 0-11.91-5.41-13.3-12.48l-7.25 5.67C7.02 41.05 14.81 46.2 24 46.2z"
-                    />
-                  </svg>
-                  Google
-                </Button>
-
-                {/* GitHub */}
-                <Button
-                  type="button"
-                  variant="outline"
-                  className="rounded-xl border border-border bg-card text-foreground hover:bg-primary/10 flex items-center justify-center gap-2"
-                  onClick={() => signIn("github")}
-                >
-                  <Github className="h-4 w-4" />
-                  GitHub
-                </Button>
-              </div>
-
-              {/* 🧭 Navigation: Sign up link */}
-              <p className="text-sm text-center text-muted-foreground">
-                Don’t have an account?{" "}
-                <Link
-                  href="/signup"
-                  className="text-primary font-medium hover:opacity-80"
-                >
-                  Sign up
-                </Link>
+            {errors.email && (
+              <p className="mt-1 text-xs text-red-500">
+                {errors.email.message}
               </p>
-            </CardFooter>
-          </form>
-        </Form>
-      </Card>
-    </div>
+            )}
+          </div>
+
+          {/* Password */}
+          <div>
+            <label className="text-sm font-medium text-[#0B2A4A]">
+              Password
+            </label>
+
+            <div className="relative mt-2">
+              <Lock className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400" />
+
+              <Input
+                {...register("password")}
+                type={showPassword ? "text" : "password"}
+                placeholder="••••••••"
+                className="h-12 rounded-[12px] pl-11 pr-11 border-black/10 bg-white focus-visible:ring-4 focus-visible:ring-[#0A79C9]/20"
+              />
+
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500"
+              >
+                {showPassword ? (
+                  <EyeOff className="h-5 w-5" />
+                ) : (
+                  <Eye className="h-5 w-5" />
+                )}
+              </button>
+            </div>
+
+            {errors.password && (
+              <p className="mt-1 text-xs text-red-500">
+                {errors.password.message}
+              </p>
+            )}
+          </div>
+
+          {/* Remember + Forgot */}
+          <div className="flex items-center justify-between">
+            <label className="flex items-center gap-2 text-sm text-slate-600">
+              <Checkbox
+                checked={watch("remember")}
+                onCheckedChange={(v: boolean | "indeterminate") =>
+                  setValue("remember", v === true)
+                }
+              />
+              Remember me
+            </label>
+
+            <button
+              type="button"
+              onClick={onForgotPassword}
+              className="text-sm text-[#0A79C9] hover:underline"
+            >
+              Forgot password?
+            </button>
+          </div>
+
+          {/* Submit */}
+          <Button
+            type="submit"
+            disabled={isSubmitting}
+            className="h-12 w-full rounded-[12px] bg-[#0A79C9] text-white hover:bg-[#0868AE]"
+          >
+            Sign in
+          </Button>
+
+          {/* Divider */}
+          <div className="my-2 flex items-center gap-3">
+            <Separator className="flex-1 bg-black/10" />
+            <span className="text-xs text-slate-400">OR CONTINUE WITH</span>
+            <Separator className="flex-1 bg-black/10" />
+          </div>
+
+          {/* Social */}
+          <div className="grid grid-cols-2 gap-4">
+            <Button
+              type="button"
+              variant="secondary"
+              onClick={onGoogle}
+              className="h-12 rounded-[12px] bg-white border border-black/10"
+            >
+              <Chrome className="mr-2 h-5 w-5" />
+              Google
+            </Button>
+
+            <Button
+              type="button"
+              variant="secondary"
+              onClick={onGithub}
+              className="h-12 rounded-[12px] bg-white border border-black/10"
+            >
+              <Github className="mr-2 h-5 w-5" />
+              GitHub
+            </Button>
+          </div>
+
+          {/* Footer */}
+          <p className="pt-2 text-center text-sm text-slate-500">
+            Don&apos;t have an account?{" "}
+            <button
+              type="button"
+              onClick={onSignUp}
+              className="font-semibold text-[#0A79C9] hover:underline"
+            >
+              Sign up
+            </button>
+          </p>
+        </form>
+      </CardContent>
+    </Card>
   );
 }

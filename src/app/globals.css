@@ -2,56 +2,25 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
-}
+:root {
+  /* existing */
+  --ic-header: #001225;
+  --ic-bg: #013056;
+  --ic-surface: #d7e4ff;
+  --ic-ink: #0b1220;
+  --ic-card-bg: #c1d2ee;
 
-/* =========
-   Global tokens (Light + Dark)
-   ========= */
-@layer base {
-  @layer base {
-    :root {
-      --background: 0 0% 97%; /* #f6f7f8 */
-      --foreground: 210 10% 15%; /* #101c22 تقريباً */
+  /* Auth / Design System v1 */
+  --ds-primary: #0a79c9; /* CTA */
+  --ds-primary-dark: #0868ae; /* hover */
+  --ds-ink: #1b2b49; /* dark navy (headings) */
+  --ds-muted: #5b6b82; /* secondary text */
+  --ds-soft: #eaf2ff; /* soft icon bg */
+  --ds-ring: rgba(10, 121, 201, 0.25);
 
-      --primary: 197 83% 46%; /* #1193d4 */
-      --primary-foreground: 0 0% 100%; /* أبيض */
+  --ds-card: #ffffff;
+  --ds-border: rgba(12, 24, 44, 0.1);
 
-      --muted: 220 9% 90%; /* حدود / خلفيات فاتحة */
-      --muted-foreground: 220 9% 45%; /* gray text */
-
-      --border: 220 10% 85%; /* #d1d5db */
-
-      --card: 0 0% 100%;
-      --card-foreground: 210 10% 15%;
-    }
-
-    .dark {
-      --background: 200 35% 8%; /* #101c22 */
-      --foreground: 0 0% 100%;
-
-      --primary: 197 83% 46%; /* نفس الأزرق */
-      --primary-foreground: 0 0% 100%;
-
-      --muted: 200 25% 20%;
-      --muted-foreground: 0 0% 70%;
-
-      --border: 210 10% 35%;
-
-      --card: 200 30% 12%;
-      --card-foreground: 0 0% 100%;
-    }
-  }
-}
-
-@layer base {
-  * {
-    @apply border-border;
-  }
-  body {
-    @apply bg-background text-foreground;
-  }
+  --ds-shadow: 0 18px 50px rgba(16, 24, 40, 0.1);
+  --ds-soft-shadow: 0 10px 24px rgba(16, 24, 40, 0.1);
 }
