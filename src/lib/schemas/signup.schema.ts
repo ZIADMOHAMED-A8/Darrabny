@@ -1,5 +1,12 @@
 import { z } from "zod";
 
+// اختياري: تعمل enum للـ gender
+export const GENDER = {
+  MALE: "male",
+  FEMALE: "female",
+  OTHER: "other",
+} as const;
+
 export const signupSchema = z
   .object({
     firstName: z.string().trim().min(2, "First name is required"),
@@ -25,6 +32,9 @@ export const signupSchema = z
       .regex(/[a-z]/, "Password must include a lowercase letter")
       .regex(/\d/, "Password must include a number"),
     confirmPassword: z.string().min(8, "Confirm your password"),
+    // gender: z.enum([GENDER.MALE, GENDER.FEMALE, GENDER.OTHER], {
+    //   required_error: "Gender is required",
+    // }),
   })
   .refine((v) => v.password === v.confirmPassword, {
     path: ["confirmPassword"],

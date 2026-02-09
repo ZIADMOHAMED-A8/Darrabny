@@ -1,9 +1,9 @@
-import { NextAuthOptions } from "next-auth";
+import { NextAuthOptions, User } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
-import { LoginResponse } from "./lib/types/auth";
-
+// NextAuth configuration options
 export const authOptions: NextAuthOptions = {
   pages: {
+    // Redirect users to custom login page instead of default NextAuth UI
     signIn: "/login",
   },
   providers: [
@@ -13,61 +13,48 @@ export const authOptions: NextAuthOptions = {
         email: {},
         password: {},
       },
+      // Authorize callback handles user authentication via custom backend API
       authorize: async (credentials) => {
-        try {
-          const response = await fetch(process.env.SIGNIN_API!, {
+        // Send credentials to backend for verification
+        const response = await fetch(
+          `${process.env.NEXTAUTH_URL}/auth/login`,
+          {
             method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
             body: JSON.stringify({
               email: credentials?.email,
               password: credentials?.password,
             }),
-          });
-
-          const payload: ApiResponse<LoginResponse> = await response.json();
-
-          if ("code" in payload) {
-            return null;
-          }
-
-          return {
-            id: payload.user._id,
-            accessToken: payload.token,
-            ...payload.user,
-          };
-        } catch (err) {
-          console.error("Authorize error:", err);
-          return null; // fallback safe
+            headers: {
+              "Content-Type": "application/json",
+            },
+          },
+        );
+        const payload: ApiResponse<User> = await response.json();
+        // If API returns an error, throw to fail authentication
+        if ("error" in payload) {
+          throw new Error(payload.error);
         }
+        // Return user and token data to NextAuth
+        return {
+          id: payload.user._id,
+          user: payload.user,
+          token: payload.token,
+        };
       },
     }),
   ],
-  session: {
-    strategy: "jwt", // <--- هذا السطر هو مفتاح الحل
-  },
   callbacks: {
+    // Attach token and user data to the JWT
     jwt: ({ token, user }) => {
       if (user) {
-        token = {
-          ...token,
-          ...user, // Spread the user properties into the token
-        };
+        token.token = user.token;
+        token.user = user.user;
       }
       return token;
     },
+    // Make token data available in client-side session
     session: ({ session, token }) => {
-      session._id = token.id;
-      session.email = token.email || "";
-      session.username = token.username;
-      session.firstName = token.firstName;
-      session.lastName = token.lastName;
-      session.phone = token.phone;
-      session.role = token.role;
-      session.isVerified = token.isVerified;
-      session.createdAt = token.createdAt;
-
+      session.user = token.user;
       return session;
     },
   },
