@@ -21,7 +21,7 @@ import { Separator } from "@/components/ui/separator";
 import { Eye, EyeOff, Lock, Mail, Github, Chrome } from "lucide-react";
 
 import { useLogin } from "../_hooks/use-login";
-import { loginSchema, LoginValues } from "@/lib/schemas/login.schema";
+import { loginSchema, LoginValues } from "@/lib/schemas/auth/login.schema";
 import SubmissionMessage from "../../_components/submission-message";
 
 /* ================= TYPES ================= */

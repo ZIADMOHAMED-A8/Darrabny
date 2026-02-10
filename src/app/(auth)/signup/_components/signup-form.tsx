@@ -26,21 +26,13 @@ import {
 
 import { Card, CardContent } from "@/components/ui/card";
 
-import { signupSchema, SignupValues } from "@/lib/schemas/signup.schema";
+import {
+  signupSchema,
+  SignupValues,
+  GENDER,
+} from "@/lib/schemas/auth/signup.schema";
 import { useRouter } from "next/navigation";
 import useSignup from "../_hooks/signup";
-
-const COUNTRY_CODES = [
-  { value: "EG(+20)", label: "EG(+20)" },
-  { value: "SA(+966)", label: "SA(+966)" },
-  { value: "AE(+971)", label: "AE(+971)" },
-];
-
-const LABEL = "text-sm font-medium text-[#0B2A4A]";
-const INPUT =
-  "mt-2 h-12 rounded-[12px] border-black/10 bg-white focus-visible:ring-4 focus-visible:ring-[#0A79C9]/20";
-const ICON_BTN =
-  "absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-700";
 
 export default function CreateAccountForm() {
   const router = useRouter();
@@ -55,28 +47,32 @@ export default function CreateAccountForm() {
     defaultValues: {
       firstName: "",
       lastName: "",
-      username: "",
       email: "",
-      countryCode: "EG(+20)",
-      phone: "",
+      mobileNumber: "",
       password: "",
       confirmPassword: "",
+      gender: GENDER.MALE,
+      DOB: "",
+      // role: "Student",
     },
   });
 
   const onSubmit: SubmitHandler<SignupValues> = (values) => {
     mutate(values, {
-      onSuccess: () => {
-        setTimeout(() => router.push("/login"), 2000);
-      },
+      onSuccess: () => setTimeout(() => router.push("/login"), 2000),
       onError: () => {},
     });
   };
 
+  const LABEL = "text-sm font-medium text-[#0B2A4A]";
+  const INPUT =
+    "mt-2 h-12 rounded-[12px] border-black/10 bg-white focus-visible:ring-4 focus-visible:ring-[#0A79C9]/20";
+  const ICON_BTN =
+    "absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-700";
+
   return (
     <Card className="w-full max-w-[520px] rounded-[20px] border border-black/10 bg-white/90 shadow-2xl backdrop-blur">
       <CardContent className="px-10 pb-10 pt-9">
-        {/* Header (اختياري) */}
         <div className="flex items-center gap-3">
           <button
             type="button"
@@ -111,7 +107,6 @@ export default function CreateAccountForm() {
                   </FormItem>
                 )}
               />
-
               <FormField
                 name="lastName"
                 control={form.control}
@@ -119,32 +114,13 @@ export default function CreateAccountForm() {
                   <FormItem>
                     <FormLabel className={LABEL}>Last Name</FormLabel>
                     <FormControl>
-                      <Input
-                        {...field}
-                        placeholder="Abdullah"
-                        className={INPUT}
-                      />
+                      <Input {...field} placeholder="Ali" className={INPUT} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
             </div>
-
-            {/* Username */}
-            <FormField
-              name="username"
-              control={form.control}
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className={LABEL}>Username</FormLabel>
-                  <FormControl>
-                    <Input {...field} placeholder="user123" className={INPUT} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
 
             {/* Email */}
             <FormField
@@ -156,7 +132,7 @@ export default function CreateAccountForm() {
                   <FormControl>
                     <Input
                       {...field}
-                      placeholder="user@enternlink.com"
+                      placeholder="user@example.com"
                       className={INPUT}
                     />
                   </FormControl>
@@ -165,37 +141,19 @@ export default function CreateAccountForm() {
               )}
             />
 
-            {/* Phone + Country */}
+            {/* Mobile Number */}
             <FormField
-              name="phone"
+              name="mobileNumber"
               control={form.control}
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className={LABEL}>Phone</FormLabel>
+                  <FormLabel className={LABEL}>Mobile Number</FormLabel>
                   <FormControl>
-                    <div className="mt-2 grid grid-cols-[120px_1fr] overflow-hidden rounded-[12px] border border-black/10 bg-white">
-                      <Select
-                        value={form.getValues("countryCode")}
-                        onValueChange={(v) => form.setValue("countryCode", v)}
-                      >
-                        <SelectTrigger className="h-12 rounded-none border-0 bg-transparent focus:ring-0">
-                          <SelectValue placeholder="Code" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {COUNTRY_CODES.map((c) => (
-                            <SelectItem key={c.value} value={c.value}>
-                              {c.label}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-
-                      <Input
-                        {...field}
-                        placeholder="1012345678"
-                        className="h-12 rounded-none border-0 bg-transparent focus-visible:ring-0"
-                      />
-                    </div>
+                    <Input
+                      {...field}
+                      placeholder="01012345678"
+                      className={INPUT}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -270,6 +228,67 @@ export default function CreateAccountForm() {
               )}
             />
 
+            {/* Gender */}
+            <FormField
+              name="gender"
+              control={form.control}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className={LABEL}>Gender</FormLabel>
+                  <FormControl>
+                    <Select
+                      value={form.getValues("gender")}
+                      onValueChange={(v: "Male" | "Female" | "Other") =>
+                        form.setValue("gender", v)
+                      }
+                    >
+                      <SelectTrigger className="h-12 rounded-[12px] border-black/10 bg-white">
+                        <SelectValue placeholder="Select Gender" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {Object.values(GENDER).map((g) => (
+                          <SelectItem key={g} value={g}>
+                            {g}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            {/* DOB */}
+            <FormField
+              name="DOB"
+              control={form.control}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className={LABEL}>Date of Birth</FormLabel>
+                  <FormControl>
+                    <Input {...field} type="date" className={INPUT} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            {/* Role */}
+            {/* <FormField
+              name="role"
+              control={form.control}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className={LABEL}>Role</FormLabel>
+                  <FormControl>
+                    <Input {...field} className={INPUT} placeholder="Student" />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            /> */}
+
             {/* Submit */}
             <Button
               type="submit"
@@ -283,7 +302,6 @@ export default function CreateAccountForm() {
               Create Account
             </Button>
 
-            {/* Footer (اختياري) */}
             <p className="pt-1 text-center text-sm text-slate-500">
               Already have an account?{" "}
               <button

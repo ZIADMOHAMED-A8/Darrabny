@@ -1,9 +1,8 @@
 "use client";
 
-import { LoginValues } from "@/lib/schemas/login.schema";
+import { LoginValues } from "@/lib/schemas/auth/login.schema";
 import { useMutation } from "@tanstack/react-query";
 import { signIn } from "next-auth/react";
-
 
 export function useLogin() {
   const { mutate, error, isPending } = useMutation({
@@ -18,7 +17,9 @@ export function useLogin() {
         throw new Error(response.error);
       }
 
-      const callbackUrl = new URLSearchParams(location.search).get("callbackUrl");
+      const callbackUrl = new URLSearchParams(location.search).get(
+        "callbackUrl",
+      );
       window.location.href = callbackUrl || "/";
     },
   });
