@@ -15,21 +15,22 @@ export const authOptions: NextAuthOptions = {
       },
       // Authorize callback handles user authentication via custom backend API
       authorize: async (credentials) => {
+        console.log("credentials::::::::::::::::::::::::::", credentials);
+
         // Send credentials to backend for verification
-        const response = await fetch(
-          `${process.env.NEXTAUTH_URL}/auth/login`,
-          {
-            method: "POST",
-            body: JSON.stringify({
-              email: credentials?.email,
-              password: credentials?.password,
-            }),
-            headers: {
-              "Content-Type": "application/json",
-            },
+        const response = await fetch(`http://localhost:5000/auth/login`, {
+          method: "POST",
+          body: JSON.stringify({
+            email: credentials?.email,
+            password: credentials?.password,
+          }),
+          headers: {
+            "Content-Type": "application/json",
           },
-        );
+        });
+
         const payload: ApiResponse<User> = await response.json();
+        console.log("payload::::::::::::::::::::::::::", payload);
         // If API returns an error, throw to fail authentication
         if ("error" in payload) {
           throw new Error(payload.error);

@@ -25,10 +25,10 @@ import { loginSchema, LoginValues } from "@/lib/schemas/auth/login.schema";
 import SubmissionMessage from "../../_components/submission-message";
 
 /* ================= TYPES ================= */
-type UserType = "trainee" | "company";
+/* type UserType = "trainee" | "company"; */
 
 type Props = {
-  defaultUserType?: UserType;
+  defaultUserType?: string;
   onForgotPassword?: () => void;
   onGoogle?: () => void;
   onGithub?: () => void;
@@ -36,11 +36,10 @@ type Props = {
 };
 
 export default function LoginFormCard({
-  defaultUserType = "trainee",
+  // defaultUserType = "trainee",
   onForgotPassword,
   onGoogle,
   onGithub,
-  onSignUp,
 }: Props) {
   const [showPassword, setShowPassword] = useState(false);
 
@@ -49,14 +48,12 @@ export default function LoginFormCard({
   const form = useForm<LoginValues>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
-      userType: defaultUserType,
       email: "",
       password: "",
-      remember: false,
     },
   });
 
-  const userType = form.watch("userType");
+  // const userType = form.watch("userType");
 
   const onSubmit: SubmitHandler<LoginValues> = (data) => {
     login(data);
@@ -70,11 +67,11 @@ export default function LoginFormCard({
         </h2>
 
         {/* Tabs */}
-        <div className="mt-4 flex justify-center">
+        {/* <div className="mt-4 flex justify-center">
           <Tabs
             value={userType}
             onValueChange={(value: string) =>
-              form.setValue("userType", value as UserType)
+              form.setValue("userType", value)
             }
           >
             <TabsList className="h-auto bg-transparent p-0">
@@ -105,7 +102,7 @@ export default function LoginFormCard({
               </div>
             </TabsList>
           </Tabs>
-        </div>
+        </div> */}
 
         {/* Form */}
         <Form {...form}>
@@ -179,7 +176,7 @@ export default function LoginFormCard({
             />
 
             {/* Remember */}
-            <FormField
+            {/* <FormField
               control={form.control}
               name="remember"
               render={({ field }) => (
@@ -201,7 +198,18 @@ export default function LoginFormCard({
                   </button>
                 </FormItem>
               )}
-            />
+            /> */}
+
+            {/* Forgot Password */}
+            <div className="flex justify-end">
+              <Button
+                type="button"
+                onClick={onForgotPassword}
+                className="text-sm text-[#0A79C9] hover:underline bg-transparent shadow-none p-0 h-auto"
+              >
+                Forgot password?
+              </Button>
+            </div>
 
             {/* Global Error */}
             <SubmissionMessage>{error?.message}</SubmissionMessage>
@@ -248,7 +256,6 @@ export default function LoginFormCard({
               Don&apos;t have an account?{" "}
               <button
                 type="button"
-                onClick={onSignUp}
                 className="font-semibold text-[#0A79C9] hover:underline"
               >
                 Sign up
