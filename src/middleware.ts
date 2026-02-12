@@ -17,6 +17,8 @@ export default async function middleware(req: NextRequest) {
 
   const isAuthRoute = authRoutes.includes(pathname);
   const isHome = pathname === "/";
+  console.log("TOKEN FROM MIDDLEWARE :::::::::::::::::::::::::::::::::", token);
+
   // console.log("PATH:", pathname);
   // console.log("TOKEN:", token);
   // console.log("ENV NEXTAUTH_URL:", process.env.NEXTAUTH_URL);
@@ -29,6 +31,8 @@ export default async function middleware(req: NextRequest) {
 
   // 2) لو انت على الهوم ومفيش توكن → روح لوجين
   if (isHome && !token) {
+    console.log(token);
+
     return NextResponse.redirect(new URL("/login", req.url));
   }
 
