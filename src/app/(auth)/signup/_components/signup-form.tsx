@@ -237,9 +237,9 @@ export default function CreateAccountForm() {
                   <FormLabel className={LABEL}>Gender</FormLabel>
                   <FormControl>
                     <Select
-                      value={form.getValues("gender")}
+                      value={field.value}
                       onValueChange={(v: "Male" | "Female" | "Other") =>
-                        form.setValue("gender", v)
+                        field.onChange(v)
                       }
                     >
                       <SelectTrigger className="h-12 rounded-[12px] border-black/10 bg-white">
