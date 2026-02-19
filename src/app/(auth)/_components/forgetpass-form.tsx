@@ -26,7 +26,7 @@ import {
 import {
   forgotPasswordSchema,
   ForgotPasswordValues,
-} from "@/lib/schemas/forgot-password-schema";
+} from "@/lib/schemas/auth/forgot-password-schema";
 
 export default function ForgotPasswordPage() {
   const form = useForm<ForgotPasswordValues>({

@@ -28,6 +28,7 @@ declare module "next-auth" {
 
   interface Session {
     user: User["user"];
+    id_token?: string;
   }
 }
 
@@ -35,5 +36,6 @@ declare module "next-auth/jwt" {
   interface JWT {
     user: User["user"];
     token: string;
+    id_token?: string;
   }
 }
