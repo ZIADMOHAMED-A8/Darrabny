@@ -1,18 +1,21 @@
-import { decode } from 'next-auth/jwt';
-import { cookies } from 'next/headers';
+import { decode } from "next-auth/jwt";
+import type { NextRequest } from "next/server";
 
-export async function getToken() {
-  const tokenCookies = cookies().get('next-auth.session-token')?.value;
+export async function getToken(req: NextRequest) {
+  const tokenCookie =
+    req.cookies.get("next-auth.session-token")?.value ||
+    req.cookies.get("__Secure-next-auth.session-token")?.value;
 
-  if (!tokenCookies) return null;
+  if (!tokenCookie) return null;
 
   try {
     const jwt = await decode({
-      token: tokenCookies,
+      token: tokenCookie,
       secret: process.env.NEXTAUTH_SECRET!,
     });
-    return jwt?.token;
-  } catch (error) {
+
+    return jwt;
+  } catch {
     return null;
   }
 }

@@ -11,7 +11,7 @@ const authRoutes = [
 ];
 
 export default async function middleware(req: NextRequest) {
-  const token = await getToken();
+  const token = await getToken(req);
 
   const { pathname, search } = req.nextUrl;
 

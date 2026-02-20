@@ -35,7 +35,7 @@ export const authOptions: NextAuthOptions = {
         return {
           id: (payload as any).user._id,
           user: (payload as any).user,
-          token: (payload as any).token, // ✅ JWT بتاع السيستم
+          token: (payload as any).token,
         };
       },
     }),
