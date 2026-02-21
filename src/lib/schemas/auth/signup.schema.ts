@@ -1,23 +1,22 @@
 import { z } from "zod";
 
+export const GENDER = {
+  MALE: "Male",
+  FEMALE: "Female",
+  OTHER: "Other",
+} as const;
+
 export const signupSchema = z
   .object({
     firstName: z.string().trim().min(2, "First name is required"),
     lastName: z.string().trim().min(2, "Last name is required"),
-    username: z
-      .string()
-      .trim()
-      .min(3, "Username must be at least 3 characters")
-      .max(30, "Username is too long")
-      .regex(/^[a-zA-Z0-9._-]+$/, "Username contains invalid characters"),
     email: z.string().trim().email("Enter a valid email"),
-    countryCode: z.string().min(1, "Country code is required"),
-    phone: z
+    mobileNumber: z
       .string()
       .trim()
-      .min(7, "Phone number is too short")
+      .min(10, "Phone number is too short")
       .max(15, "Phone number is too long")
-      .regex(/^\d+$/, "Phone must be digits only"),
+      .regex(/^\d+$/, "Mobile must be digits only"),
     password: z
       .string()
       .min(8, "Password must be at least 8 characters")
@@ -25,6 +24,9 @@ export const signupSchema = z
       .regex(/[a-z]/, "Password must include a lowercase letter")
       .regex(/\d/, "Password must include a number"),
     confirmPassword: z.string().min(8, "Confirm your password"),
+    gender: z.enum(["Male", "Female", "Other"]),
+    DOB: z.string().min(10, "Date of Birth is required"),
+    // role: z.string().min(3, "Role is required"),
   })
   .refine((v) => v.password === v.confirmPassword, {
     path: ["confirmPassword"],

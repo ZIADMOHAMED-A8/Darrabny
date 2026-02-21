@@ -1,4 +1,4 @@
-import InternshipCard from "./_components/InternshipCard";
+import InternshipCard from "./_components/InternshipProfile";
 import StatsCard from "./_components/StatsCard";
 import SavedList from "./_components/SavedList";
 

@@ -1,258 +1,319 @@
 "use client";
 
 import * as React from "react";
-import Link from "next/link";
-import { useForm, Controller } from "react-hook-form";
+import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Loader2, Eye, EyeOff, ChevronLeft } from "lucide-react";
 
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import {
+  Form,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormControl,
+  FormMessage,
+} from "@/components/ui/form";
+
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
 import {
   Select,
-  SelectContent,
-  SelectItem,
   SelectTrigger,
   SelectValue,
+  SelectContent,
+  SelectItem,
 } from "@/components/ui/select";
 
-import { ChevronLeft, Eye, EyeOff } from "lucide-react";
-import { signupSchema, SignupValues } from "@/lib/schemas/signup.schema";
+import { Card, CardContent } from "@/components/ui/card";
 
-const COUNTRY_CODES = [
-  { value: "EG(+20)", label: "EG(+20)" },
-  { value: "SA(+966)", label: "SA(+966)" },
-  { value: "AE(+971)", label: "AE(+971)" },
-];
+import {
+  signupSchema,
+  SignupValues,
+  GENDER,
+} from "@/lib/schemas/auth/signup.schema";
+import { useRouter } from "next/navigation";
+import useSignup from "../_hooks/signup";
 
-type Props = {
-  onSubmit?: (values: SignupValues) => void;
-};
+export default function CreateAccountForm() {
+  const router = useRouter();
+  const { mutate, isPending } = useSignup();
 
-function FieldError({ message }: { message?: string }) {
-  if (!message) return null;
-  return <p className="mt-1 text-xs text-red-500">{message}</p>;
-}
-
-export default function CreateAccountForm({ onSubmit }: Props) {
-  const [showPass, setShowPass] = React.useState(false);
+  const [showPassword, setShowPassword] = React.useState(false);
   const [showConfirm, setShowConfirm] = React.useState(false);
 
   const form = useForm<SignupValues>({
     resolver: zodResolver(signupSchema),
     mode: "onSubmit",
     defaultValues: {
-      firstName: "Ahmed",
-      lastName: "Abdullah",
-      username: "user123",
-      email: "user@enternlink.com",
-      countryCode: "EG(+20)",
-      phone: "1012345678",
+      firstName: "",
+      lastName: "",
+      email: "",
+      mobileNumber: "",
       password: "",
       confirmPassword: "",
+      gender: GENDER.MALE,
+      DOB: "",
+      // role: "Student",
     },
   });
 
-  const {
-    register,
-    control,
-    handleSubmit,
-    formState: { errors, isSubmitting },
-  } = form;
+  const onSubmit: SubmitHandler<SignupValues> = (values) => {
+    mutate(values, {
+      onSuccess: () => setTimeout(() => router.push("/login"), 2000),
+      onError: () => {},
+    });
+  };
+
+  const LABEL = "text-sm font-medium text-[#0B2A4A]";
+  const INPUT =
+    "mt-2 h-12 rounded-[12px] border-black/10 bg-white focus-visible:ring-4 focus-visible:ring-[#0A79C9]/20";
+  const ICON_BTN =
+    "absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-700";
 
   return (
     <Card className="w-full max-w-[520px] rounded-[20px] border border-black/10 bg-white/90 shadow-2xl backdrop-blur">
       <CardContent className="px-10 pb-10 pt-9">
-        {/* Header */}
         <div className="flex items-center gap-3">
           <button
             type="button"
+            onClick={() => router.back()}
             className="grid h-9 w-9 place-items-center rounded-full hover:bg-black/5"
             aria-label="Back"
           >
             <ChevronLeft className="h-5 w-5 text-[#0B2A4A]" />
           </button>
-
           <h2 className="text-3xl font-semibold text-[#0B2A4A]">
             Create Account
           </h2>
         </div>
 
-        {/* Form */}
-        <form
-          onSubmit={handleSubmit((v) => onSubmit?.(v))}
-          className="mt-7 space-y-5"
-        >
-          {/* First + Last */}
-          <div className="grid gap-5 md:grid-cols-2">
-            <div>
-              <Label className="text-sm font-medium text-[#0B2A4A]">
-                First name
-              </Label>
-              <Input
-                {...register("firstName")}
-                placeholder="Ahmed"
-                className="mt-2 h-12 rounded-[12px] border-black/10 bg-white focus-visible:ring-4 focus-visible:ring-[#0A79C9]/20"
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="mt-7 space-y-5"
+          >
+            {/* First + Last Name */}
+            <div className="grid gap-5 md:grid-cols-2">
+              <FormField
+                name="firstName"
+                control={form.control}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className={LABEL}>First Name</FormLabel>
+                    <FormControl>
+                      <Input {...field} placeholder="Ahmed" className={INPUT} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
-              <FieldError message={errors.firstName?.message} />
+              <FormField
+                name="lastName"
+                control={form.control}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className={LABEL}>Last Name</FormLabel>
+                    <FormControl>
+                      <Input {...field} placeholder="Ali" className={INPUT} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
             </div>
 
-            <div>
-              <Label className="text-sm font-medium text-[#0B2A4A]">
-                Last name
-              </Label>
-              <Input
-                {...register("lastName")}
-                placeholder="Abdullah"
-                className="mt-2 h-12 rounded-[12px] border-black/10 bg-white focus-visible:ring-4 focus-visible:ring-[#0A79C9]/20"
-              />
-              <FieldError message={errors.lastName?.message} />
-            </div>
-          </div>
-
-          {/* Username */}
-          <div>
-            <Label className="text-sm font-medium text-[#0B2A4A]">
-              Username
-            </Label>
-            <Input
-              {...register("username")}
-              placeholder="user123"
-              className="mt-2 h-12 rounded-[12px] border-black/10 bg-white focus-visible:ring-4 focus-visible:ring-[#0A79C9]/20"
+            {/* Email */}
+            <FormField
+              name="email"
+              control={form.control}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className={LABEL}>Email</FormLabel>
+                  <FormControl>
+                    <Input
+                      {...field}
+                      placeholder="user@example.com"
+                      className={INPUT}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
-            <FieldError message={errors.username?.message} />
-          </div>
 
-          {/* Email */}
-          <div>
-            <Label className="text-sm font-medium text-[#0B2A4A]">Email</Label>
-            <Input
-              {...register("email")}
-              placeholder="user@enternlink.com"
-              className="mt-2 h-12 rounded-[12px] border-black/10 bg-white focus-visible:ring-4 focus-visible:ring-[#0A79C9]/20"
+            {/* Mobile Number */}
+            <FormField
+              name="mobileNumber"
+              control={form.control}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className={LABEL}>Mobile Number</FormLabel>
+                  <FormControl>
+                    <Input
+                      {...field}
+                      placeholder="01012345678"
+                      className={INPUT}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
-            <FieldError message={errors.email?.message} />
-          </div>
 
-          {/* Phone */}
-          <div>
-            <Label className="text-sm font-medium text-[#0B2A4A]">Phone</Label>
+            {/* Password */}
+            <FormField
+              name="password"
+              control={form.control}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className={LABEL}>Password</FormLabel>
+                  <FormControl>
+                    <div className="relative mt-2">
+                      <Input
+                        {...field}
+                        type={showPassword ? "text" : "password"}
+                        placeholder="••••••••"
+                        className="h-12 rounded-[12px] border-black/10 bg-white pr-11 focus-visible:ring-4 focus-visible:ring-[#0A79C9]/20"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowPassword((s) => !s)}
+                        className={ICON_BTN}
+                        aria-label="Toggle password"
+                      >
+                        {showPassword ? (
+                          <EyeOff className="h-5 w-5" />
+                        ) : (
+                          <Eye className="h-5 w-5" />
+                        )}
+                      </button>
+                    </div>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-            <div className="mt-2 grid grid-cols-[120px_1fr] overflow-hidden rounded-[12px] border border-black/10 bg-white">
-              <div className="border-r border-black/10 bg-[#F3F5F9]">
-                <Controller
-                  control={control}
-                  name="countryCode"
-                  render={({ field }) => (
-                    <Select value={field.value} onValueChange={field.onChange}>
-                      <SelectTrigger className="h-12 rounded-none border-0 bg-transparent focus:ring-0">
-                        <SelectValue />
+            {/* Confirm Password */}
+            <FormField
+              name="confirmPassword"
+              control={form.control}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className={LABEL}>Confirm Password</FormLabel>
+                  <FormControl>
+                    <div className="relative mt-2">
+                      <Input
+                        {...field}
+                        type={showConfirm ? "text" : "password"}
+                        placeholder="••••••••"
+                        className="h-12 rounded-[12px] border-black/10 bg-white pr-11 focus-visible:ring-4 focus-visible:ring-[#0A79C9]/20"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowConfirm((s) => !s)}
+                        className={ICON_BTN}
+                        aria-label="Toggle confirm password"
+                      >
+                        {showConfirm ? (
+                          <EyeOff className="h-5 w-5" />
+                        ) : (
+                          <Eye className="h-5 w-5" />
+                        )}
+                      </button>
+                    </div>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            {/* Gender */}
+            <FormField
+              name="gender"
+              control={form.control}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className={LABEL}>Gender</FormLabel>
+                  <FormControl>
+                    <Select
+                      value={field.value}
+                      onValueChange={(v: "Male" | "Female" | "Other") =>
+                        field.onChange(v)
+                      }
+                    >
+                      <SelectTrigger className="h-12 rounded-[12px] border-black/10 bg-white">
+                        <SelectValue placeholder="Select Gender" />
                       </SelectTrigger>
                       <SelectContent>
-                        {COUNTRY_CODES.map((c) => (
-                          <SelectItem key={c.value} value={c.value}>
-                            {c.label}
+                        {Object.values(GENDER).map((g) => (
+                          <SelectItem key={g} value={g}>
+                            {g}
                           </SelectItem>
                         ))}
                       </SelectContent>
                     </Select>
-                  )}
-                />
-              </div>
-
-              <Input
-                {...register("phone")}
-                placeholder="1012345678"
-                className="h-12 rounded-none border-0 bg-transparent focus-visible:ring-0"
-              />
-            </div>
-
-            <FieldError
-              message={errors.countryCode?.message || errors.phone?.message}
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
-          </div>
 
-          {/* Password */}
-          <div>
-            <Label className="text-sm font-medium text-[#0B2A4A]">
-              Password
-            </Label>
+            {/* DOB */}
+            <FormField
+              name="DOB"
+              control={form.control}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className={LABEL}>Date of Birth</FormLabel>
+                  <FormControl>
+                    <Input {...field} type="date" className={INPUT} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-            <div className="relative mt-2">
-              <Input
-                {...register("password")}
-                type={showPass ? "text" : "password"}
-                placeholder="••••••••"
-                className="h-12 rounded-[12px] border-black/10 bg-white pr-11 focus-visible:ring-4 focus-visible:ring-[#0A79C9]/20"
-              />
+            {/* Role */}
+            {/* <FormField
+              name="role"
+              control={form.control}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className={LABEL}>Role</FormLabel>
+                  <FormControl>
+                    <Input {...field} className={INPUT} placeholder="Student" />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            /> */}
 
-              <button
-                type="button"
-                onClick={() => setShowPass((s) => !s)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500"
-              >
-                {showPass ? (
-                  <EyeOff className="h-5 w-5" />
-                ) : (
-                  <Eye className="h-5 w-5" />
-                )}
-              </button>
-            </div>
-
-            <FieldError message={errors.password?.message} />
-          </div>
-
-          {/* Confirm Password */}
-          <div>
-            <Label className="text-sm font-medium text-[#0B2A4A]">
-              Confirm Password
-            </Label>
-
-            <div className="relative mt-2">
-              <Input
-                {...register("confirmPassword")}
-                type={showConfirm ? "text" : "password"}
-                placeholder="••••••••"
-                className="h-12 rounded-[12px] border-black/10 bg-white pr-11 focus-visible:ring-4 focus-visible:ring-[#0A79C9]/20"
-              />
-
-              <button
-                type="button"
-                onClick={() => setShowConfirm((s) => !s)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500"
-              >
-                {showConfirm ? (
-                  <EyeOff className="h-5 w-5" />
-                ) : (
-                  <Eye className="h-5 w-5" />
-                )}
-              </button>
-            </div>
-
-            <FieldError message={errors.confirmPassword?.message} />
-          </div>
-
-          {/* Submit */}
-          <Button
-            type="submit"
-            disabled={isSubmitting}
-            className="h-12 w-full rounded-[12px] bg-[#0A79C9] text-white hover:bg-[#0868AE]"
-          >
-            Create Account
-          </Button>
-
-          {/* Footer */}
-          <p className="pt-2 text-center text-sm text-slate-500">
-            Already have an account?{" "}
-            <Link
-              href="/login"
-              className="font-semibold text-[#0A79C9] hover:underline"
+            {/* Submit */}
+            <Button
+              type="submit"
+              disabled={
+                isPending ||
+                (form.formState.isSubmitted && !form.formState.isValid)
+              }
+              className="h-12 w-full rounded-[12px] bg-[#0A79C9] text-white hover:bg-[#0868AE]"
             >
-              Login
-            </Link>
-          </p>
-        </form>
+              {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              Create Account
+            </Button>
+
+            <p className="pt-1 text-center text-sm text-slate-500">
+              Already have an account?{" "}
+              <button
+                type="button"
+                onClick={() => router.push("/login")}
+                className="font-semibold text-[#0A79C9] hover:underline"
+              >
+                Login
+              </button>
+            </p>
+          </form>
+        </Form>
       </CardContent>
     </Card>
   );

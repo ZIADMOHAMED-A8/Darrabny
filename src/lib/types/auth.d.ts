@@ -1,19 +1,19 @@
+export type AuthResponse = {
+  message: string;
+  user: {
+    token?: string;
+    _id: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+    phone: string;
+    role: string;
+    createdAt: string;
+    updatedAt: string;
+    isVerfied: boolean;
+  };
+};
 
-
-export type LoginResponse = {
-    "token": string,
-    "user": {
-        _id: string,
-        username: string,
-        username: string,
-        firstName: string,
-        lastName: string,
-        email: string,
-        phone: string,
-        role: string,
-        isVerified: boolean,
-        createdAt: string
-    }
-}
-
-
+export type ApiError = {
+  error: string;
+};

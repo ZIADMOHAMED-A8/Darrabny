@@ -13,7 +13,7 @@ import OtpInput from "./otp-input";
 import {
   VerifyOtpSchema,
   VerifyOtpValues,
-} from "@/lib/schemas/verify-otp.schema";
+} from "@/lib/schemas/auth/verify-otp.schema";
 
 type Props = {
   email?: string;
