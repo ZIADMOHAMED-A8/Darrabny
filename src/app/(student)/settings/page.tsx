@@ -3,7 +3,7 @@
 import { useForm } from "react-hook-form";
 import NotificationSettings from "./_components/NotificationSettings";
 import PersonalInfoForm from "./_components/PersonalInfoForm";
-import useUpdateProfile from "./useUpdateInfo";
+import useUpdateProfile from "./hooks/useUpdateInfo";
 
 export type SettingsFormValues = {
   fullName: string;

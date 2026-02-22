@@ -1,9 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useSession } from "next-auth/react";
-import updateProfileAction, { UpdateProfilePayload } from "./updateProfileAction";
+import updateProfileAction, { UpdateProfilePayload } from "../actions/updateProfileAction";
 
 export default function useUpdateProfile() {
-  const { data: session } = useSession();
   const queryClient = useQueryClient();
 
   const { isPending, error, mutateAsync } = useMutation<
@@ -12,7 +10,7 @@ export default function useUpdateProfile() {
     UpdateProfilePayload
   >({
     mutationFn: (values: UpdateProfilePayload) =>
-      updateProfileAction(values, session?.token),
+      updateProfileAction(values),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["profileData"] });
     },
