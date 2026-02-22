@@ -36,7 +36,7 @@ export default function InternshipCard({
           </p>
         </div>
 
-        <button className="w-10 h-10 rounded-full border flex items-center justify-center">
+        <button className="  flex justify-center items-center text-center text-blue-500 text-5xl    ">
           →
         </button>
       </div>
