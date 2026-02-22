@@ -16,6 +16,7 @@ export default async function updateProfileAction(
   values: UpdateProfilePayload,
 ) {
   const token=await getToken()
+  console.log("token from action :",token);
   if (!token) {
   throw new Error("Unauthorized");
 }
@@ -23,12 +24,12 @@ export default async function updateProfileAction(
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",
-      Authorization:`user ${token}`
+      Authorization:`user ${token.token.accessToken}`
     },
     body: JSON.stringify({
     "mobileNumber": "01272526881",
       "address": {
-    "country": "asafra",
+    "country": "asafraaa",
     "city": "Cairo"
   }
 }),
