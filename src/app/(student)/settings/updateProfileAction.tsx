@@ -1,3 +1,5 @@
+import { getToken } from "@/lib/utils/get-token.util";
+
 export type UpdateProfilePayload = {
   fullName: string;
   email: string;
@@ -10,22 +12,22 @@ export type UpdateProfilePayload = {
 
 export default async function updateProfileAction(
   values: UpdateProfilePayload,
-  token?: string,
 ) {
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:5000";
-  const [firstName = "", ...lastNameParts] = values.fullName.trim().split(/\s+/);
+//   const token=await getToken()
 
-  const res = await fetch(`${apiUrl}/user/UpdateAccount`, {
-    method: "PUT",
+  const res = await fetch('http://localhost:5000/user/UpdateAccount', {
+    method: "PATCH",
     headers: {
       "Content-Type": "application/json",
-      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      Authorization:`user eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InNpbS5aaWFkTW9oYW1lZDU1MTcwQGFsZXh1LmVkdS5lZyIsImlkIjoiNjk5MzE0M2VlMDYyMmRkMDM5ODYwODJjIiwiaWF0IjoxNzcxMjQ2NzExLCJleHAiOjE3NzE4NTE1MTF9.TSEpgxGmG4V73yjiAadUtxymIOaQX5ZMBmoIdqSYU_o`
     },
     body: JSON.stringify({
-      ...values,
-      firstName,
-      lastName: lastNameParts.join(" "),
-    }),
+    "mobileNumber": "01272526881",
+      "address": {
+    "country": "asafra",
+    "city": "Cairo"
+  }
+}),
   });
 
   if (!res.ok) {
