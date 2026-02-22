@@ -1,6 +1,6 @@
-// import { getToken } from "next-auth/jwt";
+import { getToken } from "next-auth/jwt";
 import { NextRequest, NextResponse } from "next/server";
-import { getToken } from "./lib/utils/get-token.util";
+// import { getToken } from "./lib/utils/get-token.util";
 
 const authRoutes = [
   "/login",
@@ -11,7 +11,7 @@ const authRoutes = [
 ];
 
 export default async function middleware(req: NextRequest) {
-  const token = await getToken(req);
+  const token = await getToken({ req });
 
   const { pathname, search } = req.nextUrl;
 
