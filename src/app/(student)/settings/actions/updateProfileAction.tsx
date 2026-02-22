@@ -18,13 +18,14 @@ export default async function updateProfileAction(
   const token=await getToken()
   console.log("token from action :",token);
   if (!token) {
+    console.log('d')
   throw new Error("Unauthorized");
 }
   const res = await fetch('http://localhost:5000/user/UpdateAccount', {
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",
-      Authorization:`user ${token.token.accessToken}`
+      Authorization:`user ${token.token}`
     },
     body: JSON.stringify({
     "mobileNumber": "01272526881",

@@ -1,6 +1,9 @@
+import HomeBg from "./home-bg";
+
 export default function StudentTopBar() {
   return (
-    <header className="h-[72px] px-6 border-b border-[#7da8f4] bg-[linear-gradient(110deg,#1f67e7_0%,#6ea2f5_56%,#8ab6ff_100%)] flex items-center justify-between">
+    <header className="h-[72px] px-6 z-50 border-b border-[#7da8f4] bg-[linear-gradient(110deg,#1f67e7_0%,#6ea2f5_56%,#8ab6ff_100%)] flex items-center justify-between">
+      <HomeBg></HomeBg>
       <div className="flex items-center gap-10">
         <div className="flex items-center gap-3 text-white">
           <div className="w-9 h-9 rounded-lg bg-white/20 border border-white/40 flex items-center justify-center">
@@ -8,7 +11,7 @@ export default function StudentTopBar() {
               <path d="M6 6h12v12H6V6Zm0 4h12M9 4v2m6-2v2" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
             </svg>
           </div>
-          <p className="text-[34px] font-semibold leading-none">Darrabny</p>
+          <p className="text-[34px] z-50 font-semibold leading-none">Darrabny</p>
         </div>
 
 
