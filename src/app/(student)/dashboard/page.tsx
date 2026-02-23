@@ -15,7 +15,6 @@ export default function DashboardPage() {
   return (
 
     <section className=" min-h-screen  ">
-      <HomeBg></HomeBg>
       {/* Header */}
       <div className="w-full">
         <h1 className="text-3xl font-bold">Welcome back, Sophia</h1>

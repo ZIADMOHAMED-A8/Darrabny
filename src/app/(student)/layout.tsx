@@ -10,7 +10,6 @@ export default function StudentLayout({
     <div className="flex z-100 ">
       <Sidebar />
       <main className="flex-1  min-h-screen p-8 bg-blue-200">
-        <HomeBg></HomeBg>
         {children}
       </main>
     </div>
