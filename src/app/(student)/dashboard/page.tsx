@@ -14,7 +14,7 @@ import Sidebar from "@/app/_components/Sidebar";
 export default function DashboardPage() {
   return (
 
-    <section className=" min-h-screen  ">
+    <section className=" min-h-screen flex flex-col gap-[12px]  ">
       {/* Header */}
       <div className="w-full">
         <h1 className="text-3xl font-bold">Welcome back, Sophia</h1>

@@ -1,3 +1,5 @@
+import us from '../_components/User Dashboard Overview-after_edit.png'
+import Image from "next/image";
 type Props = {
   title: string;
   company: string;
@@ -18,19 +20,22 @@ export default function InternshipProgressCard({
   const isCompleted = status === "completed";
 
   return (
-    <div className="bg-white/60 backdrop-blur rounded-2xl p-5 shadow-sm relative">
+    <div className="bg-white/60 backdrop-blur  rounded-r-2xl  shadow-sm relative">
       <div className="flex gap-6">
         {/* Image */}
-        <div className="relative w-48 h-32 bg-gray-300 rounded-xl">
+        <Image
+  src={us}
+  alt="internship"
+  className=" w-64 "
+/>
           {isCompleted && (
             <span className="absolute top-2 left-2 bg-green-500 text-white text-xs px-3 py-1 rounded-full">
               Completed
             </span>
           )}
-        </div>
 
         {/* Content */}
-        <div className="flex-1">
+        <div className="flex-1 p-4">
           <span className="text-sm text-blue-600 font-medium">
             {week}
           </span>
