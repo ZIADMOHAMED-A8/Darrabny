@@ -20,20 +20,17 @@ export default async function updateProfileAction(
     throw new Error("Unauthorized");
   }
 
-  const [cityRaw, countryRaw] = values.address.split(",");
-  const city = cityRaw?.trim();
-  const country = countryRaw?.trim();
-
-  if (!city || !country) {
-    throw new Error("Address must be in format: City,Country");
-  }
-
   const requestBody = {
+    // fullName: values.fullName,
+    // email: values.email,
+    // phoneNumber: values.phone,
     mobileNumber: values.phone,
-    address: {
-      country,
-      city,
-    },
+    address: values.address,
+    // notifications: {
+    //   email: values.emailNotifications,
+    //   push: values.pushNotifications,
+    //   sms: values.smsNotifications,
+    // },
   };
 
   const res = await fetch("http://localhost:5000/user/UpdateAccount", {

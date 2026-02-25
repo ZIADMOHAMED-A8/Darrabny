@@ -1,4 +1,3 @@
-import HomeBg from "../_components/home-bg";
 import Sidebar from "../_components/Sidebar";
 import StudentTopBar from "../_components/StudentTopBar";
 
@@ -13,7 +12,7 @@ export default function StudentLayout({
 
       <div className="flex flex-1">
         <Sidebar />
-        <main className="flex-1 min-h-[calc(100vh-72px)] p-8 bg-blue-100">
+        <main className="flex-1 bg-blue-100 p-4 sm:p-6 md:p-8">
           {children}
         </main>
       </div>
