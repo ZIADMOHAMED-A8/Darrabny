@@ -10,6 +10,7 @@ const authRoutes = [
   "/create-pass",
 ];
 
+const secret = process.env.NEXTAUTH_SECRET;
 export default async function middleware(req: NextRequest) {
   const token = await getToken({ req });
 
