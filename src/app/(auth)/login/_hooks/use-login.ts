@@ -8,22 +8,31 @@ export function useLogin() {
   const { mutate, error, isPending } = useMutation({
     mutationFn: async (values: LoginValues) => {
       console.log(values);
-      // Call NextAuth credentials signIn
+
       const response = await signIn("credentials", {
         ...values,
         redirect: false,
       });
 
-      if (response?.error) {
-        console.log("response error:::::::::::::::::::::::::::::::::::", response);
-        throw new Error("Login failed: unauthorized" );
-      }
-      console.log("response", response);
+      console.log(response);
 
+      if (response?.error) {
+        throw new Error(response.error || "Login failed");
+      }
+
+      // 👇 redirect logic حسب role
       const callbackUrl = new URLSearchParams(location.search).get(
         "callbackUrl",
       );
-      window.location.href = callbackUrl || "/";
+
+      const redirectTo =
+        values.role === "company"
+          ? "/company/dashboard"
+          : values.role === "university"
+            ? "/university/dashboard"
+            : "/";
+
+      window.location.href = callbackUrl || redirectTo;
     },
   });
 
