@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-
+import { getu } from "./getloginstudent";
 import {
   Home,
   Briefcase,
@@ -13,6 +13,9 @@ import {
   X,
 } from "lucide-react";
 import useGetUser from "../(student)/hooks/useGetLoginUser";
+import { headers } from "next/headers";
+import { getToken } from "@/lib/utils/get-token.util";
+
 const menu = [
   { label: "Dashboard", href: "/dashboard", icon: Home },
   { label: "Internships", href: "/Inprogressinternships", icon: Briefcase },

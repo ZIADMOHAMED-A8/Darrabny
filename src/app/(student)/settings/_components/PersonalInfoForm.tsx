@@ -24,7 +24,6 @@ export default function PersonalInfoForm({
           error={errors.fullName?.message}
         >
           <input
-          readOnly
             {...register("fullName", {
               required: "Full name is required",
               minLength: {

@@ -6,6 +6,7 @@ import NotificationSettings from "./_components/NotificationSettings";
 import PersonalInfoForm from "./_components/PersonalInfoForm";
 import useUpdateProfile from "./hooks/useUpdateInfo";
 import useUpdateNotif from "./hooks/useUpdateNotif";
+import useUpdateFullName from "./hooks/useUpdateFullName";
 import useGetUser from "../hooks/useGetLoginUser";
 export type SettingsFormValues = {
   fullName: string;
@@ -34,6 +35,7 @@ export default function SettingsPage() {
 
   const { updateProfile, isPending: isProfilePending, error: profileError } = useUpdateProfile();
   const { updateNotif, isPending: isNotifPending, error: notifError } = useUpdateNotif();
+  const { updateFullName, isPending: isFullNamePending, error: fullNameError } = useUpdateFullName();
   const {
     data: userData,
     isLoading,
@@ -78,6 +80,10 @@ export default function SettingsPage() {
     setSubmitError(null);
 
     try {
+      await updateFullName({
+        fullName: data.fullName,
+        links: null,
+      });
       await updateProfile(data);
       await updateNotif({
         email: data.emailNotifications,
@@ -115,8 +121,8 @@ export default function SettingsPage() {
     );
   }
 
-  return (
-
+    return (
+    
     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-10">
       <h1 className="text-3xl font-bold">Settings</h1>
 
@@ -129,6 +135,9 @@ export default function SettingsPage() {
       {notifError ? (
         <p className="text-sm text-red-600">{notifError.message}</p>
       ) : null}
+      {fullNameError ? (
+        <p className="text-sm text-red-600">{fullNameError.message}</p>
+      ) : null}
       {userError && !isError ? (
         <p className="text-sm text-red-600">{userError.message}</p>
       ) : null}
@@ -139,10 +148,10 @@ export default function SettingsPage() {
       <div className="flex justify-end">
         <button
           type="submit"
-          disabled={isProfilePending || isNotifPending}
+          disabled={isProfilePending || isNotifPending || isFullNamePending}
           className="px-6 py-2 z-10 rounded-lg bg-blue-600 text-white disabled:opacity-60"
         >
-          {isProfilePending || isNotifPending ? "Saving..." : "Save Changes"}
+          {isProfilePending || isNotifPending || isFullNamePending ? "Saving..." : "Save Changes"}
         </button>
       </div>
     </form>
