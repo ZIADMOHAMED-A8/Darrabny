@@ -28,43 +28,89 @@ type Props = {
   onGithub?: () => void;
 };
 
-export default function LoginFormCard({
-  onForgotPassword,
-  onGithub,
-}: Props) {
+export default function LoginFormCard({ onForgotPassword, onGithub }: Props) {
   const [showPassword, setShowPassword] = useState(false);
   const { login, isPending, error } = useLogin();
+  const [role, setRole] = useState<"user" | "company" | "university">("user");
+
+  const changeRole = (selectedRole: "user" | "company" | "university") => {
+    setRole(selectedRole);
+  };
 
   const form = useForm<LoginValues>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
       email: "",
       password: "",
+       role: "user",
     },
   });
 
-  const  onSubmit: SubmitHandler<LoginValues> = (data) => {
-    login(data);
+  const onSubmit: SubmitHandler<LoginValues> = (data) => {
+    login({
+    ...data,
+    role,
+  });
   };
 
-  // 👇 ده الجزء الجديد
   const handleGoogleLogin = async () => {
-    await signIn("google", {
-    });
+    await signIn("google", {});
   };
 
   return (
     <Card className="w-full max-w-[520px] rounded-[20px] border border-black/10 bg-white/90 shadow-2xl backdrop-blur">
       <CardContent className="px-10 pb-10 pt-9">
-        <h2 className="text-center text-3xl font-semibold text-[#0B2A4A]">
-          Login
-        </h2>
+        <div className="grid grid-cols-5 text-center items-center">
+          {/* Row 1 */}
+          <h2 className="col-span-5 text-3xl font-semibold text-[#0B2A4A] mb-2">
+            Login
+          </h2>
 
+          {/* Row 2 with more space */}
+          <div className="col-span-5 grid grid-cols-5 items-center py-3">
+            <button
+              type="button"
+              onClick={() => changeRole("user")}
+              className={`text-sm font-medium pb-1 transition-all duration-200 ${
+                role === "user"
+                  ? "text-[#0A79C9] border-b-2 border-[#0A79C9]"
+                  : "text-slate-400 hover:text-[#0B2A4A]"
+              }`}
+            >
+              User
+            </button>
+
+            <span className="text-slate-300">|</span>
+
+            <button
+              type="button"
+              onClick={() => changeRole("company")}
+              className={`text-sm font-medium pb-1 transition-all duration-200 ${
+                role === "company"
+                  ? "text-[#0A79C9] border-b-2 border-[#0A79C9]"
+                  : "text-slate-400 hover:text-[#0B2A4A]"
+              }`}
+            >
+              Company
+            </button>
+
+            <span className="text-slate-300">|</span>
+
+            <button
+              type="button"
+              onClick={() => changeRole("university")}
+              className={`text-sm font-medium pb-1 transition-all duration-200 ${
+                role === "university"
+                  ? "text-[#0A79C9] border-b-2 border-[#0A79C9]"
+                  : "text-slate-400 hover:text-[#0B2A4A]"
+              }`}
+            >
+              University
+            </button>
+          </div>
+        </div>
         <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(onSubmit)}
-            className="mt-7 space-y-5"
-          >
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
             <FormField
               control={form.control}
               name="email"

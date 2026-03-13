@@ -122,13 +122,24 @@ export const authOptions: NextAuthOptions = {
       credentials: {
         email: {},
         password: {},
+        role: {
+        },
       },
 
       authorize: async (credentials) => {
         const apiUrl =
           process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:5000";
+        let url = `${apiUrl}/auth/login`;
 
-        const response = await fetch(`${apiUrl}/auth/login`, {
+        if (credentials?.role === "company") {
+          url = `${apiUrl}/company/login`;
+        }
+
+        if (credentials?.role === "university") {
+          url = `${apiUrl}/university/login`;
+        }
+
+        const response = await fetch(url, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -136,10 +147,14 @@ export const authOptions: NextAuthOptions = {
             password: credentials?.password,
           }),
         });
-
+        console.log("response from auth file :",response);
+        
         const payload = await response.json().catch(() => ({}));
-
+        console.log("credentialss from auth file :",credentials,url);
         if (!response.ok) {
+          console.log("credentialss from auth file :",credentials,url);
+          console.log("payload:", payload);
+
           throw new Error(payload?.error || payload?.message || "Login failed");
         }
 
