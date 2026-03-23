@@ -14,17 +14,7 @@ export default function CompanyInternshipsPage() {
   const [tab, setTab] = useState<CompanyInternshipStatus>("all");
 
   return (
-    <main className="relative px-16 min-h-screen overflow-hidden bg-[var(--ic-bg)] text-white">
-      {/* BG */}
-      <div className="absolute inset-0 pointer-events-none">
-        <Image
-          src="/bg.png"
-          alt=""
-          fill
-          priority
-          className="object-cover opacity-90"
-        />
-      </div>
+    <main className="relative px-16 min-h-screen overflow-hidden text-white">
 
       <div className="relative z-10 py-10">
         <CompanyInternshipsHeader />

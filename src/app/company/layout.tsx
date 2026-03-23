@@ -4,7 +4,7 @@ import Footer from "@/components/shared/footer";
 
 export default function CompanyLayout({ children }: { children: ReactNode }) {
   return (
-    <div className="min-h-screen flex flex-col bg-[var(--ic-bg)] text-white">
+    <div className="min-h-screen flex flex-col text-white">
       <CompanyNavbar />
 
       <main className="flex-1">{children}</main>

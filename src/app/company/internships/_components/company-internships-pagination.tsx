@@ -2,18 +2,32 @@
 
 export default function CompanyInternshipsPagination() {
   return (
-    <div className="mt-12 flex items-center justify-center gap-2 text-sm text-white/80">
-      <button className="px-3 py-2 rounded-md hover:bg-white/10">‹ Previous</button>
+    <div className="mt-16 flex items-center justify-center">
+      <div className="flex items-center gap-3 border-b border-[#AEB9C8] pb-3 text-[16px] text-[#0A1633]">
+        <button className="rounded-md px-2 py-1 font-medium text-[#0A1633] transition hover:text-[#1786E5]">
+          ‹ Previous
+        </button>
 
-      <div className="flex items-center gap-1">
-        <button className="h-9 w-9 rounded-md bg-black/40 text-white">1</button>
-        <button className="h-9 w-9 rounded-md hover:bg-white/10">2</button>
-        <button className="h-9 w-9 rounded-md hover:bg-white/10">3</button>
-        <span className="px-2">…</span>
-        <button className="h-9 w-9 rounded-md hover:bg-white/10">10</button>
+        <div className="flex items-center gap-2">
+          <button className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#091A37] font-semibold text-white">
+            1
+          </button>
+          <button className="flex h-10 w-10 items-center justify-center rounded-xl text-[#0A1633] transition hover:bg-[#E9EEF7]">
+            2
+          </button>
+          <button className="flex h-10 w-10 items-center justify-center rounded-xl text-[#0A1633] transition hover:bg-[#E9EEF7]">
+            3
+          </button>
+          <span className="px-1 text-[#0A1633]">...</span>
+          <button className="flex h-10 w-10 items-center justify-center rounded-xl text-[#0A1633] transition hover:bg-[#E9EEF7]">
+            10
+          </button>
+        </div>
+
+        <button className="rounded-md px-2 py-1 font-medium text-[#0A1633] transition hover:text-[#1786E5]">
+          Next ›
+        </button>
       </div>
-
-      <button className="px-3 py-2 rounded-md hover:bg-white/10">Next ›</button>
     </div>
   );
 }

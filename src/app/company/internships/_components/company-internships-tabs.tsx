@@ -9,8 +9,8 @@ type Props = {
 
 export default function CompanyInternshipsTabs({ tab, onChange }: Props) {
   return (
-    <div className="mt-6 flex justify-center">
-      <div className="flex items-center gap-10 text-sm text-white/80">
+    <div className="mt-8 flex justify-center">
+      <div className="flex items-center gap-10 border-b border-[#C9D4E5] pb-1 text-[18px]">
         <Tab
           label="All"
           active={tab === "all"}
@@ -49,13 +49,15 @@ function Tab({
     <button
       onClick={onClick}
       className={[
-        "relative pb-2 transition-colors",
-        active ? "text-[#1f7ed6] font-bold" : "text-white/80 hover:text-white",
+        "relative pb-3 font-medium transition-colors",
+        active
+          ? "text-[#2F8FF7]"
+          : "text-[#6B7280] hover:text-[#0A1633]",
       ].join(" ")}
     >
       {label}
       {active && (
-        <span className="absolute left-0 right-0 -bottom-0.5 h-[2px] bg-[#1f7ed6] rounded-full" />
+        <span className="absolute left-0 right-0 bottom-[-2px] h-[3px] rounded-full bg-[#2F8FF7]" />
       )}
     </button>
   );

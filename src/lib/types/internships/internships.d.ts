@@ -7,8 +7,19 @@ export interface InternshipCardData {
   title: string
   mode: InternshipMode
   employmentType: EmploymentType
-  duration?: string // e.g. "3 months"
+  duration?: string
   imageUrl: string
   href: string
   saved?: boolean
 }
+
+export type InternshipPostFormValues = z.infer<typeof internshipSchema>;
+
+export type InternshipPostFormProps = {
+  title?: string;
+  defaultValues?: Partial<InternshipPostFormValues>;
+  cities?: { value: string; label: string }[];
+
+  publishLabel?: string;
+  draftLabel?: string;
+};
