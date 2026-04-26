@@ -1,29 +1,14 @@
-"use client";
 
-import { useState } from "react";
-import Image from "next/image";
-
-import CompanyInternshipsHeader from "./_components/company-internships-header";
-import CompanyInternshipsTabs from "./_components/company-internships-tabs";
 import CompanyInternshipsGrid from "./_components/company-internships-grid";
-import CompanyInternshipsPagination from "./_components/company-internships-pagination";
 
-import { CompanyInternshipStatus } from "./_data/internships";
 
 export default function CompanyInternshipsPage() {
-  const [tab, setTab] = useState<CompanyInternshipStatus>("all");
 
   return (
-    <main className="relative px-16 min-h-screen overflow-hidden text-white">
+    <main className="relative min-h-screen text-white">
+      <div className="relative z-1">
+        <CompanyInternshipsGrid />
 
-      <div className="relative z-10 py-10">
-        <CompanyInternshipsHeader />
-
-        <CompanyInternshipsTabs tab={tab} onChange={setTab} />
-
-        <CompanyInternshipsGrid tab={tab} />
-
-        <CompanyInternshipsPagination />
       </div>
     </main>
   );
