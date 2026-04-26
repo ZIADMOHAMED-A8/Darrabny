@@ -15,24 +15,31 @@ export type UpdateProfilePayload = {
 export default async function updateProfileAction(
   values: UpdateProfilePayload,
 ) {
-  const token=await getToken()
-  console.log("token from action :",token);
+  const token = await getToken();
   if (!token) {
-  throw new Error("Unauthorized");
-}
-  const res = await fetch('http://localhost:5000/user/UpdateAccount', {
+    throw new Error("Unauthorized");
+  }
+
+  const requestBody = {
+    // fullName: values.fullName,
+    // email: values.email,
+    // phoneNumber: values.phone,
+    mobileNumber: values.phone,
+    address: values.address,
+    // notifications: {
+    //   email: values.emailNotifications,
+    //   push: values.pushNotifications,
+    //   sms: values.smsNotifications,
+    // },
+  };
+
+  const res = await fetch("http://localhost:5000/user/UpdateAccount", {
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",
-      Authorization:`user ${token.token.accessToken}`
+      Authorization: `user ${token.token.accessToken}`,
     },
-    body: JSON.stringify({
-    "mobileNumber": "01272526881",
-      "address": {
-    "country": "asafraaa",
-    "city": "Cairo"
-  }
-}),
+    body: JSON.stringify(requestBody),
   });
 
   if (!res.ok) {

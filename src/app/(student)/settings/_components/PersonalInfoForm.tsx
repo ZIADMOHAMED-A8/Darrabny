@@ -40,6 +40,7 @@ export default function PersonalInfoForm({
           error={errors.email?.message}
         >
           <input
+          readOnly
             {...register("email", {
               required: "Email is required",
               pattern: {
@@ -61,7 +62,7 @@ export default function PersonalInfoForm({
               required: "Phone number is required",
               pattern: {
                 value:
-                  /^\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}$/,
+                  /^\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{5}$/,
                 message: "Please enter a valid phone number",
               },
             })}
@@ -76,11 +77,12 @@ export default function PersonalInfoForm({
           <input
             {...register("address", {
               required: "Address is required",
-              minLength: {
-                value: 5,
-                message: "Address must be at least 5 characters",
+              pattern: {
+                value: /^\s*[^,]+\s*,\s*[^,]+\s*$/,
+                message: "Address must be in format: City,Country",
               },
             })}
+            placeholder="Cairo,Egypt"
             className="input"
           />
         </Field>
