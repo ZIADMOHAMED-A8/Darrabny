@@ -1,7 +1,11 @@
 import { z } from "zod";
 
 export const internshipSchema = z.object({
-  internshipTittle: z.string().trim().min(3, "Title is too short").max(80, "Title is too long"),
+  internshipTittle: z
+    .string()
+    .trim()
+    .min(3, "Title is too short")
+    .max(80, "Title is too long"),
 
   internshipLocation: z.string().trim().min(1, "Location is required"),
 
@@ -19,10 +23,6 @@ export const internshipSchema = z.object({
 
   softSkills: z.array(z.string().trim().min(1)).default([]),
 
-  seniorityLevel: z.enum(["Junior", "Mid-Level", "Senior"]),
-
-  status: z.enum(["onboarding", "draft"]),
-
   startDate: z.string().min(1, "Start date is required"),
 
   durationInMonths: z.coerce
@@ -30,7 +30,7 @@ export const internshipSchema = z.object({
     .min(1, "Duration must be at least 1 month"),
 
   closed: z.boolean(),
-  thumbnail: z.instanceof(File).optional().nullable(),
+  thumbnail: z.union([z.instanceof(File), z.string(), z.null()]).optional(),
 });
 
 export type InternshipSchema = z.infer<typeof internshipSchema>;

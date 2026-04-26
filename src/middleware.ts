@@ -38,13 +38,13 @@ export default async function middleware(req: NextRequest) {
   }
 
   // 3) لو صفحة محمية وانت مش لوجين
-  // if (!isAuthRoute && !token) {
-  //   const loginUrl = new URL("/login", req.url);
-  //   // رجع معاه الصفحة اللي كان عايز يروح لها
-  //   const fullPath = pathname + search;
-  //   loginUrl.searchParams.set("callbackUrl", fullPath);
-  //   return NextResponse.redirect(loginUrl);
-  // }
+  if (!isAuthRoute && !token) {
+    const loginUrl = new URL("/login", req.url);
+    // رجع معاه الصفحة اللي كان عايز يروح لها
+    const fullPath = pathname + search;
+    loginUrl.searchParams.set("callbackUrl", fullPath);
+    return NextResponse.redirect(loginUrl);
+  }
 
   return NextResponse.next();
 }

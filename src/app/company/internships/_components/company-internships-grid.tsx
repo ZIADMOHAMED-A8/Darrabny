@@ -1,37 +1,13 @@
-"use client";
-
-import { useMemo } from "react";
 import InternshipCard from "@/components/shared/internship-card";
-import {
-  COMPANY_INTERNSHIPS,
-  CompanyInternshipStatus,
-} from "../_data/internships";
+import { getInternships } from "@/lib/api/company/company-internships.api";
 
-type Props = {
-  tab: CompanyInternshipStatus;
-};
-
-export default function CompanyInternshipsGrid({ tab }: Props) {
-  const filtered = useMemo(() => {
-    if (tab === "all") return COMPANY_INTERNSHIPS;
-    return COMPANY_INTERNSHIPS.filter((x) => x.status === tab);
-  }, [tab]);
-
-  const onToggleSave = (id: string) => {
-    console.log("toggle save", id);
-  };
+export default async function CompanyInternshipsGrid() {
+  const internships = await getInternships();
 
   return (
-    <div className="mt-8 grid gap-6 md:grid-cols-2">
-      {filtered.map((it) => (
-        <InternshipCard
-          key={it.id}
-          data={{
-            ...it,
-            href: `/internships/${it.id}`,
-          }}
-          onToggleSave={() => onToggleSave(it.id)}
-        />
+    <div className="grid items-stretch gap-6 md:grid-cols-2">
+      {internships.map((it: any) => (
+        <InternshipCard key={it.id} data={it} href={`./internships/${it.id}`} />
       ))}
     </div>
   );

@@ -15,7 +15,6 @@ import {
 } from "@/components/ui/form";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
-import { Switch } from "@/components/ui/switch";
 import {
   Select,
   SelectContent,
@@ -33,6 +32,7 @@ import {
 } from "@/lib/types/internships/internships";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { useUpdateInternship } from "../_hooks/use-update-internship";
 
 const DEFAULT_CITIES = [
   { value: "cairo", label: "Cairo" },
@@ -50,16 +50,15 @@ const DEFAULT_VALUES: InternshipPostFormValues = {
   technicalSkills: ["HTML", "CSS", "JavaScript", "React", "Next.js"],
   softSkills: ["Teamwork", "Problem-solving", "Communication"],
   startDate: "2026-04-01",
-  seniorityLevel: "Junior",
-  status: "onboarding",
   closed: false,
   thumbnail: null,
 };
 
 type Props = InternshipPostFormProps & {
   onCancel?: () => void;
+  mode?: "create" | "edit";
+  internshipId?: string;
 };
-
 const inputLike =
   "h-12 rounded-xl border border-[#0B2A4A]/50 bg-white px-4 text-[#0B2A4A] placeholder:text-[#0B2A4A]/50 focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-[#1E90FF]";
 
@@ -139,6 +138,8 @@ export default function InternshipPostForm({
   cities = DEFAULT_CITIES,
   publishLabel = "Publish Post",
   onCancel,
+  mode = "create",
+  internshipId,
 }: Props) {
   const form = useForm<InternshipPostFormValues>({
     resolver: zodResolver(internshipSchema),
@@ -149,29 +150,69 @@ export default function InternshipPostForm({
   });
 
   const { addInternship, isPending, error } = useAddInternship();
-
+  const {
+    updateInternship,
+    isPending: isUpdating,
+    error: updateError,
+  } = useUpdateInternship();
   function submit(values: InternshipPostFormValues) {
-    console.log("FORM SUBMIT", values);
     const formData = new FormData();
 
-    Object.entries(values).forEach(([key, value]) => {
-      if (key === "thumbnail" && value) {
-        formData.append("thumbnail", value as File);
-      } else if (value !== null && value !== undefined) {
-        // stringify arrays and booleans
-        formData.append(
-          key,
-          typeof value === "object" ? JSON.stringify(value) : String(value),
-        );
-      }
+    // =========================
+    // Basic Fields
+    // =========================
+    formData.append("internshipTittle", values.internshipTittle);
+    formData.append("internshipDescription", values.internshipDescription);
+    formData.append("internshipLocation", values.internshipLocation);
+    formData.append("workingTime", values.workingTime);
+    formData.append("startDate", new Date(values.startDate).toISOString());
+
+    formData.append(
+      "durationInMonths",
+      String(Number(values.durationInMonths)),
+    );
+    formData.append("closed", String(values.closed));
+
+    // =========================
+    values.technicalSkills.forEach((skill: string) => {
+      formData.append("technicalSkills", skill);
     });
 
+    values.softSkills.forEach((skill: string) => {
+      formData.append("softSkills", skill);
+    });
+
+    // =========================
+    // Thumbnail
+    // =========================
+    if (values.thumbnail instanceof File) {
+      formData.append("thumbnail", values.thumbnail);
+    }
+
+    // =========================
+    // Debugging
+    // =========================
+    console.log("========== FormData ==========");
+    for (const [key, value] of formData.entries()) {
+      console.log(`${key}:`, value);
+    }
+    console.log("==============================");
+
+    // =========================
+    // Create Internship
+    // =========================
     addInternship(formData, {
-      onSuccess: () => alert("Posted successfully"),
-      onError: (err) => alert(err.message),
+      onSuccess: () => {
+        alert("Internship posted successfully 🎉");
+        form.reset({
+          ...DEFAULT_VALUES,
+        });
+      },
+      onError: (error) => {
+        alert(error.message);
+      },
     });
   }
-
   function saveDraft() {
     const values = form.getValues();
     submit({
@@ -362,7 +403,7 @@ export default function InternshipPostForm({
               </div>
 
               {/* Seniority Level */}
-              <FormField
+              {/* <FormField
                 control={form.control}
                 name="seniorityLevel"
                 render={({ field }) => (
@@ -388,7 +429,7 @@ export default function InternshipPostForm({
                     <FormMessage />
                   </FormItem>
                 )}
-              />
+              /> */}
 
               {/* Status */}
               {/* <FormField
@@ -437,52 +478,55 @@ export default function InternshipPostForm({
               /> */}
 
               {/* Thumbnail */}
-             <FormField
-  control={form.control}
-  name="thumbnail"
-  render={({ field }) => (
-    <FormItem>
-      <Label className={smallCaps}>Thumbnail</Label>
+              <FormField
+                control={form.control}
+                name="thumbnail"
+                render={({ field }) => (
+                  <FormItem>
+                    <Label className={smallCaps}>Thumbnail</Label>
 
-      <FormControl>
-        <div className="flex items-center gap-4">
-          <label className="cursor-pointer rounded-xl border border-[#0B2A4A]/40 bg-white px-4 py-2 text-sm font-semibold text-[#0B2A4A] hover:bg-[#E3F0FA] transition">
-            Choose Image
-            <input
-              type="file"
-              accept="image/*"
-              className="hidden"
-              onChange={(e) => {
-                const file = e.target.files?.[0] || null;
+                    <FormControl>
+                      <div className="flex items-center gap-4">
+                        <label className="cursor-pointer rounded-xl border border-[#0B2A4A]/40 bg-white px-4 py-2 text-sm font-semibold text-[#0B2A4A] hover:bg-[#E3F0FA] transition">
+                          Choose Image
+                          <input
+                            type="file"
+                            accept="image/*"
+                            className="hidden"
+                            onChange={(e) => {
+                              const file = e.target.files?.[0] || null;
 
-                // ===== Debug Info =====
-                console.log("Selected file:", file);
-                console.log("File name:", file?.name);
-                console.log("Is File instance:", file instanceof File);
-                console.log("Type of value:", typeof file);
+                              // ===== Debug Info =====
+                              console.log("Selected file:", file);
+                              console.log("File name:", file?.name);
+                              console.log(
+                                "Is File instance:",
+                                file instanceof File,
+                              );
+                              console.log("Type of value:", typeof file);
 
-                field.onChange(file);
-              }}
-            />
-          </label>
+                              field.onChange(file);
+                            }}
+                          />
+                        </label>
 
-          <span className="text-sm text-[#0B2A4A]/70">
-            {field.value?.name || "No file selected"}
-          </span>
-        </div>
-      </FormControl>
+                        <span className="text-sm text-[#0B2A4A]/70">
+                          {field.value?.name || "No file selected"}
+                        </span>
+                      </div>
+                    </FormControl>
 
-      <FormMessage />
+                    <FormMessage />
 
-      {/* Optional: live debug of form state */}
-      <pre className="text-xs text-blue-500">
-        {field.value && typeof field.value === "object"
-          ? `File name: ${field.value.name}, type: ${field.value.type}, size: ${field.value.size} bytes`
-          : "No file selected"}
-      </pre>
-    </FormItem>
-  )}
-/>
+                    {/* Optional: live debug of form state */}
+                    <pre className="text-xs text-blue-500">
+                      {field.value && typeof field.value === "object"
+                        ? `File name: ${field.value.name}, type: ${field.value.type}, size: ${field.value.size} bytes`
+                        : "No file selected"}
+                    </pre>
+                  </FormItem>
+                )}
+              />
             </div>
 
             {/* SKILLS */}
@@ -626,16 +670,22 @@ export default function InternshipPostForm({
                 <Button
                   type="submit"
                   className="rounded-xl bg-[#1E90FF] hover:bg-[#187bcd]"
-                  disabled={isPending}
+                  disabled={isPending || isUpdating}
                 >
-                  {isPending ? "Publishing..." : publishLabel}
+                  {isUpdating
+                    ? "Updating..."
+                    : isPending
+                      ? "Publishing..."
+                      : mode === "edit"
+                        ? "Update Internship"
+                        : publishLabel}
                 </Button>
               </div>
             </div>
           </form>
-          {/* <pre className="text-red-500 text-xs">
-  {JSON.stringify(form.formState.errors, null, 2)}
-</pre> */}
+          <pre className="text-red-500 text-xs">
+            {JSON.stringify(form.formState.errors, null, 2)}
+          </pre>
         </Form>
       </CardContent>
     </Card>
