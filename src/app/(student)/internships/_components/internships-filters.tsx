@@ -49,17 +49,17 @@ export default function InternshipsFilters({
   SKILLS,
 }: Props) {
   return (
-    <section className="mt-10 rounded-2xl border border-white/15 bg-white/5 p-6 shadow-[0_10px_30px_rgba(0,0,0,0.25)]">
+    <section className="mt-10 rounded-2xl border border-[#0b1f33]/15 bg-white p-7 shadow-[0_18px_50px_rgba(16,24,40,0.14)] md:p-10">
       <div className="grid gap-4 md:grid-cols-3">
         {/* Search */}
         <div className="md:col-span-1">
-          <div className="flex items-center gap-2 rounded-lg bg-white px-3 py-2 text-sm text-slate-700">
-            <Search className="h-4 w-4 text-slate-400" />
+          <div className="flex items-center gap-2 rounded-lg border border-[#0b1f33]/20 bg-[#f6f7fb] px-3 py-2 text-sm text-[#0b1f33]">
+            <Search className="h-4 w-4 text-[#0b1f33]/45" />
             <input
               value={q}
               onChange={(e) => setQ(e.target.value)}
               placeholder={`Keywords (e.g. "Software", "Marketing")`}
-              className="w-full bg-transparent outline-none placeholder:text-slate-400"
+              className="w-full bg-transparent outline-none placeholder:text-[#0b1f33]/45"
             />
           </div>
         </div>
@@ -89,14 +89,14 @@ export default function InternshipsFilters({
       <div className="mt-6 flex items-center justify-center gap-3">
         <button
           onClick={onClear}
-          className="rounded-md bg-white px-5 py-2 text-sm font-semibold text-[#062845] hover:bg-white/90"
+          className="rounded-md border border-[#0b1f33]/15 bg-white px-6 py-2.5 text-sm font-semibold text-[#0b1f33] shadow-sm hover:bg-[#0b1f33]/5"
         >
           Clear
         </button>
 
         <button
           onClick={onApply}
-          className="rounded-md bg-[#2196F3] px-5 py-2 text-sm font-semibold text-white hover:bg-[#1e88e5]"
+          className="rounded-md bg-[var(--ds-primary)] px-6 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-[var(--ds-primary-dark)]"
         >
           Apply Filters
         </button>
@@ -120,7 +120,7 @@ function Select({
     <select
       value={value}
       onChange={(e) => onChange(e.target.value)}
-      className="w-full rounded-lg bg-white px-3 py-2 text-sm text-slate-700 outline-none"
+      className="w-full appearance-none rounded-lg border border-[#0b1f33]/20 bg-[#f6f7fb] px-3 py-2 text-sm text-[#0b1f33] outline-none"
     >
       <option value="">{placeholder}</option>
       {options.map((o) => (

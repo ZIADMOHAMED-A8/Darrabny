@@ -20,7 +20,7 @@ export default function HomePage() {
   // Effects
 
   return (
-    <main className="relative px-16 min-h-screen overflow-hidden bg-[var(--ic-bg)] text-white">
+    <main className="relative min-h-screen overflow-hidden bg-[#f5f8ff] px-4 text-[var(--ds-ink)] md:px-16">
       <HomeBg />
       <div className="relative z-10">
         <HeroSection />

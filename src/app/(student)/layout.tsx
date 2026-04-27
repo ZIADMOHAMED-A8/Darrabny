@@ -12,7 +12,7 @@ export default function StudentLayout({
 
       <div className="flex flex-1">
         <Sidebar />
-        <main className="flex-1 bg-blue-100 p-4 sm:p-6 md:p-8">
+        <main className="flex-1 bg-[#f5f8ff] p-4 sm:p-6 md:p-8">
           {children}
         </main>
       </div>

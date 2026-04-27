@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation"
-import { INTERNSHIPS } from "@/app/internships/_data/internships"
+import { INTERNSHIPS } from "../_data/internships"
 import InternshipDetails from "./_components/internship-details"
 
 export default function InternshipDetailsPage({

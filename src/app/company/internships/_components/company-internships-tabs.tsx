@@ -28,8 +28,8 @@ export default function CompanyInternshipsTabs({ tab, onChange }: Props) {
         />
         <Tab
           label="Starting soon"
-          active={tab === "starting"}
-          onClick={() => onChange("starting")}
+          active={tab === "starting_soon"}
+          onClick={() => onChange("starting_soon")}
         />
       </div>
     </div>

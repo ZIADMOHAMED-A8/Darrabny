@@ -8,6 +8,7 @@ export type Company = {
   cover: string;
   featured?: boolean;
   industry?: string;
+  tagline?: string;
 };
 
 export const COMPANIES: Company[] = [

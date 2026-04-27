@@ -1,4 +1,8 @@
-export type CompanyInternshipStatus = "all" | "active" | "closed" | "starting";
+export type CompanyInternshipStatus =
+  | "all"
+  | "active"
+  | "closed"
+  | "starting_soon";
 
 export type InternshipCardData = {
   id: string;
@@ -11,7 +15,7 @@ export type InternshipCardData = {
   saved?: boolean;
 
   // company page extras
-  status: CompanyInternshipStatus; // "active" | "closed" | "starting"
+  status: CompanyInternshipStatus; // "active" | "closed" | "starting_soon"
 };
 
 export const COMPANY_INTERNSHIPS: InternshipCardData[] = [
@@ -37,7 +41,7 @@ export const COMPANY_INTERNSHIPS: InternshipCardData[] = [
     imageUrl:
       "/images.unsplash.com/photo-1526481280695-3c687fd5432c?w=1200&q=80",
     saved: false,
-    status: "starting",
+    status: "starting_soon",
   },
   {
     id: "3",
