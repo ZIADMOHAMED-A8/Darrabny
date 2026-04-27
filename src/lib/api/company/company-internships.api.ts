@@ -14,6 +14,6 @@ export async function getInternships() {
   );
   const data = await res.json();
   console.log("data ::", data);
-  
+
   return data?.data ?? [];
 }
