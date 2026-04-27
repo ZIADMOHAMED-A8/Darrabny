@@ -1,6 +1,8 @@
 import { getToken } from "next-auth/jwt";
 import { NextRequest, NextResponse } from "next/server";
 // import { getToken } from "./lib/utils/get-token.util";
+import { signOut } from "next-auth/react";
+
 
 const authRoutes = [
   "/login",
@@ -10,39 +12,42 @@ const authRoutes = [
   "/create-pass",
 ];
 
-const secret = process.env.NEXTAUTH_SECRET;
-export default async function middleware(req: NextRequest) {
-  const token = await getToken({ req });
+// Add static asset extensions to ignore
+const PUBLIC_FILE = /\.(.*)$/; // matches any path with a file extension
 
+const secret = process.env.NEXTAUTH_SECRET;
+
+export default async function middleware(req: NextRequest) {
   const { pathname, search } = req.nextUrl;
 
-  const isAuthRoute = authRoutes.includes(pathname);
+  // ✅ Skip middleware for static files (images, fonts, etc.)
+  if (
+    PUBLIC_FILE.test(pathname) ||
+    pathname.startsWith("/_next") ||
+    pathname.startsWith("/api/auth") ||
+    pathname.startsWith("/favicon")
+  ) {
+    return NextResponse.next();
+  }
+
+  const token = await getToken({ req, secret });
+
+  const isAuthRoute = authRoutes.some(route => pathname.startsWith(route));
   const isHome = pathname === "/";
-  console.log("TOKEN FROM MIDDLEWARE :::::::::::::::::::::::::::::::::", token);
 
-  // console.log("PATH:", pathname);
-  // console.log("TOKEN:", token);
-  // console.log("ENV NEXTAUTH_URL:", process.env.NEXTAUTH_URL);
-  // console.log("COOKIES:", req.cookies.getAll());
+  console.log("TOKEN FROM MIDDLEWARE:", token ? "exists" : "null", "| PATH:", pathname);
 
-  // 1) لو معاك توكن وداخل على صفحة لوجين/ساين أب → رجعك للهو
   if (isAuthRoute && token) {
     return NextResponse.redirect(new URL("/", req.url));
   }
 
-  // 2) لو انت على الهوم ومفيش توكن → روح لوجين
   if (isHome && !token) {
-    console.log(token);
-
     return NextResponse.redirect(new URL("/login", req.url));
   }
 
-  // 3) لو صفحة محمية وانت مش لوجين
   if (!isAuthRoute && !token) {
     const loginUrl = new URL("/login", req.url);
-    // رجع معاه الصفحة اللي كان عايز يروح لها
-    const fullPath = pathname + search;
-    loginUrl.searchParams.set("callbackUrl", fullPath);
+    loginUrl.searchParams.set("callbackUrl", pathname + search);
     return NextResponse.redirect(loginUrl);
   }
 
@@ -50,5 +55,14 @@ export default async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/((?!api/auth|_next/static|_next/image|favicon.ico).*)"],
+  matcher: [
+    /*
+     * Match all paths EXCEPT:
+     * - api/auth (NextAuth routes)
+     * - _next/static (static files)
+     * - _next/image (image optimization)
+     * - Files with extensions (images, fonts, etc.)
+     */
+    "/((?!api/auth|_next/static|_next/image|favicon.ico|.*\\..*).*)",
+  ],
 };

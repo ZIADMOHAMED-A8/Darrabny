@@ -1,58 +1,97 @@
 "use client";
 
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { Bell, BriefcaseBusiness, MessageSquare, Search } from "lucide-react";
+
 const openSidebar = () => {
   window.dispatchEvent(new Event("student-sidebar:open"));
 };
 
 export default function StudentTopBar() {
-  return (
-    <header className="z-50 border-b border-[#7da8f4] bg-[linear-gradient(110deg,#1f67e7_0%,#6ea2f5_56%,#8ab6ff_100%)]">
-      <div className=" flex min-h-[64px] w-full px-8 items-center justify-between gap-2  py-3 sm:min-h-[72px]  ">
-        <div className="flex items-center text-white">
-          <div className="flex items-center gap-2 sm:gap-3">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg border border-white/40 bg-white/20 sm:h-9 sm:w-9">
-              <svg width="19" height="19" viewBox="0 0 24 24" fill="none">
-              <path d="M6 6h12v12H6V6Zm0 4h12M9 4v2m6-2v2" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
-              </svg>
-            </div>
-            <p className="text-xl font-semibold leading-none sm:text-2xl md:text-[30px]">
-              Darrabny
-            </p>
-          </div>
-        </div>
+  const pathname = usePathname();
 
-        <nav className="hidden items-center rounded-full border border-white/30 bg-white/15 text-white md:flex">
-          <button className="px-3 py-2 text-sm font-medium lg:px-5 lg:text-base">
-            Home
-          </button>
-          <button className="px-3 py-2 text-sm font-medium lg:px-5 lg:text-base">
-            Internships
-          </button>
-          <button className="px-3 py-2 text-sm font-medium lg:px-5 lg:text-base">
-            Companies
-          </button>
-          <button className="px-3 py-2 text-sm font-medium lg:px-5 lg:text-base">
-            Career Counseling
-          </button>
+  const links = [
+    { href: "/dashboard", label: "Dashboard" },
+    { href: "/internships", label: "Internships" },
+    { href: "/companies", label: "Companies" },
+    { href: "/career-consulting", label: "Career Counseling" },
+  ];
+
+  return (
+    <header className="sticky top-0 z-50 border-b border-[#0b1f33]/10 bg-white/85 backdrop-blur">
+      <div className="mx-auto flex min-h-[64px] max-w-7xl items-center justify-between gap-3 px-4 py-3 sm:min-h-[72px] md:px-8">
+        {/* Left */}
+        <Link href="/dashboard" className="flex items-center gap-3">
+          <div className="grid h-9 w-9 place-items-center rounded-lg bg-[var(--ds-primary)] text-white">
+            <BriefcaseBusiness className="h-5 w-5" />
+          </div>
+          <p className="text-xl font-bold tracking-tight text-[var(--ds-primary)] sm:text-2xl">
+            Darrabny
+          </p>
+        </Link>
+
+        {/* Center */}
+        <nav className="hidden items-center gap-8 text-sm font-medium text-[#0b1f33]/70 md:flex">
+          {links.map((l) => {
+            const active = pathname === l.href || pathname.startsWith(`${l.href}/`);
+
+            return (
+              <Link
+                key={l.href}
+                href={l.href}
+                className={[
+                  "relative py-2 transition-colors",
+                  active ? "text-[var(--ds-primary)]" : "hover:text-[#0b1f33]",
+                ].join(" ")}
+              >
+                {l.label}
+                {active && (
+                  <span className="absolute inset-x-0 -bottom-[2px] mx-auto h-[2px] w-10 rounded-full bg-[var(--ds-primary)]" />
+                )}
+              </Link>
+            );
+          })}
         </nav>
 
-        <div className="flex items-center gap-2 text-white sm:gap-3 md:gap-4">
+        {/* Right */}
+        <div className="flex items-center gap-2 sm:gap-3">
+          <div className="relative hidden w-[280px] md:block">
+            <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#0b1f33]/45" />
+            <input
+              placeholder="Search internships..."
+              className="h-10 w-full rounded-xl border border-[#0b1f33]/15 bg-white pl-9 pr-3 text-sm text-[#0b1f33] shadow-sm outline-none placeholder:text-[#0b1f33]/35 focus:border-[#0a79c9]/40"
+            />
+          </div>
+
           <button
             type="button"
             aria-label="Open sidebar"
             onClick={openSidebar}
-            className="flex h-8 w-8 items-center justify-center rounded-full border border-white/35 bg-white/20 md:hidden"
+            className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-[#0b1f33]/15 bg-white text-[#0b1f33]/70 shadow-sm hover:bg-[#0b1f33]/5 md:hidden"
           >
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
               <path d="M8 7h8M8 12h8M8 17h8" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
             </svg>
           </button>
-          <button className="flex h-8 w-8 items-center justify-center rounded-full border border-white/35 bg-white/20">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-              <path d="M12 21a2.2 2.2 0 0 0 2.2-2.2H9.8A2.2 2.2 0 0 0 12 21Zm7-4.4H5.1l1.7-2.4v-4a5.2 5.2 0 1 1 10.4 0v4l1.8 2.4Z" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" />
-            </svg>
+
+          <Link
+            href="/notifications"
+            aria-label="Notifications"
+            className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-[#0b1f33]/15 bg-white text-[#0b1f33]/70 shadow-sm hover:bg-[#0b1f33]/5"
+          >
+            <Bell className="h-5 w-5" />
+          </Link>
+
+          <button
+            type="button"
+            aria-label="Messages"
+            className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-[#0b1f33]/15 bg-white text-[#0b1f33]/70 shadow-sm hover:bg-[#0b1f33]/5"
+          >
+            <MessageSquare className="h-5 w-5" />
           </button>
-          <div className="h-8 w-8 rounded-full border-2 border-white/70 bg-[linear-gradient(145deg,#f6c8a2,#9b6d4a)] sm:h-9 sm:w-9 md:h-10 md:w-10" />
+
+          <div className="h-10 w-10 rounded-full border border-[#0b1f33]/10 bg-[linear-gradient(145deg,#f6c8a2,#9b6d4a)] shadow-sm" />
         </div>
       </div>
     </header>

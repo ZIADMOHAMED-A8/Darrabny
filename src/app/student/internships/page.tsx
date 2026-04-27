@@ -11,6 +11,7 @@ import {
   MapPin,
 } from "lucide-react";
 import InternshipsFilters from "./_components/internships-filters";
+import StudentFooter from "@/components/shared/student-footer";
 
 type Internship = {
   id: string;
@@ -34,8 +35,8 @@ const INTERNSHIPS: Internship[] = [
     duration: "3 months",
     match: 98,
     reason:
-      "Your recent “E-commerce Dashboard” project used React and Tailwind, which are the primary tech stack for this role.",
-    image: "/images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=800&q=80",
+      'Your recent "E-commerce Dashboard" project used React and Tailwind, which are the primary tech stack for this role.',
+    image: "/home/featured-internships/Img-1.png",
   },
   {
     id: "2",
@@ -47,7 +48,7 @@ const INTERNSHIPS: Internship[] = [
     match: 98,
     reason:
       "Strong fit for analytical thinking + dashboards and reporting. Your projects show consistent data work.",
-    image: "/images.unsplash.com/photo-1524758631624-e2822e304c36?w=800&q=80",
+    image: "/home/featured-internships/Img-2.png",
   },
   {
     id: "3",
@@ -56,7 +57,7 @@ const INTERNSHIPS: Internship[] = [
     workMode: "Remote",
     type: "Full-time",
     duration: "3 months",
-    image: "/images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=800&q=80",
+    image: "/home/featured-internships/Img-1.png",
   },
   {
     id: "4",
@@ -65,7 +66,7 @@ const INTERNSHIPS: Internship[] = [
     workMode: "Hybrid",
     type: "Part-time",
     duration: "6 months",
-    image: "/images.unsplash.com/photo-1526481280695-3c687fd5432c?w=800&q=80",
+    image: "/home/featured-internships/Img-3.png",
   },
   {
     id: "5",
@@ -74,7 +75,7 @@ const INTERNSHIPS: Internship[] = [
     workMode: "On-site",
     type: "Full-time",
     duration: "3 months",
-    image: "/images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&q=80",
+    image: "/home/featured-internships/Img-2.png",
   },
   {
     id: "6",
@@ -83,7 +84,7 @@ const INTERNSHIPS: Internship[] = [
     workMode: "Remote",
     type: "Full-time",
     duration: "6 months",
-    image: "/images.unsplash.com/photo-1621761191319-c6fb62004040?w=800&q=80",
+    image: "/home/featured-internships/Img-1.png",
   },
   {
     id: "7",
@@ -92,7 +93,7 @@ const INTERNSHIPS: Internship[] = [
     workMode: "On-site",
     type: "Part-time",
     duration: "12 months",
-    image: "/images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=800&q=80",
+    image: "/home/featured-internships/Img-3.png",
   },
   {
     id: "8",
@@ -101,7 +102,7 @@ const INTERNSHIPS: Internship[] = [
     workMode: "Hybrid",
     type: "Full-time",
     duration: "3 months",
-    image: "/images.unsplash.com/photo-1559028012-481c04fa702d?w=800&q=80",
+    image: "/home/featured-internships/Img-2.png",
   },
 ];
 
@@ -172,21 +173,41 @@ export default function InternshipsPage() {
   return (
     <div className="relative">
       {/* Background */}
-      <div className="absolute inset-0 -z-10 bg-[var(--ic-bg)]" />
-      <div className="absolute inset-0 -z-10 opacity-70">
-        <div className="absolute right-0 top-32 h-[520px] w-[520px] rounded-full bg-[#2196F3]/15 blur-3xl" />
-        <div className="absolute left-0 bottom-0 h-[520px] w-[520px] rounded-full bg-white/5 blur-3xl" />
+      <div className="absolute inset-0 -z-10">
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              "linear-gradient(180deg, #f8fbff 0%, #f3f7ff 45%, #eef4ff 100%)",
+          }}
+        />
+        <div
+          className="absolute inset-0 opacity-[0.35]"
+          style={{
+            backgroundImage:
+              "radial-gradient(circle at 1px 1px, rgba(6,48,88,0.10) 1px, rgba(255,255,255,0) 1px)",
+            backgroundSize: "22px 22px",
+          }}
+        />
+        <div className="absolute inset-0 opacity-[0.85]">
+          <div className="absolute left-[-120px] top-24 h-[520px] w-[520px] rounded-full bg-[#d7e4ff]/70 blur-3xl" />
+          <div className="absolute right-[-180px] top-64 h-[560px] w-[560px] rounded-full bg-[#c1d2ee]/55 blur-3xl" />
+          <div className="absolute left-1/2 top-[520px] h-[620px] w-[620px] -translate-x-1/2 rounded-full bg-[#d7e4ff]/55 blur-3xl" />
+        </div>
       </div>
 
-      <div className="mx-auto px-16 py-10">
+      <div className="mx-auto max-w-6xl py-10 md:py-14">
         {/* Hero */}
         <div className="text-center">
-          <h1 className="mx-auto inline-flex rounded-2xl bg-white/10 px-8 py-4 text-3xl md:text-5xl font-extrabold tracking-tight text-white shadow-sm">
-            Explore&nbsp;
-            <span className="text-white">Internship</span>&nbsp;Opportunities
+          <h1 className="text-4xl font-extrabold tracking-tight text-[#0b1f33] drop-shadow-sm md:text-6xl">
+            Explore{" "}
+            <span className="bg-gradient-to-r from-[#0a79c9] to-[#3aa5ff] bg-clip-text text-transparent">
+              Internship
+            </span>{" "}
+            Opportunities
           </h1>
 
-          <p className="mx-auto mt-4 max-w-2xl text-sm md:text-base text-white/80">
+          <p className="mx-auto mt-4 max-w-2xl text-sm text-[#0b1f33]/70 md:text-base">
             Find the perfect internship to kickstart your career. Use the
             filters below to narrow down your search and discover opportunities
             that match your interests and skills.
@@ -217,11 +238,11 @@ export default function InternshipsPage() {
         />
 
         {/* Section title */}
-        <div className="mt-8">
-          <h2 className="text-2xl md:text-3xl font-bold text-white">
+        <div className="mt-14">
+          <h2 className="text-2xl font-bold text-[#0b1f33] md:text-3xl">
             Recommended Internships
           </h2>
-          <div className="mt-4 h-px w-full bg-white/15" />
+          <div className="mt-4 h-px w-full bg-[#0b1f33]/10" />
         </div>
 
         {/* Grid */}
@@ -232,10 +253,10 @@ export default function InternshipsPage() {
         </section>
 
         {/* Pagination */}
-        <div className="mt-10 flex items-center justify-center gap-2 text-sm text-white/80">
+        <div className="mt-10 flex items-center justify-center gap-2 text-sm text-[#0b1f33]/70">
           <button
             onClick={() => setPage((p) => Math.max(1, p - 1))}
-            className="px-3 py-2 rounded-md hover:bg-white/10"
+            className="px-3 py-2 rounded-md hover:bg-[#0b1f33]/5"
           >
             ‹ Previous
           </button>
@@ -250,7 +271,9 @@ export default function InternshipsPage() {
                   onClick={() => setPage(p)}
                   className={[
                     "h-9 w-9 rounded-md",
-                    active ? "bg-black/40 text-white" : "hover:bg-white/10",
+                    active
+                      ? "bg-[#0b1f33] text-white"
+                      : "hover:bg-[#0b1f33]/5",
                   ].join(" ")}
                 >
                   {p}
@@ -261,7 +284,7 @@ export default function InternshipsPage() {
             {totalPages > 5 && (
               <button
                 onClick={() => setPage(totalPages)}
-                className="h-9 w-9 rounded-md hover:bg-white/10"
+                className="h-9 w-9 rounded-md hover:bg-[#0b1f33]/5"
               >
                 {totalPages}
               </button>
@@ -275,6 +298,8 @@ export default function InternshipsPage() {
             Next ›
           </button>
         </div>
+
+        <StudentFooter />
       </div>
     </div>
   );
@@ -288,7 +313,7 @@ function InternshipCard({
   priority?: boolean;
 }) {
   return (
-    <div className="relative rounded-2xl bg-[#dbeafe] text-[#062845] shadow-[0_10px_30px_rgba(0,0,0,0.25)] overflow-hidden">
+    <div className="relative overflow-hidden rounded-2xl border border-[#0b1f33]/15 bg-white shadow-[0_18px_50px_rgba(16,24,40,0.12)]">
       {/* Match ribbon */}
       {typeof it.match === "number" && (
         <div className="absolute -right-10 top-6 rotate-45 bg-[#2196F3] px-10 py-1 text-xs font-bold text-white shadow">
@@ -296,9 +321,9 @@ function InternshipCard({
         </div>
       )}
 
-      <div className="flex gap-4 p-4">
+      <div className="flex gap-4 p-4 md:p-5">
         {/* Image */}
-        <div className="relative h-24 w-28 shrink-0 overflow-hidden rounded-xl bg-white">
+        <div className="relative h-24 w-28 shrink-0 overflow-hidden rounded-xl bg-[#f6f7fb]">
           {it.image ? (
             <Image
               src={it.image}
@@ -316,12 +341,12 @@ function InternshipCard({
 
         {/* Content */}
         <div className="min-w-0 flex-1">
-          <p className="text-xs font-semibold text-slate-600">{it.company}</p>
-          <h3 className="mt-0.5 text-base md:text-lg font-extrabold truncate">
+          <p className="text-xs font-semibold text-[#0b1f33]/60">{it.company}</p>
+          <h3 className="mt-0.5 truncate text-base font-extrabold text-[#0b1f33] md:text-lg">
             {it.title}
           </h3>
 
-          <div className="mt-2 flex flex-wrap items-center gap-3 text-xs text-slate-600">
+          <div className="mt-2 flex flex-wrap items-center gap-3 text-xs text-[#0b1f33]/60">
             <span className="inline-flex items-center gap-1">
               <MapPin className="h-3.5 w-3.5" /> {it.workMode}
             </span>
@@ -335,10 +360,10 @@ function InternshipCard({
 
           {/* Reason */}
           {it.reason && (
-            <div className="mt-3 rounded-xl bg-[#c7ddff] px-3 py-2">
+            <div className="mt-3 rounded-xl bg-[#eaf2ff] px-3 py-2">
               <div className="flex items-center gap-2 text-xs font-extrabold text-[#0b3b6b]">
-                <span className="inline-flex h-5 w-5 items-center justify-center rounded-md bg-white/70">
-                  <Briefcase className="h-3.5 w-3.5" />
+                <span className="inline-flex h-5 w-5 items-center justify-center rounded-md bg-white shadow-sm">
+                  <Briefcase className="h-3.5 w-3.5 text-[#0a79c9]" />
                 </span>
                 WHY THIS MATCHES YOU
               </div>
@@ -349,17 +374,17 @@ function InternshipCard({
           )}
 
           {/* Actions */}
-          <div className="mt-3 flex items-center justify-between">
+          <div className="mt-4 flex items-center justify-between">
             <Link
               href={`/internships/${it.id}`}
-              className="inline-flex items-center justify-center rounded-md bg-[#1f7ed6] px-4 py-2 text-xs font-bold text-white hover:bg-[#1b72c2]"
+              className="inline-flex items-center justify-center rounded-md bg-[var(--ds-primary)] px-5 py-2 text-xs font-bold text-white shadow-sm hover:bg-[var(--ds-primary-dark)]"
             >
               View Details
             </Link>
 
             <button
               aria-label="Save"
-              className="rounded-md p-2 text-[#062845]/70 hover:bg-black/5 hover:text-[#062845]"
+              className="rounded-md p-2 text-[#0b1f33]/60 hover:bg-[#0b1f33]/5 hover:text-[#0b1f33]"
             >
               <Bookmark className="h-5 w-5" />
             </button>
@@ -370,29 +395,3 @@ function InternshipCard({
   );
 }
 
-function Select({
-  value,
-  onChange,
-  placeholder,
-  options,
-}: {
-  value: string;
-  onChange: (v: string) => void;
-  placeholder: string;
-  options: string[];
-}) {
-  return (
-    <select
-      value={value}
-      onChange={(e) => onChange(e.target.value)}
-      className="w-full rounded-lg bg-white px-3 py-2 text-sm text-slate-700 outline-none"
-    >
-      <option value="">{placeholder}</option>
-      {options.map((o) => (
-        <option key={o} value={o}>
-          {o}
-        </option>
-      ))}
-    </select>
-  );
-}

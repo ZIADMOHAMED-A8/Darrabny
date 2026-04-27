@@ -1,52 +1,47 @@
 "use client";
 
-import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Bot, Search } from "lucide-react";
 
 export default function HeroSection() {
   // Hero banner + search UI (no logic yet)
 
   return (
-    <section className="mx-auto pt-10">
-      <h1 className="text-2xl md:text-3xl font-semibold">
-        Hi Adham, Welcome To Darrabny
-      </h1>
+    <section className="mx-auto pt-10 md:pt-14">
+      <div className="mx-auto max-w-6xl">
+        <h1 className="text-2xl font-semibold text-[#063058] md:text-3xl">
+          Hi Adham, Welcome To Darrabny
+        </h1>
 
-      <div className="mt-6 overflow-hidden rounded-2xl border border-white/10">
-        <div className="relative h-[260px] md:h-[34.81rem]">
-          {/* Background Image */}
-          <Image
-            src="/hero-section.png"
-            alt="Hero background"
-            fill
-            priority
-            className="object-cover"
-          />
+        <div className="relative mt-10 overflow-hidden rounded-3xl border border-white/60 bg-white/50 px-6 py-16 shadow-[var(--ds-shadow)] backdrop-blur-sm md:px-12 md:py-24">
+          <div className="mx-auto max-w-3xl text-center">
+            <h2 className="text-4xl font-extrabold leading-tight text-[#063058] md:text-6xl">
+              Find your dream <br /> internship
+            </h2>
+            <p className="mx-auto mt-4 max-w-xl text-sm font-medium text-[var(--ds-muted)] md:text-base">
+              Explore thousands of internships and launch your career with
+              InternLink.
+            </p>
 
-          {/* Overlay */}
-          {/* <div className="absolute inset-0 bg-black/25" /> */}
-
-          {/* Content */}
-          <div className="relative z-10 grid h-full place-items-center px-4 text-center">
-            <div className="text-[var(--ic-surface)]">
-              <h2 className="text-3xl md:text-5xl font-extrabold leading-tight">
-                Find your dream <br /> internship
-              </h2>
-              <p className="mt-3">
-                Explore thousands of internships and launch your career with
-                InternLink.
-              </p>
-
-              {/* Search bar */}
-              <div className="mt-6 flex flex-col sm:flex-row items-center justify-center gap-3">
+            <div className="mx-auto mt-8 w-full max-w-2xl">
+              <div className="relative flex items-center rounded-full bg-white shadow-[var(--ds-soft-shadow)] ring-1 ring-[var(--ds-border)]">
+                <Search className="pointer-events-none absolute left-4 h-5 w-5 text-[#063058]/70" />
                 <Input
                   placeholder="Search internships by title, company, or keyword"
-                  className="w-full sm:w-[520px] bg-white/10 border-white/15 text-white placeholder:text-white/60"
+                  className="h-12 rounded-full border-0 bg-transparent pl-12 pr-28 text-[#063058] placeholder:text-[#063058]/50 focus-visible:ring-0 focus:border-transparent"
                 />
-                <Button className="w-full sm:w-auto bg-[var(--ic-surface)] text-[var(--ic-ink)] hover:bg-[var(--ic-surface)]/90">
+                <Button className="absolute right-1 top-1/2 h-10 -translate-y-1/2 rounded-full bg-[var(--ds-primary)] px-8 text-white hover:bg-[var(--ds-primary-dark)]">
                   Search
                 </Button>
+              </div>
+            </div>
+          </div>
+
+          <div className="absolute right-10 top-1/2 hidden -translate-y-2 md:block">
+            <div className="grid h-16 w-16 place-items-center rounded-2xl bg-white/70 shadow-[var(--ds-soft-shadow)] ring-1 ring-[var(--ds-border)]">
+              <div className="grid h-10 w-10 place-items-center rounded-xl bg-[var(--ds-soft)]">
+                <Bot className="h-6 w-6 text-[var(--ds-primary)]" />
               </div>
             </div>
           </div>

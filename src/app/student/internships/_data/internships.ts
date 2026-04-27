@@ -24,8 +24,7 @@ export const INTERNSHIPS: Internship[] = [
     type: "Full-time",
     duration: "3 months",
     posted: "Posted 2 days ago",
-    image:
-      "/images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=1200&q=80",
+    image: "/home/featured-internships/Img-1.png",
     about:
       "Join our dynamic team at Acme Corp as a Software Engineering Intern and contribute to cutting-edge projects. You'll work alongside experienced engineers, gaining hands-on experience in developing and maintaining software applications. This internship offers a unique opportunity to learn from industry experts and make a real impact on our products.",
     responsibilities: [
