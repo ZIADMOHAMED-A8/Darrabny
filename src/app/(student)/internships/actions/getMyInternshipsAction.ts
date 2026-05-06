@@ -17,7 +17,7 @@ export default async function getMyInternshipsAction({
 }: GetMyInternshipsParams = {}) {
   const token = await getToken();
 
-  if (!token) {
+  if (!token?.token?.accessToken) {
     throw new Error("Unauthorized");
   }
 
@@ -34,7 +34,7 @@ export default async function getMyInternshipsAction({
     method: "GET",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `user eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFobWVkLnN0dWRlbnRAZXhhbXBsZS5jb20iLCJpZCI6IjY5ZDY4MmM3ZDk4M2EwZGUxYjUxOTk5NiIsImlhdCI6MTc3NTkzNTcyMywiZXhwIjoxNzc1OTM5MzIzfQ.0ZVAJU-Nbk2WTh9uNevG5rgppbWSeBnZs4k5qVLb6cg`,
+      Authorization: `user ${token.token.accessToken}`,
     },
     cache: "no-store",
   });

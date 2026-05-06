@@ -9,6 +9,7 @@ import {
   Form,
   FormField,
   FormItem,
+  FormLabel,
   FormControl,
   FormMessage,
 } from "@/components/ui/form";
@@ -21,19 +22,26 @@ import { Eye, EyeOff, Lock, Mail, Github, Chrome } from "lucide-react";
 
 import { useLogin } from "../_hooks/use-login";
 import { loginSchema, LoginValues } from "@/lib/schemas/auth/login.schema";
-import SubmissionMessage from "../../_components/submission-message";
+import type { Role } from "@/lib/types/signup";
 
 type Props = {
   onForgotPassword?: () => void;
   onGithub?: () => void;
+  initialRole?: Role;
 };
 
-export default function LoginFormCard({ onForgotPassword, onGithub }: Props) {
+export default function LoginFormCard({
+  onForgotPassword,
+  onGithub,
+  initialRole = "user",
+}: Props) {
   const [showPassword, setShowPassword] = useState(false);
-  const { login, isPending, error } = useLogin();
-  const [role, setRole] = useState<"user" | "company" | "university">("user");
+  const { login, isPending, error, reset } = useLogin();
+  const [role, setRole] = useState<Role>(initialRole);
+  const ICON_BTN =
+    "absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-700";
 
-  const changeRole = (selectedRole: "user" | "company" | "university") => {
+  const changeRole = (selectedRole: Role) => {
     setRole(selectedRole);
   };
 
@@ -42,15 +50,16 @@ export default function LoginFormCard({ onForgotPassword, onGithub }: Props) {
     defaultValues: {
       email: "",
       password: "",
-       role: "user",
+      role: initialRole,
     },
   });
 
   const onSubmit: SubmitHandler<LoginValues> = (data) => {
+    reset();
     login({
-    ...data,
-    role,
-  });
+      ...data,
+      role,
+    });
   };
 
   const handleGoogleLogin = async () => {
@@ -60,14 +69,12 @@ export default function LoginFormCard({ onForgotPassword, onGithub }: Props) {
   return (
     <Card className="w-full max-w-[520px] rounded-[20px] border border-black/10 bg-white/90 shadow-2xl backdrop-blur">
       <CardContent className="px-10 pb-10 pt-9">
-        <div className="grid grid-cols-5 text-center items-center">
-          {/* Row 1 */}
-          <h2 className="col-span-5 text-3xl font-semibold text-[#0B2A4A] mb-2">
+        <div>
+          <h2 className="text-center text-3xl font-semibold text-[#0B2A4A] mb-2">
             Login
           </h2>
 
-          {/* Row 2 with more space */}
-          <div className="col-span-5 grid grid-cols-5 items-center py-3">
+          <div className="flex items-center justify-center gap-4 py-3 text-sm font-medium">
             <button
               type="button"
               onClick={() => changeRole("user")}
@@ -98,14 +105,14 @@ export default function LoginFormCard({ onForgotPassword, onGithub }: Props) {
 
             <button
               type="button"
-              onClick={() => changeRole("university")}
+              onClick={() => changeRole("college")}
               className={`text-sm font-medium pb-1 transition-all duration-200 ${
-                role === "university"
+                role === "college"
                   ? "text-[#0A79C9] border-b-2 border-[#0A79C9]"
                   : "text-slate-400 hover:text-[#0B2A4A]"
               }`}
             >
-              University
+              College
             </button>
           </div>
         </div>
@@ -116,9 +123,9 @@ export default function LoginFormCard({ onForgotPassword, onGithub }: Props) {
               name="email"
               render={({ field }) => (
                 <FormItem>
-                  <label className="text-sm font-medium text-[#0B2A4A]">
+                  <FormLabel className="text-sm font-medium text-[#0B2A4A]">
                     Email address
-                  </label>
+                  </FormLabel>
                   <div className="relative mt-2">
                     <Mail className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400" />
                     <FormControl>
@@ -139,9 +146,9 @@ export default function LoginFormCard({ onForgotPassword, onGithub }: Props) {
               name="password"
               render={({ field }) => (
                 <FormItem>
-                  <label className="text-sm font-medium text-[#0B2A4A]">
+                  <FormLabel className="text-sm font-medium text-[#0B2A4A]">
                     Password
-                  </label>
+                  </FormLabel>
                   <div className="relative mt-2">
                     <Lock className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400" />
                     <FormControl>
@@ -155,7 +162,7 @@ export default function LoginFormCard({ onForgotPassword, onGithub }: Props) {
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500"
+                      className={ICON_BTN}
                     >
                       {showPassword ? (
                         <EyeOff className="h-5 w-5" />
@@ -179,7 +186,11 @@ export default function LoginFormCard({ onForgotPassword, onGithub }: Props) {
               </Button>
             </div>
 
-            <SubmissionMessage>{error?.message}</SubmissionMessage>
+            {error ? (
+              <div className="rounded-[12px] border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+                {(error as any)?.message || "An unexpected error occurred"}
+              </div>
+            ) : null}
 
             <Button
               type="submit"

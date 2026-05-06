@@ -1,8 +1,10 @@
 "use client";
+import { useRouter } from 'next/navigation';
 
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
+import type { Internship } from "../../_data/internships";
 import {
   CheckCircle2,
   Star,
@@ -12,6 +14,7 @@ import {
 } from "lucide-react";
 import StudentFooter from "@/components/shared/student-footer";
 import ApplyModal from "./apply-modal";
+import InternshipsFilters from "./internships-filters";
 
 const SPECIALIZATIONS = ["Software", "Data", "Marketing", "UI/UX", "Finance", "Research"];
 const LOCATIONS = ["Cairo", "Alexandria", "Giza", "Remote"];
@@ -60,6 +63,7 @@ const REVIEWS: Review[] = [
 ];
 
 export default function InternshipDetails({ data }: { data: Internship }) {
+  const router = useRouter();
   const [tab, setTab] = useState<"overview" | "reviews">("overview");
   const [applyOpen, setApplyOpen] = useState(false);
 
@@ -165,7 +169,7 @@ export default function InternshipDetails({ data }: { data: Internship }) {
             </div>
           </div>
         </div>
-
+a7aaaaa
         {/* Big details panel */}
         <section className="relative mt-12 overflow-hidden rounded-2xl border border-[#0b1f33]/12 bg-white shadow-[0_22px_70px_rgba(16,24,40,0.16)]">
           <Link
@@ -173,8 +177,15 @@ export default function InternshipDetails({ data }: { data: Internship }) {
             aria-label="Close"
             className="absolute right-8 top-8 text-[#0b1f33]/60 hover:text-[#0b1f33]"
           >
-            <X className="h-9 w-9" />
+
           </Link>
+          <button
+            type="button"
+            className="p-2 hover:bg-gray-100 rounded-full"
+            onClick={() => router.back()}
+          >
+            <X className="h-9 w-9" />
+          </button>
 
           <div className="px-10 pt-10 md:px-12">
             <h1 className="text-4xl font-extrabold tracking-tight text-[#0b1f33] md:text-5xl">

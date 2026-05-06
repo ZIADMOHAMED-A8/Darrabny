@@ -1,8 +1,8 @@
 "use client";
 
+import { useMemo, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { useMemo, useState } from "react";
 import {
   Bookmark,
   Briefcase,
@@ -10,6 +10,7 @@ import {
   Clock,
   MapPin,
 } from "lucide-react";
+
 import InternshipsFilters from "./_components/internships-filters";
 import StudentFooter from "@/components/shared/student-footer";
 
@@ -23,285 +24,144 @@ type Internship = {
   match?: number;
   reason?: string;
   image?: string;
+  matchedSkills?: string[];
+  technicalSkills?: string[];
+  softSkills?: string[];
 };
 
-const INTERNSHIPS: Internship[] = [
-  {
-    id: "1",
-    company: "Tech Innovators Inc.",
-    title: "Software Engineering Intern",
-    workMode: "Remote",
-    type: "Full-time",
-    duration: "3 months",
-    match: 98,
-    reason:
-      'Your recent "E-commerce Dashboard" project used React and Tailwind, which are the primary tech stack for this role.',
-    image: "/home/featured-internships/Img-1.png",
-  },
-  {
-    id: "2",
-    company: "Tech Innovators Inc.",
-    title: "Data Analysis Intern",
-    workMode: "Remote",
-    type: "Full-time",
-    duration: "3 months",
-    match: 98,
-    reason:
-      "Strong fit for analytical thinking + dashboards and reporting. Your projects show consistent data work.",
-    image: "/home/featured-internships/Img-2.png",
-  },
-  {
-    id: "3",
-    company: "Tech Innovators Inc.",
-    title: "Software Engineering Intern",
-    workMode: "Remote",
-    type: "Full-time",
-    duration: "3 months",
-    image: "/home/featured-internships/Img-1.png",
-  },
-  {
-    id: "4",
-    company: "Creative Solutions Agency",
-    title: "Marketing Intern",
-    workMode: "Hybrid",
-    type: "Part-time",
-    duration: "6 months",
-    image: "/home/featured-internships/Img-3.png",
-  },
-  {
-    id: "5",
-    company: "Data Insights Corp.",
-    title: "Data Analysis Intern",
-    workMode: "On-site",
-    type: "Full-time",
-    duration: "3 months",
-    image: "/home/featured-internships/Img-2.png",
-  },
-  {
-    id: "6",
-    company: "Global Finance Group",
-    title: "Financial Analyst Intern",
-    workMode: "Remote",
-    type: "Full-time",
-    duration: "6 months",
-    image: "/home/featured-internships/Img-1.png",
-  },
-  {
-    id: "7",
-    company: "Healthcare Innovations Lab",
-    title: "Research Intern",
-    workMode: "On-site",
-    type: "Part-time",
-    duration: "12 months",
-    image: "/home/featured-internships/Img-3.png",
-  },
-  {
-    id: "8",
-    company: "Future Tech Solutions",
-    title: "UI/UX Design Intern",
-    workMode: "Hybrid",
-    type: "Full-time",
-    duration: "3 months",
-    image: "/home/featured-internships/Img-2.png",
-  },
-];
+function ensureStringArray(value: unknown): string[] {
+  if (!Array.isArray(value)) return [];
+  return value.filter((x) => typeof x === "string") as string[];
+}
 
-const SPECIALIZATIONS = [
-  "Software",
-  "Data",
-  "Marketing",
-  "UI/UX",
-  "Finance",
-  "Research",
-];
+function mapInternships(data: any[]): Internship[] {
+  return (Array.isArray(data) ? data : [])?.map((item: any, index) => ({
+    id: String(item?._id ?? index),
+    company:
+      item?.companyId?.companyName ||
+      item?.companyName ||
+      "Unknown Company",
 
-const LOCATIONS = ["Cairo", "Alexandria", "Giza", "Remote"];
-const TRAINING_TYPES = ["Full-time", "Part-time"];
-const DURATIONS = ["3 months", "6 months", "12 months"];
-const SKILLS = ["React", "Tailwind", "SQL", "Python", "Figma", "Excel"];
+    title:
+      item?.internshipTitle ||
+      item?.internshipTittle ||
+      "Internship",
+
+    workMode:
+      item?.internshipLocation === "onsite"
+        ? "On-site"
+        : item?.internshipLocation === "hybrid"
+        ? "Hybrid"
+        : "Remote",
+
+    type:
+      item?.workingTime === "part-time"
+        ? "Part-time"
+        : "Full-time",
+
+    duration: `${item?.durationInMonths || 3} months`,
+
+    match:
+      typeof item?.matchScore === "number"
+        ? Math.round(item.matchScore * 100)
+        : undefined,
+
+    reason: item?.why,
+
+    image: item?.thumbnail || "/placeholder.png",
+    matchedSkills: ensureStringArray(item?.matchedSkills),
+    technicalSkills: ensureStringArray(item?.technicalSkills),
+    softSkills: ensureStringArray(item?.softSkills),
+  }));
+}
 
 export default function InternshipsPage() {
-  const [q, setQ] = useState("");
-  const [specialization, setSpecialization] = useState("");
-  const [skill, setSkill] = useState("");
-  const [location, setLocation] = useState("");
-  const [trainingType, setTrainingType] = useState("");
-  const [duration, setDuration] = useState("");
+  const { data, isLoading, isError } = useGetRecommendedInternships();
 
-  const [page, setPage] = useState(1);
-  const perPage = 6;
+  const [searchResults, setSearchResults] = useState<any[] | null>(null);
 
-  const filtered = useMemo(() => {
-    const text = q.trim().toLowerCase();
+  const recommended = useMemo(
+    () => mapInternships(data || []),
+    [data]
+  );
 
-    return INTERNSHIPS.filter((it) => {
-      const textOk =
-        !text ||
-        it.title.toLowerCase().includes(text) ||
-        it.company.toLowerCase().includes(text);
-
-      const specOk =
-        !specialization ||
-        it.title.toLowerCase().includes(specialization.toLowerCase());
-      const typeOk = !trainingType || it.type === trainingType;
-      const durOk = !duration || it.duration === duration;
-      const locOk =
-        !location || (location === "Remote" ? it.workMode === "Remote" : true);
-      const skillOk = !skill; // Placeholder: wire to real data later
-
-      return textOk && specOk && typeOk && durOk && locOk && skillOk;
-    });
-  }, [q, specialization, trainingType, duration, location, skill]);
-
-  const totalPages = Math.max(1, Math.ceil(filtered.length / perPage));
-  const slice = filtered.slice((page - 1) * perPage, page * perPage);
-
-  function clearFilters() {
-    setQ("");
-    setSpecialization("");
-    setSkill("");
-    setLocation("");
-    setTrainingType("");
-    setDuration("");
-    setPage(1);
-  }
-
-  function applyFilters() {
-    setPage(1);
-  }
+  const shown = useMemo(() => {
+    if (searchResults !== null) {
+      return mapInternships(searchResults);
+    }
+    return recommended;
+  }, [searchResults, recommended]);
 
   return (
-    <div className="relative">
-      {/* Background */}
-      <div className="absolute inset-0 -z-10">
-        <div
-          className="absolute inset-0"
-          style={{
-            background:
-              "linear-gradient(180deg, #f8fbff 0%, #f3f7ff 45%, #eef4ff 100%)",
-          }}
-        />
-        <div
-          className="absolute inset-0 opacity-[0.35]"
-          style={{
-            backgroundImage:
-              "radial-gradient(circle at 1px 1px, rgba(6,48,88,0.10) 1px, rgba(255,255,255,0) 1px)",
-            backgroundSize: "22px 22px",
-          }}
-        />
-        <div className="absolute inset-0 opacity-[0.85]">
-          <div className="absolute left-[-120px] top-24 h-[520px] w-[520px] rounded-full bg-[#d7e4ff]/70 blur-3xl" />
-          <div className="absolute right-[-180px] top-64 h-[560px] w-[560px] rounded-full bg-[#c1d2ee]/55 blur-3xl" />
-          <div className="absolute left-1/2 top-[520px] h-[620px] w-[620px] -translate-x-1/2 rounded-full bg-[#d7e4ff]/55 blur-3xl" />
-        </div>
-      </div>
-
-      <div className="mx-auto max-w-6xl py-10 md:py-14">
+    <div className="min-h-screen bg-gradient-to-b from-[#EEF4FF] via-[#F7FAFF] to-white">
+      <div className="mx-auto max-w-6xl px-4 py-10">
         {/* Hero */}
-        <div className="text-center">
-          <h1 className="text-4xl font-extrabold tracking-tight text-[#0b1f33] drop-shadow-sm md:text-6xl">
+        <header className="text-center mt-6">
+          <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight text-slate-900">
             Explore{" "}
-            <span className="bg-gradient-to-r from-[#0a79c9] to-[#3aa5ff] bg-clip-text text-transparent">
+            <span className="text-blue-600">
               Internship
             </span>{" "}
             Opportunities
           </h1>
-
-          <p className="mx-auto mt-4 max-w-2xl text-sm text-[#0b1f33]/70 md:text-base">
-            Find the perfect internship to kickstart your career. Use the
-            filters below to narrow down your search and discover opportunities
-            that match your interests and skills.
+          <p className="mt-4 mx-auto max-w-3xl text-slate-600">
+            Find the perfect internship to kickstart your career. Use the filters below to
+            narrow down your search and discover opportunities that match your interests and skills.
           </p>
-        </div>
 
-        {/* Filters */}
-        <InternshipsFilters
-          q={q}
-          specialization={specialization}
-          skill={skill}
-          location={location}
-          trainingType={trainingType}
-          duration={duration}
-          setQ={setQ}
-          setSpecialization={setSpecialization}
-          setSkill={setSkill}
-          setLocation={setLocation}
-          setTrainingType={setTrainingType}
-          setDuration={setDuration}
-          onClear={clearFilters}
-          onApply={applyFilters}
-          SPECIALIZATIONS={SPECIALIZATIONS}
-          LOCATIONS={LOCATIONS}
-          TRAINING_TYPES={TRAINING_TYPES}
-          DURATIONS={DURATIONS}
-          SKILLS={SKILLS}
-        />
+          <div className="mt-10">
+            <InternshipsFilters onResults={setSearchResults} />
+          </div>
+        </header>
 
-        {/* Section title */}
+        {/* Title */}
         <div className="mt-14">
-          <h2 className="text-2xl font-bold text-[#0b1f33] md:text-3xl">
-            Recommended Internships
+          <h2 className="text-2xl font-bold text-slate-900">
+            {searchResults !== null ? "Search Results" : "Recommended Internships"}
           </h2>
-          <div className="mt-4 h-px w-full bg-[#0b1f33]/10" />
         </div>
 
         {/* Grid */}
         <section className="mt-6 grid gap-6 md:grid-cols-2">
-          {slice.map((it, idx) => (
+
+          {/* Recommended loading */}
+          {isLoading && !searchResults && (
+            <div className="col-span-full text-center text-slate-600">
+              Loading recommended internships...
+            </div>
+          )}
+
+          {isError && !searchResults && (
+            <div className="col-span-full text-center text-red-500">
+              Failed to load recommended internships
+            </div>
+          )}
+
+          {/* Empty */}
+          {!isLoading && shown.length === 0 && (
+            <div className="col-span-full text-center text-slate-500">
+              No internships found
+            </div>
+          )}
+
+          {/* Cards */}
+          {shown.map((it, idx) => (
             <InternshipCard key={it.id} it={it} priority={idx < 2} />
           ))}
+
         </section>
-
-        {/* Pagination */}
-        <div className="mt-10 flex items-center justify-center gap-2 text-sm text-[#0b1f33]/70">
-          <button
-            onClick={() => setPage((p) => Math.max(1, p - 1))}
-            className="px-3 py-2 rounded-md hover:bg-[#0b1f33]/5"
-          >
-            ‹ Previous
-          </button>
-
-          <div className="flex items-center gap-1">
-            {Array.from({ length: Math.min(totalPages, 5) }).map((_, i) => {
-              const p = i + 1;
-              const active = p === page;
-              return (
-                <button
-                  key={p}
-                  onClick={() => setPage(p)}
-                  className={[
-                    "h-9 w-9 rounded-md",
-                    active
-                      ? "bg-[#0b1f33] text-white"
-                      : "hover:bg-[#0b1f33]/5",
-                  ].join(" ")}
-                >
-                  {p}
-                </button>
-              );
-            })}
-            {totalPages > 5 && <span className="px-2">…</span>}
-            {totalPages > 5 && (
-              <button
-                onClick={() => setPage(totalPages)}
-                className="h-9 w-9 rounded-md hover:bg-[#0b1f33]/5"
-              >
-                {totalPages}
-              </button>
-            )}
-          </div>
-
-          <button
-            onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-            className="px-3 py-2 rounded-md hover:bg-white/10"
-          >
-            Next ›
-          </button>
-        </div>
 
         <StudentFooter />
       </div>
     </div>
+  );
+}
+
+function SkillChip({ label }: { label: string }) {
+  return (
+    <span className="inline-flex items-center rounded-full border border-blue-200 bg-blue-50 px-2.5 py-1 text-[11px] font-medium text-blue-700">
+      {label}
+    </span>
   );
 }
 
@@ -312,18 +172,27 @@ function InternshipCard({
   it: Internship;
   priority?: boolean;
 }) {
+  const matchLabel =
+    typeof it.match === "number"
+      ? `${Math.max(0, Math.min(100, it.match))}% Match`
+      : null;
+
+  const chips = (it.matchedSkills?.length ? it.matchedSkills : it.technicalSkills)?.slice(0, 6) ?? [];
+
   return (
-    <div className="relative overflow-hidden rounded-2xl border border-[#0b1f33]/15 bg-white shadow-[0_18px_50px_rgba(16,24,40,0.12)]">
-      {/* Match ribbon */}
-      {typeof it.match === "number" && (
-        <div className="absolute -right-10 top-6 rotate-45 bg-[#2196F3] px-10 py-1 text-xs font-bold text-white shadow">
-          {it.match}% Match
+    <div className="relative overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+      {matchLabel && (
+        <div className="absolute right-0 top-0 z-10">
+          <div className="origin-top-right rotate-45 translate-x-10 translate-y-4 bg-blue-600 px-10 py-1 text-xs font-semibold text-white shadow">
+            {matchLabel}
+          </div>
         </div>
       )}
 
-      <div className="flex gap-4 p-4 md:p-5">
+      <div className="flex gap-4 p-4">
+
         {/* Image */}
-        <div className="relative h-24 w-28 shrink-0 overflow-hidden rounded-xl bg-[#f6f7fb]">
+        <div className="relative h-24 w-28 rounded-xl overflow-hidden bg-slate-100 flex-shrink-0">
           {it.image ? (
             <Image
               src={it.image}
@@ -333,65 +202,70 @@ function InternshipCard({
               priority={priority}
             />
           ) : (
-            <div className="h-full w-full grid place-items-center text-slate-400">
-              <Building2 className="h-6 w-6" />
-            </div>
+            <Building2 className="m-auto text-slate-400" />
           )}
         </div>
 
         {/* Content */}
-        <div className="min-w-0 flex-1">
-          <p className="text-xs font-semibold text-[#0b1f33]/60">{it.company}</p>
-          <h3 className="mt-0.5 truncate text-base font-extrabold text-[#0b1f33] md:text-lg">
-            {it.title}
-          </h3>
+        <div className="flex-1">
+          <p className="text-xs text-slate-500">{it.company}</p>
 
-          <div className="mt-2 flex flex-wrap items-center gap-3 text-xs text-[#0b1f33]/60">
+          <h3 className="text-lg font-bold text-slate-900">{it.title}</h3>
+
+          <div className="flex flex-wrap gap-x-3 gap-y-1 text-xs text-slate-500 mt-2">
             <span className="inline-flex items-center gap-1">
-              <MapPin className="h-3.5 w-3.5" /> {it.workMode}
+              <MapPin className="w-3 h-3" /> {it.workMode}
             </span>
             <span className="inline-flex items-center gap-1">
-              <Briefcase className="h-3.5 w-3.5" /> {it.type}
+              <Briefcase className="w-3 h-3" /> {it.type}
             </span>
             <span className="inline-flex items-center gap-1">
-              <Clock className="h-3.5 w-3.5" /> {it.duration}
+              <Clock className="w-3 h-3" /> {it.duration}
             </span>
           </div>
 
-          {/* Reason */}
-          {it.reason && (
-            <div className="mt-3 rounded-xl bg-[#eaf2ff] px-3 py-2">
-              <div className="flex items-center gap-2 text-xs font-extrabold text-[#0b3b6b]">
-                <span className="inline-flex h-5 w-5 items-center justify-center rounded-md bg-white shadow-sm">
-                  <Briefcase className="h-3.5 w-3.5 text-[#0a79c9]" />
-                </span>
+          {(it.reason || chips.length > 0) && (
+            <div className="mt-3 rounded-xl bg-blue-50/60 p-3">
+              <div className="flex items-center gap-2 text-xs font-semibold text-blue-700">
+                <div className="h-6 w-6 rounded-md bg-blue-600 text-white flex items-center justify-center">
+                  <Building2 className="h-4 w-4" />
+                </div>
                 WHY THIS MATCHES YOU
               </div>
-              <p className="mt-1 text-xs text-[#0b3b6b]/90 line-clamp-2">
-                {it.reason}
-              </p>
+              {it.reason && (
+                <p className="mt-2 text-xs text-slate-700">
+                  {it.reason}
+                </p>
+              )}
+              {chips.length > 0 && (
+                <div className="mt-2 flex flex-wrap gap-2">
+                  {chips.map((s) => (
+                    <SkillChip key={s} label={s} />
+                  ))}
+                </div>
+              )}
             </div>
           )}
 
-          {/* Actions */}
           <div className="mt-4 flex items-center justify-between">
             <Link
+              className="inline-flex items-center justify-center rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700"
               href={`/student/internships/${it.id}`}
-              className="inline-flex items-center justify-center rounded-md bg-[var(--ds-primary)] px-5 py-2 text-xs font-bold text-white shadow-sm hover:bg-[var(--ds-primary-dark)]"
             >
               View Details
             </Link>
 
             <button
-              aria-label="Save"
-              className="rounded-md p-2 text-[#0b1f33]/60 hover:bg-[#0b1f33]/5 hover:text-[#0b1f33]"
+              type="button"
+              className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-slate-200 text-slate-700 hover:bg-slate-50"
+              aria-label="Save internship"
             >
-              <Bookmark className="h-5 w-5" />
+              <Bookmark className="w-4 h-4" />
             </button>
           </div>
         </div>
+
       </div>
     </div>
   );
 }
-

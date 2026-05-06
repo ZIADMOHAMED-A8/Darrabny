@@ -42,7 +42,7 @@ export default function SignupLayout({ children }: SignupLayoutProps) {
           </div>
 
           {/* ===== TABS ===== */}
-          <div className="flex items-center gap-4 text-sm font-medium mb-6">
+          <div className="flex justify-center items-center gap-4 text-sm font-medium mb-6">
             <button
               onClick={() => changeRole("user")}
               className={`pb-1 transition ${
@@ -70,14 +70,14 @@ export default function SignupLayout({ children }: SignupLayoutProps) {
             <span className="text-slate-300">|</span>
 
             <button
-              onClick={() => changeRole("university")}
+              onClick={() => changeRole("college")}
               className={`pb-1 transition ${
-                role === "university"
+                role === "college"
                   ? "text-[#0A79C9] border-b-2 border-[#0A79C9]"
                   : "text-slate-400 hover:text-[#0B2A4A]"
               }`}
             >
-              University
+              College
             </button>
           </div>
 
