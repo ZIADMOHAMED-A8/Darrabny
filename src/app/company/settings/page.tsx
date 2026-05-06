@@ -6,7 +6,6 @@ import CompanySettingsForm from "./_components/CompanySettingsForm";
 import { useGetCompanySettings } from "./hooks/use-get-company-settings";
 
 const sidebarItems = [
-  { label: "Dashboard", href: "/company/dashboard", icon: "dashboard" },
   { label: "Monitoring Report", href: "/company/report", icon: "report" },
   {
     label: "Company Partners",
@@ -23,9 +22,10 @@ export default function CompanySettingsPage() {
 
   const formDefaultValues = useMemo(
     () => ({
-      companyName: settings?.name || settings?.fullName || "",
-      email: settings?.email || "",
-      phone: settings?.phone || "",
+      companyName:
+        settings?.companyName || settings?.name || settings?.fullName || "",
+      email: settings?.email || settings?.companyEmail || "",
+      phone: settings?.companyPhone || settings?.phone || "",
       address: settings?.address || "",
       notifications: {
         email: Boolean(
@@ -41,9 +41,12 @@ export default function CompanySettingsPage() {
       },
     }),
     [
+      settings?.companyName,
       settings?.name,
       settings?.fullName,
       settings?.email,
+      settings?.companyEmail,
+      settings?.companyPhone,
       settings?.phone,
       settings?.address,
       settings?.notifications?.email,

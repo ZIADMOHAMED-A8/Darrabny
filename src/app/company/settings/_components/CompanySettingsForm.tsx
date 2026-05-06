@@ -133,9 +133,9 @@ export default function CompanySettingsForm({
 
   const onSubmit = (values: SettingsValues) => {
     updateCompanySettings({
-      name: values.companyName,
+      companyName: values.companyName,
       email: values.email,
-      phone: values.phone,
+      companyPhone: values.phone,
       address: values.address,
     });
   };

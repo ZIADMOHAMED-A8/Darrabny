@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
-  House,
   BarChart3,
   Building2,
   Users,
@@ -12,7 +11,6 @@ import {
 } from "lucide-react";
 
 const iconMap = {
-  dashboard: House,
   report: BarChart3,
   partners: Building2,
   students: Users,

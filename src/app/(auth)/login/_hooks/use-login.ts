@@ -5,7 +5,7 @@ import { useMutation } from "@tanstack/react-query";
 import { signIn } from "next-auth/react";
 
 export function useLogin() {
-  const { mutate, error, isPending } = useMutation({
+  const { mutate, error, isPending, reset } = useMutation({
     mutationFn: async (values: LoginValues) => {
       console.log(values);
 
@@ -20,7 +20,6 @@ export function useLogin() {
         throw new Error(response.error || "Login failed");
       }
 
-      // 👇 redirect logic حسب role
       const callbackUrl = new URLSearchParams(location.search).get(
         "callbackUrl",
       );
@@ -28,13 +27,13 @@ export function useLogin() {
       const redirectTo =
         values.role === "company"
           ? "/company/dashboard"
-          : values.role === "university"
-            ? "/university/dashboard"
+          : values.role === "college"
+            ? "/college/dashboard"
             : "/";
 
       window.location.href = callbackUrl || redirectTo;
     },
   });
 
-  return { login: mutate, error, isPending };
+  return { login: mutate, error, isPending, reset };
 }

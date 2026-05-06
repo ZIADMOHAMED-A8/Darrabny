@@ -3,7 +3,7 @@
 import * as React from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff, Loader2 } from "lucide-react";
 
 import {
   Form,
@@ -24,7 +24,7 @@ import {
 import useCompanySignup from "../_hooks/company-signup";
 
 export default function CompanySignupForm() {
-  const { mutate, isPending, error } = useCompanySignup();
+  const { mutate, isPending, error, reset } = useCompanySignup();
   const [showPassword, setShowPassword] = React.useState(false);
   const [showConfirm, setShowConfirm] = React.useState(false);
 
@@ -48,44 +48,14 @@ export default function CompanySignupForm() {
   });
 
   const onSubmit: SubmitHandler<CompanySignupValues> = (values) => {
-    // Debug سريع: لازم يظهر في Console المتصفح
-    console.log("SUBMIT VALUES:", values);
-    console.log({
-      companyName: values.companyName,
-      companyEmail: values.companyEmail,
-      companyPhone: values.companyPhone,
-      password: values.password,
-      confirmPassword: values.confirmPassword,
-      description: values.description,
-      industry: values.industry,
-      address: values.address,
-      numberOfEmployees: values.numberOfEmployees,
+    reset();
+    mutate({
+      ...values,
+      numberOfEmployees: {
+        from: values.numberOfEmployees.from,
+        to: values.numberOfEmployees.to,
+      },
     });
-    form.clearErrors("root");
-
-    mutate(
-      {
-        ...values,
-        numberOfEmployees: {
-          from: values.numberOfEmployees.from,
-          to: values.numberOfEmployees.to,
-        },
-      },
-      {
-        onSuccess: (res: any) => {
-          console.log("success", res);
-        },
-        onError: (err: any) => {
-          console.error("error", err);
-
-          // Global error
-          form.setError("root", {
-            type: "server",
-            message: err?.message || "Something went wrong",
-          });
-        },
-      },
-    );
   };
 
   const LABEL = "text-sm font-medium text-[#0B2A4A]";
@@ -94,16 +64,11 @@ export default function CompanySignupForm() {
 
   return (
     <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onSubmit, (errors) =>
-          console.log("CLIENT VALIDATION ERRORS:", errors),
-        )}
-        className="space-y-5"
-      >
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
         {/* Global server error */}
-        {form.formState.errors.root?.message ? (
+        {error ? (
           <div className="rounded-[12px] border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
-            {form.formState.errors.root.message}
+            {(error as any)?.message || "An unexpected error occurred"}
           </div>
         ) : null}
 
@@ -341,14 +306,9 @@ export default function CompanySignupForm() {
           disabled={isPending}
           className="h-12 w-full rounded-[12px] bg-[#0A79C9] text-white hover:bg-[#0868AE]"
         >
-          {isPending ? "Loading..." : "Next"}
+          {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+          Create Account
         </Button>
-
-        {error && (
-          <div className="rounded-[12px] border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
-            {error?.message || "Something went wrong"}
-          </div>
-        )}
       </form>
     </Form>
   );

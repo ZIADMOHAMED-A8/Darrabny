@@ -24,7 +24,6 @@ export default function ProfileSection({
                 <label className="text-[14px] font-bold text-[#64748b] uppercase tracking-wider">
                   {field.label}
                 </label>
-                
                 {/* نمرر الـ name عشان نفتح الحقل ده بس */}
                 <button 
                   type="button"

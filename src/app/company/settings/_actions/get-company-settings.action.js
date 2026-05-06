@@ -11,7 +11,7 @@ export async function getCompanySettingsAction() {
     throw new Error("Unauthorized");
   }
 
-  if (!token?.token?.accessToken) {
+  if (!token?.token) {
     throw new Error("Unauthorized");
   }
 
@@ -19,7 +19,7 @@ export async function getCompanySettingsAction() {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `user ${token.token.accessToken}`,
+      Authorization: `company ${token?.token}`,
     },
     cache: "no-store",
   });

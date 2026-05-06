@@ -5,23 +5,30 @@ import { getToken } from "@/lib/utils/get-token.util";
 const SETTINGS_API_URL = "http://localhost:5000/company/settings";
 
 export async function updateCompanySettingsAction(payload) {
+  const normalizedPayload = {
+    companyName: payload?.companyName || payload?.name,
+    email: payload?.email,
+    companyPhone: payload?.companyPhone || payload?.phone,
+    address: payload?.address,
+  };
+
   const token = await getToken();
 
   if (!token) {
     throw new Error("Unauthorized");
   }
 
-  if (!token?.token?.accessToken) {
+  if (!token?.token) {
     throw new Error("Unauthorized");
   }
 
   const res = await fetch(SETTINGS_API_URL, {
-    method: "PUT",
+    method: "PATCH",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `user ${token.token.accessToken}`,
+      Authorization: `company ${token?.token}`,
     },
-    body: JSON.stringify(payload),
+    body: JSON.stringify(normalizedPayload),
     cache: "no-store",
   });
 

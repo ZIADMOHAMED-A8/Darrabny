@@ -11,5 +11,15 @@ export async function signupAction(values: SignupValues) {
     },
   });
 
-  return response.json();
+  const data = await response.json().catch(() => null);
+
+  if (!response.ok) {
+    throw {
+      message: data?.message || "Signup failed",
+      fieldErrors: data?.fieldErrors || data?.errors,
+      status: response.status,
+    };
+  }
+
+  return data;
 }
