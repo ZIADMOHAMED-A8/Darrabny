@@ -3,7 +3,6 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
-import type { Internship } from "../../_data/internships";
 import {
   CheckCircle2,
   Star,
@@ -11,7 +10,6 @@ import {
   ThumbsUp,
   X,
 } from "lucide-react";
-import InternshipsFilters from "../../_components/internships-filters";
 import StudentFooter from "@/components/shared/student-footer";
 import ApplyModal from "./apply-modal";
 

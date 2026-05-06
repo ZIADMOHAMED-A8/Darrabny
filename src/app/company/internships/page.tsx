@@ -1,24 +1,16 @@
 
-<<<<<<< HEAD
-=======
+"use client";
+
 import { useMemo, useState } from "react";
-import Image from "next/image";
 
-import CompanyInternshipsHeader from "./_components/company-internships-header";
 import CompanyInternshipsTabs from "./_components/company-internships-tabs";
->>>>>>> adding-user-features
 import CompanyInternshipsGrid from "./_components/company-internships-grid";
+import CompanyInternshipsPagination from "./_components/company-internships-pagination";
 
-<<<<<<< HEAD
-
-export default function CompanyInternshipsPage() {
-=======
 import { CompanyInternshipStatus } from "./_data/internships";
 import useGetCompanyInternships from "./hooks/useGetCompanyInternships";
 import type {
-  EmploymentType,
   InternshipCardData,
-  InternshipMode,
 } from "@/lib/types/internships/internships";
 
 type ApiInternship = {
@@ -53,20 +45,22 @@ export default function CompanyInternshipsPage() {
     () =>
       rawItems.map((item, index) => {
         const id = String(item.id ?? item._id ?? item.uuid ?? index + 1);
+        const companyName =
+          typeof item.company === "string"
+            ? item.company
+            : item.company?.name ?? "Unknown Company";
         return {
           id,
-          title: item.title ?? "Untitled Internship",
-          company:
-            typeof item.company === "string"
-              ? item.company
-              : item.company?.name ?? "Unknown Company",
-          mode: normalizeMode(item.mode ?? item.location),
-          employmentType: normalizeEmploymentType(item.employmentType),
-          duration: item.duration,
-          imageUrl:
-            item.imageUrl ??
-            item.image ??
-            "/images/company/company-logo.png",
+          internshipTittle: item.title ?? "Untitled Internship",
+          internshipLocation: item.location ?? "Remote",
+          workingTime: item.employmentType ?? "Internship",
+          durationInMonths: parseDurationInMonths(item.duration),
+          thumbnail: item.imageUrl ?? item.image ?? "/images/company/company-logo.png",
+          companyId: {
+            _id: id,
+            id,
+            companyName,
+          },
           href: `/internships/${id}`,
         };
       }),
@@ -75,18 +69,10 @@ export default function CompanyInternshipsPage() {
 
   const total = Number(data?.meta?.total ?? data?.total ?? rawItems.length);
   const totalPages = Math.max(1, Math.ceil(total / limit));
->>>>>>> adding-user-features
 
   return (
     <main className="relative min-h-screen text-white">
-      <div className="relative z-1">
-        <CompanyInternshipsGrid />
-
-<<<<<<< HEAD
-=======
       <div className="relative z-10 py-10">
-        <CompanyInternshipsHeader />
-
         <CompanyInternshipsTabs
           tab={tab}
           onChange={(nextTab) => {
@@ -109,30 +95,13 @@ export default function CompanyInternshipsPage() {
           isLoading={isLoading || isFetching}
           onPageChange={(nextPage) => setPage(nextPage)}
         />
->>>>>>> adding-user-features
       </div>
     </main>
   );
 }
 
-function normalizeMode(value?: string): InternshipMode {
-  const normalized = (value ?? "").toLowerCase();
-  if (normalized.includes("hybrid")) return "Hybrid";
-  if (
-    normalized.includes("on-site") ||
-    normalized.includes("onsite") ||
-    normalized.includes("on site")
-  ) {
-    return "On-site";
-  }
-  if (normalized.includes("remote")) return "Remote";
-  return "Remote";
-}
-
-function normalizeEmploymentType(value?: string): EmploymentType {
-  const normalized = (value ?? "").toLowerCase();
-  if (normalized.includes("part")) return "Part-time";
-  if (normalized.includes("contract")) return "Contract";
-  if (normalized.includes("intern")) return "Internship";
-  return "Full-time";
+function parseDurationInMonths(value?: string): number | undefined {
+  if (!value) return undefined;
+  const numeric = Number(value.match(/\d+/)?.[0]);
+  return Number.isFinite(numeric) ? numeric : undefined;
 }

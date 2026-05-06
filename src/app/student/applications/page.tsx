@@ -3,8 +3,7 @@
 import { useState } from "react";
 import { ApplicationTab } from "@/data/applications";
 import ApplicationCard from "./components/ApplicationCard";
-import useGetMyApplications from "./hooks/useGetMyApplications";
-
+import useGetMyApplications from "@/app/(student)/applications/hooks/useGetMyApplications";
 type ApplicationResponseItem = {
   id: string;
   internship?: {

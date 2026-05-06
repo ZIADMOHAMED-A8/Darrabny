@@ -2,8 +2,7 @@
 
 import { useState } from "react";
 import InternshipProgressCard from "./_components/InternshipProgressCard";
-import useGetMyInternships from "../internships/hooks/useGetMyInternships";
-
+import useGetMyInternships from "@/app/(student)/internships/hooks/useGetMyInternships";
 type Tab = "in-progress" | "completed";
 
 type MyInternshipItem = {

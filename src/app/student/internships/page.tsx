@@ -376,7 +376,7 @@ function InternshipCard({
           {/* Actions */}
           <div className="mt-4 flex items-center justify-between">
             <Link
-              href={`/internships/${it.id}`}
+              href={`/student/internships/${it.id}`}
               className="inline-flex items-center justify-center rounded-md bg-[var(--ds-primary)] px-5 py-2 text-xs font-bold text-white shadow-sm hover:bg-[var(--ds-primary-dark)]"
             >
               View Details
