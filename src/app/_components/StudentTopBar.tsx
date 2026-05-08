@@ -12,10 +12,9 @@ export default function StudentTopBar() {
   const pathname = usePathname();
 
   const links = [
-    { href: "/dashboard", label: "Dashboard" },
-    { href: "/internships", label: "Internships" },
-    { href: "/companies", label: "Companies" },
-    { href: "/career-consulting", label: "Career Counseling" },
+    { href: "/student/dashboard", label: "Dashboard" },
+    { href: "/student/internships", label: "Internships" },
+    { href: "/student/companies", label: "Companies" },
   ];
 
   return (
@@ -56,13 +55,7 @@ export default function StudentTopBar() {
 
         {/* Right */}
         <div className="flex items-center gap-2 sm:gap-3">
-          <div className="relative hidden w-[280px] md:block">
-            <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#0b1f33]/45" />
-            <input
-              placeholder="Search internships..."
-              className="h-10 w-full rounded-xl border border-[#0b1f33]/15 bg-white pl-9 pr-3 text-sm text-[#0b1f33] shadow-sm outline-none placeholder:text-[#0b1f33]/35 focus:border-[#0a79c9]/40"
-            />
-          </div>
+
 
           <button
             type="button"
@@ -83,13 +76,6 @@ export default function StudentTopBar() {
             <Bell className="h-5 w-5" />
           </Link>
 
-          <button
-            type="button"
-            aria-label="Messages"
-            className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-[#0b1f33]/15 bg-white text-[#0b1f33]/70 shadow-sm hover:bg-[#0b1f33]/5"
-          >
-            <MessageSquare className="h-5 w-5" />
-          </button>
 
           <div className="h-10 w-10 rounded-full border border-[#0b1f33]/10 bg-[linear-gradient(145deg,#f6c8a2,#9b6d4a)] shadow-sm" />
         </div>

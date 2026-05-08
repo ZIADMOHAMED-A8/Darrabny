@@ -3,8 +3,7 @@
 import InternshipCard from "./_components/InternshipProfile";
 import StatsCard from "./_components/StatsCard";
 import SavedList from "./_components/SavedList";
-import useGetStudentDashboard from "./hooks/useGetStudentDashboard";
-
+import useGetStudentDashboard from "@/app/student/dashboard/hooks/useGetStudentDashboard";
 type DashboardResponse = {
   user?: {
     firstName?: string;
