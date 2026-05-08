@@ -13,6 +13,7 @@ import {
 
 import InternshipsFilters from "./_components/internships-filters";
 import StudentFooter from "@/components/shared/student-footer";
+import useGetRecommendedInternships from "@/app/student/internships/hooks/useGetRecommendedInternships";
 
 type Internship = {
   id: string;

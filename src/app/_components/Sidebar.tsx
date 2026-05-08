@@ -12,7 +12,7 @@ import {
   Settings,
   X,
 } from "lucide-react";
-import useGetUser from "../(student)/hooks/useGetLoginUser";
+import useGetUser from "../student/hooks/useGetLoginUser";
 import { headers } from "next/headers";
 import { getToken } from "@/lib/utils/get-token.util";
 import { signOut } from "next-auth/react"

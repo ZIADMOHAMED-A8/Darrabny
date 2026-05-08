@@ -1,9 +1,11 @@
 "use client";
 
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useCollegeReports } from "./hooks/use-college-reports";
 
 export default function UniversityDashboardPage() {
+    const router = useRouter();
     const { data, isLoading } = useCollegeReports();
 
     if (isLoading) return <p className="p-10">Loading...</p>;
@@ -174,7 +176,7 @@ export default function UniversityDashboardPage() {
                                     const badge = getPerformanceBadge(globalIndex);
                                     const tag = getProgramTag(item.internship?.title);
                                     return (
-                                        <tr key={intern.applicationId} style={{ borderTop: "0.5px solid #F0F2F5" }}>
+                                        <tr key={intern.applicationId} style={{ borderTop: "0.5px solid #F0F2F5", cursor: "pointer" }} onClick={() => router.push(`/university/dashboard/${intern.applicationId}`)}>
                                             <td style={{ padding: "12px 10px" }}>
                                                 <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
 

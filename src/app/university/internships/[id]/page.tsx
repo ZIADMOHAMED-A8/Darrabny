@@ -2,15 +2,14 @@
 
 import { useState } from "react";
 import { X, CheckCircle2, Star } from "lucide-react";
-import { useInternshipDetails } from "./hooks/use-internship-details";
+import { useInternshipDetails } from "@/app/student/internships/[id]/hooks/use-internship-details";
 import { useParams } from "next/navigation";
-import { useInternshipReviews } from "./hooks/use-internship-reviews";
+import { useInternshipReviews } from "@/app/student/internships/[id]/hooks/use-internship-reviews";
 import { useRouter } from 'next/navigation';
-import ApplyModal from "@/app/student/internships/[id]/_components/apply-modal";
+import useRespondToEndorsementRequest from "../hooks/useRespondToEndorsementRequest";
 
-export default function InternshipDetailsPanel() {
+export default function UniversityInternshipDetailsPanel() {
   const [tab, setTab] = useState<"overview" | "reviews">("overview");
-  const [applyOpen, setApplyOpen] = useState(false);
   const router = useRouter();
 
   const { id } = useParams() as { id: string };
@@ -26,6 +25,8 @@ export default function InternshipDetailsPanel() {
     isLoading: reviewsLoading,
     isError: reviewsError,
   } = useInternshipReviews(id);
+
+  const { mutate: respondToEndorsement, isPending,isError:isRespondError,error } = useRespondToEndorsementRequest();
 
   // ================= LOADING / ERROR (MAIN) =================
   if (isLoading) {
@@ -54,6 +55,14 @@ export default function InternshipDetailsPanel() {
   const rating = reviewsData?.averageRating || 0;
   const totalReviews = reviewsData?.totalReviews || 0;
   const reviews = Array.isArray(reviewsData) ? reviewsData : reviewsData?.data || [];
+
+  const handleAccept = () => {
+    respondToEndorsement({ id, decision: "approved" });
+  };
+
+  const handleReject = () => {
+    respondToEndorsement({ id, decision: "rejected" });
+  };
 
   return (
     <>
@@ -204,7 +213,7 @@ export default function InternshipDetailsPanel() {
                     </div>
 
                     <div className="text-sm text-gray-400">
-                      
+
                     </div>
                   </div>
                 </div>
@@ -260,30 +269,28 @@ export default function InternshipDetailsPanel() {
 
         {/* Actions */}
         <div className="mt-12 flex justify-end gap-3">
-          <button className="px-6 py-2 border rounded-md">
-            Save
+          <button
+            onClick={handleReject}
+            disabled={isPending}
+            className="px-6 py-2 border border-red-300 text-red-600 rounded-md hover:bg-red-50 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {isPending ? "Processing..." : "Reject"}
           </button>
           <button
             type="button"
-            onClick={() => setApplyOpen(true)}
-            className="px-6 py-2 bg-[#0a79c9] text-white rounded-md"
+            onClick={handleAccept}
+            disabled={isPending}
+            className="px-6 py-2 bg-[#0a79c9] text-white rounded-md hover:bg-[#0a6ab5] disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            Apply Now
+            {isPending ? "Processing..." : "Accept"}
           </button>
         </div>
+        {isRespondError && <div className="text-red-500">
+          {error.message}
+          </div>}
 
       </div>
     </div>
-
-      <ApplyModal
-        open={applyOpen}
-        onClose={() => setApplyOpen(false)}
-        internship={{
-          title: String(title || "Internship"),
-          company: String(company || "Unknown Company"),
-          image: String(image),
-        }}
-      />
     </>
   );
 }

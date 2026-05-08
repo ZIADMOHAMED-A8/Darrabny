@@ -318,13 +318,40 @@ function Pagination({ current, total, onChange }: { current: number; total: numb
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
 export default function InternshipListingsPage() {
-  const { endorsements, isLoading, isError, error, refetch, isFetching } =
+  let { endorsements, isLoading, isError, error, refetch, isFetching } =
     useGetPendingEndorsements();
   const respondMutation = useRespondToEndorsementRequest();
   const [busyId, setBusyId] = useState<string | null>(null);
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
-
+  // const dummy= {
+  //   _id: "69ed51a85f872ad9fe513a23",
+  //   internshipTittle: "Frontend Developer Intern 2",
+  //   internshipLocation: "remote",
+  //   workingTime: "full-time",
+  //   internshipDescription:
+  //     "Internship focused on building modern web applications",
+  //   technicalSkills: ["HTML", "CSS", "JavaScript", "React", "Next.js"],
+  //   softSkills: ["Teamwork", "Problem-solving", "Communication"],
+  //   status: "onboarding",
+  //   startDate: "2026-04-01T00:00:00.000Z",
+  //   durationInMonths: 3,
+  //   thumbnail: null,
+  //   closed: false,
+  //   companyId: {
+  //     _id: "69d3b16f874301a670b5b629",
+  //     companyName: "tecH 2",
+  //   },
+  //   endDate: "2026-06-30T23:00:00.000Z",
+  //   createdAt: "2026-04-25T23:43:36.667Z",
+  //   updatedAt: "2026-04-27T13:14:18.728Z",
+  //   __v: 0,
+  //   updatedBy: "69d3b16f874301a670b5b629",
+  //   matchScore: 0.19,
+  //   matchedSkills: [],
+  //   why: "Recently added internship",
+  // }
+  //  endorsements=[...endorsements,dummy]
   const internships = useMemo(
     () => endorsements.map(mapEndorsementToInternship),
     [endorsements]
