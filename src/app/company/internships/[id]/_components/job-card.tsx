@@ -1,7 +1,6 @@
 // components/JobCard.tsx
 import Image from "next/image";
 import { MapPin, Briefcase, Calendar } from "lucide-react";
-
 interface JobCardProps {
   _id: string;
   internshipTittle: string;

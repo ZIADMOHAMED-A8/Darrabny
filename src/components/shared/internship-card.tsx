@@ -42,13 +42,13 @@ export default function InternshipCard({
         <div className="grid grid-cols-[140px_1fr] gap-4 p-4 md:gap-5 md:p-5">
           {/* Left image */}
           <div className="relative h-full w-full overflow-hidden rounded-[14px] bg-[#EEF3F8]">
-            <Image
+            {/* <Image
               src={thumbnail}
               alt={`${internshipTittle} - ${companyId.companyName}`}
               fill
               sizes="140px"
               className="object-cover transition-transform duration-300 group-hover:scale-[1.03]"
-            />
+            /> */}
           </div>
 
           {/* Right content */}

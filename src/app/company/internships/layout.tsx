@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import InternshipPostForm from "@/app/company/internships/_components/internship-post-form";
+import StudentTopBar from "@/app/_components/StudentTopBar";
 
 export default function Layout({
   children,
@@ -11,6 +12,8 @@ export default function Layout({
   const [open, setOpen] = useState(false);
 
   return (
+    <>
+    <StudentTopBar></StudentTopBar>
     <div className="min-h-screen flex flex-col px-16">
 
       {/* الزرار فوق يمين */}
@@ -50,5 +53,6 @@ export default function Layout({
         </div>
       )}
     </div>
+    </>
   );
 }

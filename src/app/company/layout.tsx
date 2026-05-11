@@ -1,12 +1,12 @@
 import type { ReactNode } from "react";
 import CompanyNavbar from "./dashboard/_components/company-navbar";
 import Footer from "@/components/shared/footer";
+import StudentTopBar from "../_components/StudentTopBar";
 
 export default function CompanyLayout({ children }: { children: ReactNode }) {
   return (
     <div className="min-h-screen flex flex-col text-white">
-      <CompanyNavbar />
-
+      <StudentTopBar></StudentTopBar>
       <main className="flex-1">{children}</main>
 
       <Footer />
