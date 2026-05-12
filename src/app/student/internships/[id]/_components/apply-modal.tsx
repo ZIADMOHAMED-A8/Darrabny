@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import {
+  AlertCircle,
   CheckCircle2,
   Eye,
   FileText,
@@ -14,10 +15,12 @@ import {
 } from "lucide-react";
 import useGetApplyProfile from "../../hooks/useGetApplyProfile";
 import { useToast } from "@/hooks/use-toast";
+import useApplyToInternship from "../hooks/use-apply-to-internship";
 
 type Props = {
   open: boolean;
   onClose: () => void;
+  internshipId: string;
   internship: {
     title: string;
     company: string;
@@ -72,22 +75,26 @@ const extractSkills = (payload: unknown): string[] => {
 
 const extractUser = (payload: unknown) => {
   const root = payload && typeof payload === "object" ? (payload as Record<string, unknown>) : {};
-  const user = (root as any)?.data ?? (root as any)?.user ?? payload;
+  const userPayload = root.data ?? root.user ?? payload;
+  const user =
+    userPayload && typeof userPayload === "object"
+      ? (userPayload as Record<string, unknown>)
+      : {};
 
-  const firstName = (user as any)?.firstName;
-  const lastName = (user as any)?.lastName;
+  const firstName = user.firstName;
+  const lastName = user.lastName;
   const fullNameFromParts = [firstName, lastName].filter(Boolean).join(" ").trim();
 
   const fullName =
-    (user as any)?.name ||
-    (user as any)?.fullName ||
+    user.name ||
+    user.fullName ||
     fullNameFromParts ||
     "Student";
 
   const email =
-    (user as any)?.email ||
-    (user as any)?.Email ||
-    (user as any)?.mail ||
+    user.email ||
+    user.Email ||
+    user.mail ||
     "";
 
   return { fullName: String(fullName), email: String(email) };
@@ -96,15 +103,23 @@ const extractUser = (payload: unknown) => {
 const extractResumeUrl = (payload: unknown): string | null => {
   if (!payload) return null;
   if (payload && typeof payload === "object") {
-    const url = (payload as any)?.downloadUrl || (payload as any)?.url;
+    const resume = payload as Record<string, unknown>;
+    const url = resume.downloadUrl || resume.url;
     if (typeof url === "string" && url.trim().length > 0) return url;
   }
   return null;
 };
 
-export default function ApplyModal({ open, onClose, internship }: Props) {
+export default function ApplyModal({
+  open,
+  onClose,
+  internshipId,
+  internship,
+}: Props) {
   const { toast } = useToast();
   const [coverLetter, setCoverLetter] = useState("");
+  const [submitError, setSubmitError] = useState("");
+  const { mutate, isPending, reset } = useApplyToInternship();
 
   const { data, isLoading, isError, error, isFetching } = useGetApplyProfile(open);
 
@@ -112,13 +127,54 @@ export default function ApplyModal({ open, onClose, internship }: Props) {
   const skills = useMemo(() => extractSkills(data?.skills), [data?.skills]);
   const resumeUrl = useMemo(() => extractResumeUrl(data?.resume), [data?.resume]);
 
-  function handleSubmit() {
-    toast({
-      title: "Application submitted",
-      description: "Your application was submitted successfully.",
-    });
+  function handleClose() {
+    reset();
+    setSubmitError("");
     onClose();
-    setCoverLetter("");
+  }
+
+  function handleCoverLetterChange(value: string) {
+    setCoverLetter(value);
+    setSubmitError("");
+    reset();
+  }
+
+  function handleSubmit() {
+    setSubmitError("");
+    reset();
+
+    if (!internshipId) {
+      setSubmitError("Missing internship id. Please refresh the page and try again.");
+      return;
+    }
+
+    mutate({
+      internshipId,
+      coverLetter,
+      skills,
+    }, {
+      onSuccess: () => {
+        toast({
+          title: "Application submitted",
+          description: "Your application was submitted successfully.",
+        });
+        handleClose();
+        setCoverLetter("");
+      },
+      onError: (submitError) => {
+        const message =
+          submitError instanceof Error
+            ? submitError.message
+            : "Please try again.";
+
+        setSubmitError(message);
+        toast({
+          title: "Failed to submit application",
+          description: message,
+          variant: "destructive",
+        });
+      },
+    });
   }
 
   if (!open) return null;
@@ -127,7 +183,7 @@ export default function ApplyModal({ open, onClose, internship }: Props) {
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 md:p-6">
       <div
         className="absolute inset-0 bg-black/35 backdrop-blur-[2px]"
-        onClick={onClose}
+        onClick={handleClose}
       />
 
       <div className="relative z-10 w-full max-w-3xl overflow-hidden rounded-2xl border border-[#0b1f33]/15 bg-white shadow-[0_30px_90px_rgba(16,24,40,0.22)]">
@@ -156,7 +212,7 @@ export default function ApplyModal({ open, onClose, internship }: Props) {
           <button
             type="button"
             aria-label="Close"
-            onClick={onClose}
+            onClick={handleClose}
             className="inline-flex h-10 w-10 items-center justify-center rounded-xl text-[#0b1f33]/55 hover:bg-[#0b1f33]/5 hover:text-[#0b1f33]"
           >
             <X className="h-6 w-6" />
@@ -289,7 +345,7 @@ export default function ApplyModal({ open, onClose, internship }: Props) {
 
             <textarea
               value={coverLetter}
-              onChange={(e) => setCoverLetter(e.target.value)}
+              onChange={(e) => handleCoverLetterChange(e.target.value)}
               placeholder="Briefly describe why you are a good fit for this role..."
               className="mt-4 min-h-[140px] w-full resize-none rounded-2xl border border-[#0b1f33]/12 bg-white px-4 py-3 text-sm text-[#0b1f33] shadow-sm outline-none placeholder:text-[#0b1f33]/35 focus:border-[#0a79c9]/40"
             />
@@ -300,13 +356,24 @@ export default function ApplyModal({ open, onClose, internship }: Props) {
               {error instanceof Error ? error.message : "Failed to load your profile info."}
             </div>
           )}
+
+          {submitError && (
+            <div className="mt-6 flex items-start gap-3 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+              <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" />
+              <div>
+                <p className="font-semibold">Application was not submitted.</p>
+                <p className="mt-1">{submitError}</p>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Footer */}
         <div className="flex items-center justify-end gap-3 border-t border-[#0b1f33]/10 px-6 py-5 md:px-8">
           <button
             type="button"
-            onClick={onClose}
+            onClick={handleClose}
+            disabled={isPending}
             className="rounded-md border border-[#0b1f33]/15 bg-white px-5 py-2.5 text-sm font-semibold text-[#0b1f33] hover:bg-[#0b1f33]/5"
           >
             Cancel
@@ -314,9 +381,10 @@ export default function ApplyModal({ open, onClose, internship }: Props) {
           <button
             type="button"
             onClick={handleSubmit}
-            className="rounded-md bg-[var(--ds-primary)] px-6 py-2.5 text-sm font-bold text-white shadow-sm hover:bg-[var(--ds-primary-dark)]"
+            disabled={isPending}
+            className="rounded-md bg-[var(--ds-primary)] px-6 py-2.5 text-sm font-bold text-white shadow-sm hover:bg-[var(--ds-primary-dark)] disabled:cursor-not-allowed disabled:opacity-60"
           >
-            Submit Application
+            {isPending ? "Submitting..." : "Submit Application"}
           </button>
         </div>
       </div>

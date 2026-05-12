@@ -15,6 +15,7 @@ function getTopbarConfig(role?: string): {
   homeHref: string;
   links: TopbarLink[];
   notificationsHref: string;
+  profileHref: string;
 } {
   switch (role) {
     case "company":
@@ -27,6 +28,8 @@ function getTopbarConfig(role?: string): {
           { href: "/company/partners", label: "Partners" },
         ],
         notificationsHref: "/company/settings",
+        profileHref: '/company/profile'
+
       };
     case "university":
       return {
@@ -36,6 +39,8 @@ function getTopbarConfig(role?: string): {
           { href: "/university/internships", label: "Internships" },
         ],
         notificationsHref: "/university/dashboard",
+        profileHref: '/unviersity/profile'
+
       };
     case "student":
     default:
@@ -48,6 +53,7 @@ function getTopbarConfig(role?: string): {
           { href: "/student/applications", label: "Applications" },
         ],
         notificationsHref: "/student/notifications",
+        profileHref: '/profile'
       };
   }
 }
@@ -118,7 +124,10 @@ export default function StudentTopBar() {
           </Link>
 
 
-          <div className="h-10 w-10 rounded-full border border-[#0b1f33]/10 bg-[linear-gradient(145deg,#f6c8a2,#9b6d4a)] shadow-sm" />
+          <Link href={getTopbarConfig(role).profileHref}>          <div className="h-10 w-10 rounded-full border border-[#0b1f33]/10 bg-[linear-gradient(145deg,#f6c8a2,#9b6d4a)] shadow-sm" >
+
+          </div></Link>
+
         </div>
       </div>
     </header>
