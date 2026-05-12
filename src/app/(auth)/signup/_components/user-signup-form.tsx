@@ -32,7 +32,7 @@ import {
 import useSignup from "../_hooks/signup";
 
 export default function UserSignupForm() {
-  const { mutate, isPending } = useSignup();
+  const { mutate, isPending, error, reset } = useSignup();
 
   const [showPassword, setShowPassword] = React.useState(false);
   const [showConfirm, setShowConfirm] = React.useState(false);
@@ -53,6 +53,7 @@ export default function UserSignupForm() {
   });
 
   const onSubmit: SubmitHandler<SignupValues> = (values) => {
+    reset();
     mutate(values);
   };
 
@@ -65,6 +66,11 @@ export default function UserSignupForm() {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
+        {error ? (
+          <div className="rounded-[12px] border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+            {(error as any)?.message || "An unexpected error occurred"}
+          </div>
+        ) : null}
 
         {/* First + Last Name */}
         <div className="grid gap-5 md:grid-cols-2">
@@ -124,11 +130,7 @@ export default function UserSignupForm() {
             <FormItem>
               <FormLabel className={LABEL}>Mobile Number</FormLabel>
               <FormControl>
-                <Input
-                  {...field}
-                  placeholder="01012345678"
-                  className={INPUT}
-                />
+                <Input {...field} placeholder="01012345678" className={INPUT} />
               </FormControl>
               <FormMessage />
             </FormItem>

@@ -7,7 +7,7 @@ import { Company } from "../_data/companies.data";
 export default function CompanyCard({ c }: { c: Company }) {
   return (
     <Link
-      href={`/companies/${c.id}`}
+      href={`/student/companies/${c.id}`}
       className="overflow-hidden rounded-2xl border border-[#0b1f33]/10 bg-white shadow-[0_10px_25px_rgba(16,24,40,0.08)] transition hover:-translate-y-0.5"
     >
       <div className="relative h-[165px] w-full bg-[#f2f5fc]">

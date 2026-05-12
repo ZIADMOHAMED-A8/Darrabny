@@ -5,7 +5,7 @@ import { FileText, Loader2, Upload } from "lucide-react";
 import useGetResume from "../_hooks/useGetResume";
 import useUploadResume from "../_hooks/useUploadResume";
 import { useToast } from "@/hooks/use-toast";
-import useGetUser from "../../(student)/hooks/useGetLoginUser";
+import useGetUser from "../../student/hooks/useGetLoginUser";
 
 interface ResumeSectionProps {
   isEditing?: boolean;

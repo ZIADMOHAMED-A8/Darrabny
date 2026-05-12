@@ -13,7 +13,7 @@ import {
 } from "lucide-react";
 import useUploadProfilePic from "../_hooks/useUploadProfilePic";
 import { useToast } from "@/hooks/use-toast";
-import useGetUser from "@/app/(student)/hooks/useGetLoginUser";
+import useGetUser from "@/app/student/hooks/useGetLoginUser";
 
 const extractProfilePicUrl = (payload: unknown): string | null => {
   if (!payload || typeof payload !== "object") return null;

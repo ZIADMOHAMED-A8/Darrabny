@@ -12,16 +12,15 @@ import {
   Settings,
   X,
 } from "lucide-react";
-import useGetUser from "../(student)/hooks/useGetLoginUser";
+import useGetUser from "../student/hooks/useGetLoginUser";
 import { headers } from "next/headers";
 import { getToken } from "@/lib/utils/get-token.util";
-
+import { signOut } from "next-auth/react"
 const menu = [
-  { label: "Dashboard", href: "/dashboard", icon: Home },
-  { label: "Internships", href: "/Inprogressinternships", icon: Briefcase },
-  { label: "Applications", href: "/applications", icon: FileText },
-  { label: "Resume", href: "/resume", icon: User },
-  { label: "Settings", href: "/settings", icon: Settings },
+  { label: "Dashboard", href: "/student/dashboard", icon: Home },
+  { label: "Internships", href: "/student/Inprogressinternships", icon: Briefcase },
+  { label: "Applications", href: "/student/applications", icon: FileText },
+  { label: "Settings", href: "/student/settings", icon: Settings },
 ];
 
 export default function Sidebar() {
@@ -121,7 +120,9 @@ export default function Sidebar() {
         </nav>
       </div>
 
-      <button className="mt-6 w-full rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-blue-500">
+      <button onClick={()=>{
+        signOut({ callbackUrl: '/login' })
+      }} className="mt-6 w-full rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-blue-500">
         Logout
       </button>
     </>

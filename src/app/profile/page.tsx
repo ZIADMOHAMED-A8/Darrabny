@@ -8,7 +8,7 @@ import AchievementsSection from "./_components/AchievementsSection";
 import StudentTopBar from "../_components/StudentTopBar";
 import { useState } from "react";
 import { Loader2 } from "lucide-react";
-import useGetUser from "../(student)/hooks/useGetLoginUser";
+import useGetUser from "../student/hooks/useGetLoginUser";
 
 export default function ProfilePage() {
   const [isEditing,setIsEditing]=useState(false)

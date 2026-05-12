@@ -7,7 +7,7 @@ import PersonalInfoForm from "./_components/PersonalInfoForm";
 import useUpdateProfile from "./hooks/useUpdateInfo";
 import useUpdateNotif from "./hooks/useUpdateNotif";
 import useUpdateFullName from "./hooks/useUpdateFullName";
-import useGetUser from "../hooks/useGetLoginUser";
+import useGetUser from "@/app/student/hooks/useGetLoginUser";
 export type SettingsFormValues = {
   fullName: string;
   email: string;

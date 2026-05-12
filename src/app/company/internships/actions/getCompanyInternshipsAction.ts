@@ -35,14 +35,14 @@ export default async function getCompanyInternshipsAction({
   }
 
   const baseUrl = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:5000";
-
+  console.log('kosom el token',token)
   const res = await fetch(
     `${baseUrl}/internship/companyInternships?${query.toString()}`,
     {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        Authorization: 'company eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5YTdiYzQyMjU3MmViN2U3Y2Q5ZjUwMCIsInJvbGUiOiJjb21wYW55IiwiaWF0IjoxNzczMDMwMDkxLCJleHAiOjE3NzM2MzQ4OTF9.l0__8OiCXEr9YGgxVkjzQJBt2PBYeGp8iiSc3jrCt3A',
+        Authorization: `company ${token.token}`,
       },
       
     }

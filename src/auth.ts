@@ -150,6 +150,7 @@ export const authOptions: NextAuthOptions = {
         console.log("response from auth file :",response);
         
         const payload = await response.json().catch(() => ({}));
+        console.log('payloooooad----',payload)
         console.log("credentialss from auth file :",credentials,url);
         if (!response.ok) {
           console.log("credentialss from auth file :",credentials,url);
@@ -158,11 +159,25 @@ export const authOptions: NextAuthOptions = {
           throw new Error(payload?.error || payload?.message || "Login failed");
         }
 
-        return {
-          id: payload?.user?._id,
-          user: payload?.user,
-          token: payload?.token, // access + refresh
-        };
+        const actualUser =
+        payload?.user ||
+        payload?.company ||
+        payload?.university;
+      
+      const role =
+        payload?.user
+          ? "user"
+          : payload?.company
+          ? "company"
+          : "university";
+      
+      return {
+        id: actualUser?._id,
+        user: {
+          ...actualUser,
+          role,
+        },
+      };;
       },
     }),
 

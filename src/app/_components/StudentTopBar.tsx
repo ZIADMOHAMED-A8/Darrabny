@@ -2,27 +2,75 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Bell, BriefcaseBusiness, MessageSquare, Search } from "lucide-react";
+import { Bell, BriefcaseBusiness } from "lucide-react";
+import { useSession } from "next-auth/react";
 
 const openSidebar = () => {
   window.dispatchEvent(new Event("student-sidebar:open"));
 };
 
+type TopbarLink = { href: string; label: string };
+
+function getTopbarConfig(role?: string): {
+  homeHref: string;
+  links: TopbarLink[];
+  notificationsHref: string;
+  profileHref: string;
+} {
+  switch (role) {
+    case "company":
+      return {
+        homeHref: "/company/dashboard",
+        links: [
+          { href: "/company/dashboard", label: "Dashboard" },
+          { href: "/company/internships", label: "Internships" },
+          { href: "/company/candidates/ai-ranked", label: "Candidates" },
+          { href: "/company/partners", label: "Partners" },
+        ],
+        notificationsHref: "/company/settings",
+        profileHref: '/company/profile'
+
+      };
+    case "university":
+      return {
+        homeHref: "/university/dashboard",
+        links: [
+          { href: "/university/dashboard", label: "Dashboard" },
+          { href: "/university/internships", label: "Internships" },
+        ],
+        notificationsHref: "/university/dashboard",
+        profileHref: '/unviersity/profile'
+
+      };
+    case "student":
+    default:
+      return {
+        homeHref: "/student/dashboard",
+        links: [
+          { href: "/student/dashboard", label: "Dashboard" },
+          { href: "/student/internships", label: "Internships" },
+          { href: "/student/companies", label: "Companies" },
+          { href: "/student/applications", label: "Applications" },
+        ],
+        notificationsHref: "/student/notifications",
+        profileHref: '/profile'
+      };
+  }
+}
+
 export default function StudentTopBar() {
   const pathname = usePathname();
 
-  const links = [
-    { href: "/dashboard", label: "Dashboard" },
-    { href: "/internships", label: "Internships" },
-    { href: "/companies", label: "Companies" },
-    { href: "/career-consulting", label: "Career Counseling" },
-  ];
+  const { data } = useSession();
+  console.log(data,"datraaaaaaa")
+  const role = (data?.user as { role?: string } | undefined)?.role;
+  const { homeHref, links, notificationsHref } = getTopbarConfig(role);
 
   return (
     <header className="sticky top-0 z-50 border-b border-[#0b1f33]/10 bg-white/85 backdrop-blur">
       <div className="mx-auto flex min-h-[64px] max-w-7xl items-center justify-between gap-3 px-4 py-3 sm:min-h-[72px] md:px-8">
         {/* Left */}
-        <Link href="/dashboard" className="flex items-center gap-3">
+        <Link href={homeHref} className="flex items-center gap-3">
           <div className="grid h-9 w-9 place-items-center rounded-lg bg-[var(--ds-primary)] text-white">
             <BriefcaseBusiness className="h-5 w-5" />
           </div>
@@ -35,7 +83,7 @@ export default function StudentTopBar() {
         <nav className="hidden items-center gap-8 text-sm font-medium text-[#0b1f33]/70 md:flex">
           {links.map((l) => {
             const active = pathname === l.href || pathname.startsWith(`${l.href}/`);
-
+            console.log(l)
             return (
               <Link
                 key={l.href}
@@ -56,14 +104,6 @@ export default function StudentTopBar() {
 
         {/* Right */}
         <div className="flex items-center gap-2 sm:gap-3">
-          <div className="relative hidden w-[280px] md:block">
-            <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#0b1f33]/45" />
-            <input
-              placeholder="Search internships..."
-              className="h-10 w-full rounded-xl border border-[#0b1f33]/15 bg-white pl-9 pr-3 text-sm text-[#0b1f33] shadow-sm outline-none placeholder:text-[#0b1f33]/35 focus:border-[#0a79c9]/40"
-            />
-          </div>
-
           <button
             type="button"
             aria-label="Open sidebar"
@@ -76,22 +116,18 @@ export default function StudentTopBar() {
           </button>
 
           <Link
-            href="/notifications"
+            href={notificationsHref}
             aria-label="Notifications"
             className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-[#0b1f33]/15 bg-white text-[#0b1f33]/70 shadow-sm hover:bg-[#0b1f33]/5"
           >
             <Bell className="h-5 w-5" />
           </Link>
 
-          <button
-            type="button"
-            aria-label="Messages"
-            className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-[#0b1f33]/15 bg-white text-[#0b1f33]/70 shadow-sm hover:bg-[#0b1f33]/5"
-          >
-            <MessageSquare className="h-5 w-5" />
-          </button>
 
-          <div className="h-10 w-10 rounded-full border border-[#0b1f33]/10 bg-[linear-gradient(145deg,#f6c8a2,#9b6d4a)] shadow-sm" />
+          <Link href={getTopbarConfig(role).profileHref}>          <div className="h-10 w-10 rounded-full border border-[#0b1f33]/10 bg-[linear-gradient(145deg,#f6c8a2,#9b6d4a)] shadow-sm" >
+
+          </div></Link>
+
         </div>
       </div>
     </header>
