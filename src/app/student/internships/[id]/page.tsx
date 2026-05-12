@@ -8,6 +8,17 @@ import { useInternshipReviews } from "./hooks/use-internship-reviews";
 import { useRouter } from 'next/navigation';
 import ApplyModal from "@/app/student/internships/[id]/_components/apply-modal";
 
+type InternshipReview = {
+  _id?: string;
+  rating?: number;
+  comment?: string;
+  createdAt?: string;
+  userId?: {
+    firstName?: string;
+    lastName?: string;
+  };
+};
+
 export default function InternshipDetailsPanel() {
   const [tab, setTab] = useState<"overview" | "reviews">("overview");
   const [applyOpen, setApplyOpen] = useState(false);
@@ -53,7 +64,9 @@ export default function InternshipDetailsPanel() {
   // reviews
   const rating = reviewsData?.averageRating || 0;
   const totalReviews = reviewsData?.totalReviews || 0;
-  const reviews = Array.isArray(reviewsData) ? reviewsData : reviewsData?.data || [];
+  const reviews: InternshipReview[] = Array.isArray(reviewsData)
+    ? reviewsData
+    : reviewsData?.data || [];
 
   return (
     <>
@@ -217,9 +230,9 @@ export default function InternshipDetailsPanel() {
                 )}
 
                 {/* Reviews list */}
-                {reviews.map((r: any) => (
+                {reviews.map((r) => (
                   <div
-                    key={r._id}
+                    key={r._id || `${r.userId?.firstName}-${r.createdAt}`}
                     className="rounded-2xl border border-[#0b1f33]/10 p-6"
                   >
                     <div className="flex justify-between items-start">
@@ -229,7 +242,9 @@ export default function InternshipDetailsPanel() {
                           {r.userId?.firstName} {r.userId?.lastName}
                         </div>
                         <div className="text-sm text-gray-500">
-                          {new Date(r.createdAt).toLocaleDateString()}
+                          {r.createdAt
+                            ? new Date(r.createdAt).toLocaleDateString()
+                            : "Date unavailable"}
                         </div>
                       </div>
 
@@ -238,7 +253,7 @@ export default function InternshipDetailsPanel() {
                           <Star
                             key={i}
                             className={`w-4 h-4 ${
-                              i < r.rating
+                              i < Number(r.rating || 0)
                                 ? "fill-yellow-400 text-yellow-400"
                                 : "text-gray-300"
                             }`}
@@ -278,6 +293,7 @@ export default function InternshipDetailsPanel() {
       <ApplyModal
         open={applyOpen}
         onClose={() => setApplyOpen(false)}
+        internshipId={id}
         internship={{
           title: String(title || "Internship"),
           company: String(company || "Unknown Company"),
