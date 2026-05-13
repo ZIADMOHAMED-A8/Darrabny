@@ -177,6 +177,7 @@ export const authOptions: NextAuthOptions = {
           ...actualUser,
           role,
         },
+        token:payload?.token
       };;
       },
     }),
@@ -224,6 +225,7 @@ export const authOptions: NextAuthOptions = {
           if (res.ok && backendToken) {
             token.token = backendToken;
             token.user = data?.user;
+
           }
         } catch {
           token.token = undefined;

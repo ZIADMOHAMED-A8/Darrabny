@@ -4,6 +4,8 @@ import InternshipCard from "./_components/InternshipProfile";
 import StatsCard from "./_components/StatsCard";
 import SavedList from "./_components/SavedList";
 import useGetStudentDashboard from "@/app/student/dashboard/hooks/useGetStudentDashboard";
+import useGetSavedInternships from "@/app/student/dashboard/hooks/useGetSavedInternships";
+
 type DashboardResponse = {
   user?: {
     firstName?: string;
@@ -24,21 +26,34 @@ type DashboardResponse = {
     internshipsCompleted?: number;
     averageCompanyRating?: number;
   };
-  savedInternships?: Array<{
-    id: string;
-    title?: string;
-    company?: {
-      name?: string;
-    };
-  }>;
 };
 
+type SavedInternshipResponseItem = {
+  _id?: string;
+  id?: string;
+  internshipTitle?: string;
+  internshipTittle?: string;
+  title?: string;
+  companyId?: {
+    companyName?: string;
+  };
+  company?: {
+    name?: string;
+  };
+};
 
 export default function DashboardPage() {
   const { data, isLoading, isError, error } = useGetStudentDashboard({
     activeLimit: 5,
     savedLimit: 5,
   });
+  const {
+    data: savedInternshipsData,
+    isLoading: isSavedLoading,
+    isError: isSavedError,
+    error: savedError,
+  } = useGetSavedInternships();
+
   const dashboardData = (data ?? {}) as DashboardResponse;
 
   const fullName =
@@ -67,10 +82,10 @@ export default function DashboardPage() {
     },
   ];
 
-  const savedInternships = (dashboardData.savedInternships ?? []).map((item) => ({
-    id: item.id,
-    title: item.title ?? "Untitled Internship",
-    company: item.company?.name ?? "Unknown Company",
+  const savedInternships = ((savedInternshipsData ?? []) as SavedInternshipResponseItem[]).map((item) => ({
+    id: item.id ?? item._id ?? item.internshipTitle ?? "saved-internship",
+    title: item.internshipTitle ?? item.internshipTittle ?? item.title ?? "Untitled Internship",
+    company: item.companyId?.companyName ?? item.company?.name ?? "Unknown Company",
   }));
 
   return (
@@ -117,10 +132,18 @@ export default function DashboardPage() {
           </div>
 
           <div className="rounded-xl bg-white/60 backdrop-blur p-4 space-y-4 shadow-sm">
+            {isSavedLoading && (
+              <p className="text-sm text-gray-500">Loading saved internships...</p>
+            )}
+            {isSavedError && (
+              <p className="text-sm text-red-600">
+                {(savedError as Error)?.message || "Failed to load saved internships."}
+              </p>
+            )}
             {savedInternships.map((item) => (
               <SavedList key={item.id} {...item} />
             ))}
-            {!isLoading && !isError && savedInternships.length === 0 && (
+            {!isSavedLoading && !isSavedError && savedInternships.length === 0 && (
               <p className="text-sm text-gray-500">No saved internships yet.</p>
             )}
           </div>

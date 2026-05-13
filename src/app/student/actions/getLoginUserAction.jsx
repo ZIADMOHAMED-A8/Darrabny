@@ -5,6 +5,7 @@ import { getToken } from "@/lib/utils/get-token.util";
 
 export default async function getLoginUserAction() {
       const token=await getToken()
+      console.log(token,'ziadf')
       if (!token) {
       throw new Error("Unauthorized");
     }

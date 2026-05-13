@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import {
   Bookmark,
+  BookmarkCheck,
   Briefcase,
   Building2,
   Clock,
@@ -14,6 +15,9 @@ import {
 import InternshipsFilters from "./_components/internships-filters";
 import StudentFooter from "@/components/shared/student-footer";
 import useGetRecommendedInternships from "@/app/student/internships/hooks/useGetRecommendedInternships";
+import useGetSavedInternships from "@/app/student/dashboard/hooks/useGetSavedInternships";
+import useToggleSaveInternship from "@/app/student/internships/hooks/useToggleSaveInternship";
+import { cn } from "@/lib/utils";
 
 type Internship = {
   id: string;
@@ -30,56 +34,88 @@ type Internship = {
   softSkills?: string[];
 };
 
+type SavedInternshipItem = {
+  _id?: string;
+  id?: string;
+};
+
+type RawInternship = {
+  _id?: string;
+  id?: string;
+  companyId?: {
+    companyName?: string;
+  };
+  companyName?: string;
+  internshipTitle?: string;
+  internshipTittle?: string;
+  internshipLocation?: string;
+  workingTime?: string;
+  durationInMonths?: number | string;
+  matchScore?: number;
+  why?: string;
+  thumbnail?: string;
+  matchedSkills?: unknown;
+  technicalSkills?: unknown;
+  softSkills?: unknown;
+};
+
 function ensureStringArray(value: unknown): string[] {
   if (!Array.isArray(value)) return [];
   return value.filter((x) => typeof x === "string") as string[];
 }
 
-function mapInternships(data: any[]): Internship[] {
-  return (Array.isArray(data) ? data : [])?.map((item: any, index) => ({
-    id: String(item?._id ?? index),
+function mapInternships(data: unknown[]): Internship[] {
+  return (Array.isArray(data) ? data : [])?.map((rawItem, index) => {
+    const item = rawItem as RawInternship;
+    const durationInMonths = item.durationInMonths || 3;
+
+    return {
+    id: String(item._id ?? item.id ?? index),
     company:
-      item?.companyId?.companyName ||
-      item?.companyName ||
+      item.companyId?.companyName ||
+      item.companyName ||
       "Unknown Company",
 
     title:
-      item?.internshipTitle ||
-      item?.internshipTittle ||
+      item.internshipTitle ||
+      item.internshipTittle ||
       "Internship",
 
     workMode:
-      item?.internshipLocation === "onsite"
+      item.internshipLocation === "onsite"
         ? "On-site"
-        : item?.internshipLocation === "hybrid"
+        : item.internshipLocation === "hybrid"
         ? "Hybrid"
         : "Remote",
 
     type:
-      item?.workingTime === "part-time"
+      item.workingTime === "part-time"
         ? "Part-time"
         : "Full-time",
 
-    duration: `${item?.durationInMonths || 3} months`,
+    duration: `${durationInMonths} months`,
 
     match:
-      typeof item?.matchScore === "number"
+      typeof item.matchScore === "number"
         ? Math.round(item.matchScore * 100)
         : undefined,
 
-    reason: item?.why,
+    reason: item.why,
 
-    image: item?.thumbnail || "/placeholder.png",
-    matchedSkills: ensureStringArray(item?.matchedSkills),
-    technicalSkills: ensureStringArray(item?.technicalSkills),
-    softSkills: ensureStringArray(item?.softSkills),
-  }));
+    image: item.thumbnail || "/placeholder.png",
+    matchedSkills: ensureStringArray(item.matchedSkills),
+    technicalSkills: ensureStringArray(item.technicalSkills),
+    softSkills: ensureStringArray(item.softSkills),
+    };
+  });
 }
 
 export default function InternshipsPage() {
   const { data, isLoading, isError } = useGetRecommendedInternships();
+  const { data: savedInternshipsData } = useGetSavedInternships();
+  const { toggleSaveInternship, isPending: isTogglePending } = useToggleSaveInternship();
 
-  const [searchResults, setSearchResults] = useState<any[] | null>(null);
+  const [searchResults, setSearchResults] = useState<unknown[] | null>(null);
 
   const recommended = useMemo(
     () => mapInternships(data || []),
@@ -92,6 +128,18 @@ export default function InternshipsPage() {
     }
     return recommended;
   }, [searchResults, recommended]);
+
+  const savedIds = useMemo(() => {
+    return new Set(
+      ((savedInternshipsData ?? []) as SavedInternshipItem[])
+        .map((item) => item.id ?? item._id)
+        .filter((id): id is string => Boolean(id))
+    );
+  }, [savedInternshipsData]);
+
+  const handleToggleSave = async (internshipId: string) => {
+    await toggleSaveInternship(internshipId);
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#EEF4FF] via-[#F7FAFF] to-white">
@@ -147,7 +195,14 @@ export default function InternshipsPage() {
 
           {/* Cards */}
           {shown.map((it, idx) => (
-            <InternshipCard key={it.id} it={it} priority={idx < 2} />
+            <InternshipCard
+              key={it.id}
+              it={it}
+              priority={idx < 2}
+              isSaved={savedIds.has(it.id)}
+              isSaving={isTogglePending}
+              onToggleSave={handleToggleSave}
+            />
           ))}
 
         </section>
@@ -169,9 +224,15 @@ function SkillChip({ label }: { label: string }) {
 function InternshipCard({
   it,
   priority,
+  isSaved,
+  isSaving,
+  onToggleSave,
 }: {
   it: Internship;
   priority?: boolean;
+  isSaved: boolean;
+  isSaving: boolean;
+  onToggleSave: (internshipId: string) => void;
 }) {
   const matchLabel =
     typeof it.match === "number"
@@ -258,10 +319,23 @@ function InternshipCard({
 
             <button
               type="button"
-              className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-slate-200 text-slate-700 hover:bg-slate-50"
-              aria-label="Save internship"
+              disabled={isSaving}
+              onClick={() => onToggleSave(it.id)}
+              className={cn(
+                "inline-flex h-9 w-9 items-center justify-center rounded-lg border transition-colors",
+                isSaved
+                  ? "border-blue-200 bg-blue-50 text-blue-600 hover:bg-blue-100"
+                  : "border-slate-200 text-slate-700 hover:bg-slate-50",
+                isSaving && "cursor-not-allowed opacity-60"
+              )}
+              aria-label={isSaved ? "Unsave internship" : "Save internship"}
+              aria-pressed={isSaved}
             >
-              <Bookmark className="w-4 h-4" />
+              {isSaved ? (
+                <BookmarkCheck className="w-4 h-4" />
+              ) : (
+                <Bookmark className="w-4 h-4" />
+              )}
             </button>
           </div>
         </div>

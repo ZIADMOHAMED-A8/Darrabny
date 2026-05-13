@@ -35,7 +35,7 @@ export default async function middleware(req: NextRequest) {
   const isAuthRoute = authRoutes.some(route => pathname.startsWith(route));
   const isHome = pathname === "/";
 
-  console.log("TOKEN FROM MIDDLEWARE:", token ? "exists" : "null", "| PATH:", pathname);
+  console.log("TOKEN FROM MIDDLEWARE:", token , pathname);
 
   if (isAuthRoute && token) {
     return NextResponse.redirect(new URL("/", req.url));
