@@ -4,10 +4,61 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Bell, BriefcaseBusiness } from "lucide-react";
 import { useSession } from "next-auth/react";
+import { Bell, BriefcaseBusiness } from "lucide-react";
+import { useSession } from "next-auth/react";
 
 const openSidebar = () => {
   window.dispatchEvent(new Event("student-sidebar:open"));
 };
+
+type TopbarLink = { href: string; label: string };
+
+function getTopbarConfig(role?: string): {
+  homeHref: string;
+  links: TopbarLink[];
+  notificationsHref: string;
+  profileHref: string;
+} {
+  switch (role) {
+    case "company":
+      return {
+        homeHref: "/company/dashboard",
+        links: [
+          { href: "/company/dashboard", label: "Dashboard" },
+          { href: "/company/internships", label: "Internships" },
+          { href: "/company/candidates/ai-ranked", label: "Candidates" },
+          { href: "/company/partners", label: "Partners" },
+        ],
+        notificationsHref: "/company/settings",
+        profileHref: '/company/profile'
+
+      };
+    case "university":
+      return {
+        homeHref: "/university/dashboard",
+        links: [
+          { href: "/university/dashboard", label: "Dashboard" },
+          { href: "/university/internships", label: "Internships" },
+        ],
+        notificationsHref: "/university/dashboard",
+        profileHref: '/unviersity/profile'
+
+      };
+    case "student":
+    default:
+      return {
+        homeHref: "/student/dashboard",
+        links: [
+          { href: "/student/dashboard", label: "Dashboard" },
+          { href: "/student/internships", label: "Internships" },
+          { href: "/student/companies", label: "Companies" },
+          { href: "/student/applications", label: "Applications" },
+        ],
+        notificationsHref: "/student/notifications",
+        profileHref: '/profile'
+      };
+  }
+}
 
 type TopbarLink = { href: string; label: string };
 
@@ -71,6 +122,7 @@ export default function StudentTopBar() {
       <div className="mx-auto flex min-h-[64px] max-w-7xl items-center justify-between gap-3 px-4 py-3 sm:min-h-[72px] md:px-8">
         {/* Left */}
         <Link href={homeHref} className="flex items-center gap-3">
+        <Link href={homeHref} className="flex items-center gap-3">
           <div className="grid h-9 w-9 place-items-center rounded-lg bg-[var(--ds-primary)] text-white">
             <BriefcaseBusiness className="h-5 w-5" />
           </div>
@@ -83,6 +135,7 @@ export default function StudentTopBar() {
         <nav className="hidden items-center gap-8 text-sm font-medium text-[#0b1f33]/70 md:flex">
           {links.map((l) => {
             const active = pathname === l.href || pathname.startsWith(`${l.href}/`);
+            console.log(l)
             console.log(l)
             return (
               <Link
@@ -117,11 +170,17 @@ export default function StudentTopBar() {
 
           <Link
             href={notificationsHref}
+            href={notificationsHref}
             aria-label="Notifications"
             className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-[#0b1f33]/15 bg-white text-[#0b1f33]/70 shadow-sm hover:bg-[#0b1f33]/5"
           >
             <Bell className="h-5 w-5" />
           </Link>
+
+
+          <Link href={getTopbarConfig(role).profileHref}>          <div className="h-10 w-10 rounded-full border border-[#0b1f33]/10 bg-[linear-gradient(145deg,#f6c8a2,#9b6d4a)] shadow-sm" >
+
+          </div></Link>
 
 
           <Link href={getTopbarConfig(role).profileHref}>          <div className="h-10 w-10 rounded-full border border-[#0b1f33]/10 bg-[linear-gradient(145deg,#f6c8a2,#9b6d4a)] shadow-sm" >

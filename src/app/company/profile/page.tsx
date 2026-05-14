@@ -290,26 +290,35 @@ export default function CompanyProfilePage() {
               </div>
 
               <div className="space-y-3">
-                {MOCK_INTERNSHIPS.map(intern => (
-                  <div key={intern.title} className="border border-slate-100 rounded-xl p-4">
+                {data?.internships?.map((intern: any) => (
+                  <div key={intern.id} className="border border-slate-100 rounded-xl p-4">
                     <div className="flex items-start justify-between gap-3">
                       <div className="flex items-start gap-3">
                         <div className="w-9 h-9 rounded-lg bg-slate-100 border border-slate-200 shrink-0" />
+
                         <div>
-                          <p className="text-xs font-bold text-slate-800">{intern.title}</p>
+                          <p className="text-xs font-bold text-slate-800">
+                            {intern.internshipTitle}
+                          </p>
+
                           <div className="flex gap-3 mt-1 text-[11px] text-slate-500">
-                            <span>{intern.type}</span>
-                            <span>{intern.duration}</span>
-                            <span>{intern.pay}</span>
+                            <span>{intern.internshipLocation}</span>
+                            <span>{intern.workingTime}</span>
+                            <span>{intern.postedAgo}</span>
                           </div>
+
                           <div className="flex flex-wrap gap-1.5 mt-2">
-                            {intern.skills.map(s => (
-                              <span key={s} className="border border-slate-200 text-[10px] text-slate-600 px-2 py-0.5 rounded-full">{s}</span>
+                            {intern.technicalSkills?.map((s: string, i: number) => (
+                              <span
+                                key={i}
+                                className="border border-slate-200 text-[10px] text-slate-600 px-2 py-0.5 rounded-full"
+                              >
+                                {s.replace(/[\[\]\"]/g, "")}
+                              </span>
                             ))}
                           </div>
                         </div>
                       </div>
-
                     </div>
                   </div>
                 ))}
@@ -332,34 +341,51 @@ export default function CompanyProfilePage() {
 
               {/* Individual reviews */}
               <div className="space-y-4">
-                {MOCK_REVIEWS.map(r => (
-                  <div key={r.name} className="border border-slate-100 rounded-xl p-4">
+                {data?.reviews?.map((r: any) => (
+                  <div
+                    key={r.id}
+                    className="border border-slate-100 rounded-xl p-4"
+                  >
                     <div className="flex items-start justify-between mb-3">
                       <div className="flex items-center gap-3">
+
                         <div
-                          className="w-9 h-9 rounded-full flex items-center justify-center text-xs font-bold shrink-0"
-                          style={{ background: r.color, color: "#0B2545" }}
+                          className="w-9 h-9 rounded-full flex items-center justify-center text-xs font-bold shrink-0 bg-slate-200 text-slate-700"
                         >
-                          {r.initials}
+                          {r.user?.fullName
+                            ?.split(" ")
+                            ?.map((n: string) => n[0])
+                            ?.join("")
+                            ?.slice(0, 2)}
                         </div>
+
                         <div>
-                          <p className="text-xs font-bold text-slate-800">{r.name}</p>
-                          <p className="text-[11px] text-slate-400">{r.date}</p>
+                          <p className="text-xs font-bold text-slate-800">
+                            {r.user?.fullName}
+                          </p>
+
+                          <p className="text-[11px] text-slate-400">
+                            {new Date(r.createdAt).toLocaleDateString()}
+                          </p>
                         </div>
                       </div>
+
                       <Stars rating={r.rating} size={14} />
                     </div>
 
-                    <p className="text-xs text-slate-600 leading-relaxed mb-3">{r.text}</p>
+                    <p className="text-xs text-slate-600 leading-relaxed mb-3">
+                      {r.comment}
+                    </p>
 
                     <div className="flex gap-4 text-[11px] text-slate-500">
                       <button className="flex items-center gap-1.5 hover:text-slate-700 transition">
                         <Icon d={ICONS.thumb_up} size={13} />
-                        {r.likes}
+                        0
                       </button>
+
                       <button className="flex items-center gap-1.5 hover:text-slate-700 transition">
                         <Icon d={ICONS.thumb_down} size={13} />
-                        {r.dislikes}
+                        0
                       </button>
                     </div>
                   </div>
@@ -390,11 +416,10 @@ export default function CompanyProfilePage() {
             {company?.verificationStatus && (
               <div>
                 <p className="text-[10px] uppercase tracking-widest font-semibold text-slate-400 mb-1">Verification</p>
-                <span className={`inline-block text-[11px] font-semibold px-2.5 py-1 rounded-full capitalize ${
-                  company.verificationStatus === "verified"
-                    ? "bg-green-50 text-green-700 border border-green-200"
-                    : "bg-amber-50 text-amber-700 border border-amber-200"
-                }`}>
+                <span className={`inline-block text-[11px] font-semibold px-2.5 py-1 rounded-full capitalize ${company.verificationStatus === "verified"
+                  ? "bg-green-50 text-green-700 border border-green-200"
+                  : "bg-amber-50 text-amber-700 border border-amber-200"
+                  }`}>
                   {company.verificationStatus}
                 </span>
               </div>
@@ -415,7 +440,7 @@ export default function CompanyProfilePage() {
 
       {/* ── EDIT MODAL ────────────────────────────────────────────────────── */}
       {isEditing && (
-        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4">
+        <div className="fixed inset-0 bg-black/40 flex text-black items-center justify-center z-50 p-4">
           <div className="bg-white w-full max-w-xl rounded-2xl p-6 shadow-xl">
             <div className="flex items-center justify-between mb-5">
               <h2 className="text-base font-bold text-slate-800">Edit Company Profile</h2>
