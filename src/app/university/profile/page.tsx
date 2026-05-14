@@ -4,14 +4,35 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useCollegeReports } from "./hooks/use-college-reports";
 
+type CollegeIntern = {
+    applicationId: string;
+    reportId?: string;
+    student: {
+        fullName?: string;
+        university?: string;
+        faculty?: string;
+        profilePic?: {
+            secure_url?: string;
+        };
+    };
+    reports?: { _id: string }[];
+};
+
+type CollegeInternshipReport = {
+    internship?: {
+        title?: string;
+    };
+    interns: CollegeIntern[];
+};
+
 export default function UniversityDashboardPage() {
     const router = useRouter();
     const { data, isLoading } = useCollegeReports();
 
     if (isLoading) return <p className="p-10">Loading...</p>;
 
-    const internships = data || [];
-    const totalInterns = internships.reduce((acc: number, i: any) => acc + i.interns.length, 0);
+    const internships = (data || []) as CollegeInternshipReport[];
+    const totalInterns = internships.reduce((acc, i) => acc + i.interns.length, 0);
     const activePrograms = internships.length;
 
     const getPerformanceBadge = (index: number) => {
@@ -37,21 +58,9 @@ export default function UniversityDashboardPage() {
         return colors.default;
     };
 
-    const getAvatar = (name: string, index: number) => {
-        const initials = name?.split(" ").map((n: string) => n[0]).join("").slice(0, 2).toUpperCase() || "??";
-        const avatarStyles = [
-            { bg: "#E3ECFF", color: "#1565C0" },
-            { bg: "#E8F5E9", color: "#2e7d32" },
-            { bg: "#FCE4EC", color: "#c62828" },
-            { bg: "#FFF8E1", color: "#f57f17" },
-        ];
-        const style = avatarStyles[index % avatarStyles.length];
-        return { initials, ...style };
-    };
-
-    const allInterns: { intern: any; item: any; globalIndex: number }[] = [];
-    internships.forEach((item: any) => {
-        item.interns.forEach((intern: any) => {
+    const allInterns: { intern: CollegeIntern; item: CollegeInternshipReport; globalIndex: number }[] = [];
+    internships.forEach((item) => {
+        item.interns.forEach((intern) => {
             allInterns.push({ intern, item, globalIndex: allInterns.length });
         });
     });
@@ -94,26 +103,7 @@ export default function UniversityDashboardPage() {
 
             {/* Main */}
             <div style={{ flex: 1, overflow: "auto", display: "flex", flexDirection: "column" }}>
-                {/* Top Nav */}
-                <nav style={{ background: "#fff", borderBottom: "0.5px solid #e5e7eb", display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0 24px", height: 52 }}>
-                    <div style={{ display: "flex", gap: 24 }}>
-                        {["Dashboard", "Internships", "Profile"].map((link) => (
-                            <span key={link} style={{ fontSize: 13, color: link === "Profile" ? "#1565C0" : "#888", cursor: "pointer", height: 52, display: "flex", alignItems: "center", borderBottom: link === "Profile" ? "2px solid #1565C0" : "2px solid transparent", fontWeight: link === "Profile" ? 500 : 400 }}>
-                                {link}
-                            </span>
-                        ))}
-                    </div>
-                    <div style={{ display: "flex", alignItems: "center", gap: 8, background: "#F5F7FB", border: "0.5px solid #e5e7eb", borderRadius: 20, padding: "6px 14px" }}>
-                        <svg viewBox="0 0 24 24" fill="none" stroke="#aaa" strokeWidth={2} width={14} height={14}><circle cx="11" cy="11" r="8" /><path d="m21 21-4.35-4.35" /></svg>
-                        <input placeholder="Search internships..." style={{ border: "none", background: "transparent", fontSize: 13, color: "#888", outline: "none", width: 160 }} />
-                    </div>
-                    <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-                        <div style={{ width: 32, height: 32, borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", background: "#F5F7FB" }}>
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} width={16} height={16}><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" /><path d="M13.73 21a2 2 0 0 1-3.46 0" /></svg>
-                        </div>
-                        <div style={{ width: 32, height: 32, borderRadius: "50%", background: "#1565C0", color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 600, fontSize: 13 }}>A</div>
-                    </div>
-                </nav>
+
 
                 {/* Content */}
                 <div style={{ padding: 24, flex: 1 }}>
@@ -145,22 +135,7 @@ export default function UniversityDashboardPage() {
 
                     {/* Intern Progress Tracker */}
                     <div style={{ background: "#fff", border: "0.5px solid #e5e7eb", borderRadius: 12, padding: 20, marginBottom: 20 }}>
-                        <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginBottom: 16 }}>
-                            <div>
-                                <div style={{ fontSize: 15, fontWeight: 600, color: "#1a1a2e" }}>Intern Progress Tracker</div>
-                                <div style={{ fontSize: 12, color: "#999", marginTop: 2 }}>Detailed view of current internship lifecycle and performance.</div>
-                            </div>
-                            <div style={{ display: "flex", gap: 8 }}>
-                                <button style={{ border: "0.5px solid #e5e7eb", background: "#fff", color: "#555", fontSize: 12, padding: "7px 14px", borderRadius: 8, cursor: "pointer", display: "flex", alignItems: "center", gap: 6 }}>
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} width={13} height={13}><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" /></svg>
-                                    Filter
-                                </button>
-                                <button style={{ background: "#1565C0", color: "#fff", border: "none", fontSize: 12, padding: "7px 14px", borderRadius: 8, cursor: "pointer", display: "flex", alignItems: "center", gap: 6, fontWeight: 500 }}>
-                                    <svg viewBox="0 0 24 24" fill="white" width={13} height={13}><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z" /></svg>
-                                    Export Data
-                                </button>
-                            </div>
-                        </div>
+
 
                         <table style={{ width: "100%", borderCollapse: "collapse" }}>
                             <thead>
@@ -172,7 +147,6 @@ export default function UniversityDashboardPage() {
                             </thead>
                             <tbody>
                                 {allInterns.slice(0, 4).map(({ intern, item, globalIndex }) => {
-                                    const avatar = getAvatar(intern.student?.fullName, globalIndex);
                                     const badge = getPerformanceBadge(globalIndex);
                                     const tag = getProgramTag(item.internship?.title);
                                     return (
@@ -209,7 +183,19 @@ export default function UniversityDashboardPage() {
                                             </td>
                                             <td style={{ padding: "12px 10px" }}>
                                                 <div style={{ display: "flex", alignItems: "center", gap: 8, color: "#aaa" }}>
-                                                    <svg viewBox="0 0 24 24" fill="currentColor" width={14} height={14}><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z" /></svg>
+                                                    <button
+                                                        type="button"
+                                                        disabled={!intern.reportId && !intern.reports?.[0]?._id}
+                                                        onClick={(event) => {
+                                                            event.stopPropagation();
+                                                            const reportId = intern.reportId || intern.reports?.[0]?._id;
+                                                            if (reportId) router.push(`/university/profile/report/${reportId}`);
+                                                        }}
+                                                        title="View report"
+                                                        style={{ border: "none", background: "transparent", padding: 0, color: "inherit", cursor: intern.reportId || intern.reports?.[0]?._id ? "pointer" : "not-allowed", opacity: intern.reportId || intern.reports?.[0]?._id ? 1 : 0.4 }}
+                                                    >
+                                                        <svg viewBox="0 0 24 24" fill="currentColor" width={14} height={14}><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z" /></svg>
+                                                    </button>
                                                     <svg viewBox="0 0 24 24" fill="currentColor" width={14} height={14}><path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z" /></svg>
                                                 </div>
                                             </td>
@@ -229,60 +215,6 @@ export default function UniversityDashboardPage() {
                         </div>
                     </div>
 
-                    {/* Bottom Row */}
-                    <div style={{ display: "grid", gridTemplateColumns: "1fr 280px", gap: 16 }}>
-                        {/* Global Partner Reach */}
-                        <div style={{ background: "#fff", border: "0.5px solid #e5e7eb", borderRadius: 12, padding: 20 }}>
-                            <div style={{ fontSize: 15, fontWeight: 600, color: "#1a1a2e" }}>Global Partner Reach</div>
-                            <div style={{ fontSize: 12, color: "#999", marginTop: 2 }}>Monitoring active collaborations across 18 universities.</div>
-                            <div style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: 12, marginTop: 16 }}>
-                                {[{ label: "North America", val: 8 }, { label: "Europe", val: 5 }, { label: "Asia Pacific", val: 3 }, { label: "Other", val: 2 }].map(({ label, val }) => (
-                                    <div key={label}>
-                                        <div style={{ fontSize: 10, color: "#1565C0", textTransform: "uppercase", letterSpacing: "0.5px", fontWeight: 600, marginBottom: 4 }}>{label}</div>
-                                        <div style={{ fontSize: 22, fontWeight: 700, color: "#1a1a2e" }}>{val}</div>
-                                    </div>
-                                ))}
-                            </div>
-                            <div style={{ marginTop: 16, background: "#F8FAFF", borderRadius: 8, height: 90, display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden" }}>
-                                <svg viewBox="0 0 360 100" width="100%" height={90}>
-                                    <ellipse cx="180" cy="50" rx="170" ry="45" fill="none" stroke="#D0D8F0" strokeWidth="0.5" />
-                                    <path d="M10,50 Q60,30 110,45 Q160,60 210,40 Q260,20 350,50" fill="none" stroke="#C5D0E8" strokeWidth="0.5" />
-                                    <path d="M10,60 Q80,40 150,55 Q220,68 290,50 Q320,44 350,55" fill="none" stroke="#C5D0E8" strokeWidth="0.5" />
-                                    <circle cx="80" cy="40" r="5" fill="#1565C0" opacity="0.7" />
-                                    <circle cx="130" cy="55" r="4" fill="#1565C0" opacity="0.6" />
-                                    <circle cx="195" cy="35" r="6" fill="#1565C0" opacity="0.5" />
-                                    <circle cx="240" cy="50" r="4" fill="#1565C0" opacity="0.6" />
-                                    <circle cx="300" cy="42" r="3" fill="#1565C0" opacity="0.4" />
-                                </svg>
-                            </div>
-                        </div>
-
-                        {/* Right Column */}
-                        <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-                            <div style={{ background: "#1a2b4a", borderRadius: 12, padding: 18, color: "#fff" }}>
-                                <div style={{ fontSize: 15, fontWeight: 600, marginBottom: 4 }}>Generate Reports</div>
-                                <div style={{ fontSize: 12, color: "rgba(255,255,255,0.6)", marginBottom: 16 }}>Instant analytics on student satisfaction and program ROI.</div>
-                                <button style={{ background: "#fff", color: "#1a2b4a", border: "none", fontSize: 13, fontWeight: 600, padding: "10px 16px", borderRadius: 8, cursor: "pointer", width: "100%", display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
-                                    <svg viewBox="0 0 24 24" fill="#1a2b4a" width={15} height={15}><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z" /></svg>
-                                    Report Center
-                                </button>
-                            </div>
-
-                            <div style={{ background: "#fff", border: "0.5px solid #e5e7eb", borderRadius: 12, padding: 18 }}>
-                                <div style={{ fontSize: 14, fontWeight: 600, color: "#1a1a2e", marginBottom: 14 }}>Program Health</div>
-                                {[{ label: "Completion Rate", pct: 94, color: "#43A047" }, { label: "Engagement Level", pct: 78, color: "#1565C0" }].map(({ label, pct, color }) => (
-                                    <div key={label} style={{ marginBottom: 12 }}>
-                                        <div style={{ display: "flex", justifyContent: "space-between", fontSize: 12, color: "#555", marginBottom: 6 }}>
-                                            <span>{label}</span><span style={{ fontWeight: 600 }}>{pct}%</span>
-                                        </div>
-                                        <div style={{ height: 7, background: "#F0F2F5", borderRadius: 4, overflow: "hidden" }}>
-                                            <div style={{ width: `${pct}%`, height: "100%", background: color, borderRadius: 4 }} />
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>

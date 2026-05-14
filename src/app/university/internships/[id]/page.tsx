@@ -3,16 +3,29 @@
 import { useState } from "react";
 import { X, CheckCircle2, Star } from "lucide-react";
 import { useInternshipDetails } from "@/app/student/internships/[id]/hooks/use-internship-details";
-import { useParams } from "next/navigation";
+import { useParams, useSearchParams } from "next/navigation";
 import { useInternshipReviews } from "@/app/student/internships/[id]/hooks/use-internship-reviews";
 import { useRouter } from 'next/navigation';
 import useRespondToEndorsementRequest from "../hooks/useRespondToEndorsementRequest";
 
+type InternshipReview = {
+  _id: string;
+  userId?: {
+    firstName?: string;
+    lastName?: string;
+  };
+  createdAt: string;
+  rating: number;
+  comment: string;
+};
+
 export default function UniversityInternshipDetailsPanel() {
   const [tab, setTab] = useState<"overview" | "reviews">("overview");
   const router = useRouter();
+  const searchParams = useSearchParams();
 
   const { id } = useParams() as { id: string };
+  const endorsementId = searchParams.get("endorsementId") || id;
 
   const {
     data,
@@ -40,7 +53,6 @@ export default function UniversityInternshipDetailsPanel() {
   // ================= MAPPING =================
   const title = data.internshipTitle || data.internshipTittle;
   const company = data.companyId?.companyName;
-  const image = data.thumbnail || "/placeholder.png";
 
   const workMode =
     data.internshipLocation === "onsite"
@@ -57,11 +69,11 @@ export default function UniversityInternshipDetailsPanel() {
   const reviews = Array.isArray(reviewsData) ? reviewsData : reviewsData?.data || [];
 
   const handleAccept = () => {
-    respondToEndorsement({ id, decision: "approved" });
+    respondToEndorsement({ id: endorsementId, decision: "approved" });
   };
 
   const handleReject = () => {
-    respondToEndorsement({ id, decision: "rejected" });
+    respondToEndorsement({ id: endorsementId, decision: "rejected" });
   };
 
   return (
@@ -226,7 +238,7 @@ export default function UniversityInternshipDetailsPanel() {
                 )}
 
                 {/* Reviews list */}
-                {reviews.map((r: any) => (
+                {reviews.map((r: InternshipReview) => (
                   <div
                     key={r._id}
                     className="rounded-2xl border border-[#0b1f33]/10 p-6"
