@@ -126,60 +126,68 @@ export const authOptions: NextAuthOptions = {
         },
       },
 
-      authorize: async (credentials) => {
-        const apiUrl =
-          process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:5000";
-        let url = `${apiUrl}/auth/login`;
+     authorize: async (credentials) => {
+  const apiUrl =
+    process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:5000";
 
-        if (credentials?.role === "company") {
-          url = `${apiUrl}/company/login`;
-        }
+  console.log("=== LOGIN ATTEMPT ===");
+  console.log("Incoming credentials:", credentials);
+  console.log("Incoming role:", credentials?.role);
 
-        if (credentials?.role === "university") {
-          url = `${apiUrl}/university/login`;
-        }
+  let url = `${apiUrl}/auth/login`;
 
-        const response = await fetch(url, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            email: credentials?.email,
-            password: credentials?.password,
-          }),
-        });
-        console.log("response from auth file :",response);
-        
-        const payload = await response.json().catch(() => ({}));
-        console.log('payloooooad----',payload)
-        console.log("credentialss from auth file :",credentials,url);
-        if (!response.ok) {
-          console.log("credentialss from auth file :",credentials,url);
-          console.log("payload:", payload);
+  if (credentials?.role === "company") {
+    url = `${apiUrl}/company/login`;
+  }
 
-          throw new Error(payload?.error || payload?.message || "Login failed");
-        }
+  if (credentials?.role === "college") {
+    url = `${apiUrl}/college/signin`;
+  }
 
-        const actualUser =
-        payload?.user ||
-        payload?.company ||
-        payload?.university;
-      
-      const role =
-        payload?.user
-          ? "user"
-          : payload?.company
-          ? "company"
-          : "university";
-      
-      return {
-        id: actualUser?._id,
-        user: {
-          ...actualUser,
-          role,
-        },
-        token: payload?.token,
-      };;
-      },
+  console.log("Final URL:", url);
+
+  const response = await fetch(url, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      email: credentials?.email,
+      password: credentials?.password,
+    }),
+  });
+
+  console.log("Response status:", response.status);
+
+  const payload = await response.json().catch(() => ({}));
+
+  console.log("Payload:", payload);
+
+  if (!response.ok) {
+    throw new Error(payload?.error || payload?.message || "Login failed");
+  }
+
+  const actualUser =
+    payload?.user ||
+    payload?.company ||
+    payload?.college;
+
+  const role =
+    payload?.user
+      ? "user"
+      : payload?.company
+      ? "company"
+      : "college";
+
+  console.log("Detected role from backend:", role);
+
+  return {
+    id: actualUser?._id,
+    user: {
+      ...actualUser,
+      role,
+    },
+    token: payload?.token,
+  };
+},
     }),
 
     // ==========================
