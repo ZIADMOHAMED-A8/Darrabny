@@ -3,6 +3,30 @@
 import { getToken } from "@/lib/utils/get-token.util";
 import type { StudentPlacement } from "../_types/report";
 
+type RawStudent = {
+  _id?: unknown;
+  id?: unknown;
+  firstName?: unknown;
+  lastName?: unknown;
+  fullName?: unknown;
+  name?: unknown;
+  email?: unknown;
+};
+
+type RawPlacement = {
+  _id?: unknown;
+  id?: unknown;
+  placementId?: unknown;
+  student?: unknown;
+  studentId?: unknown;
+  firstName?: unknown;
+  lastName?: unknown;
+  fullName?: unknown;
+  name?: unknown;
+  email?: unknown;
+  currentPerformance?: unknown;
+};
+
 export async function getInternshipStudents(internshipId: string) {
   const token = await getToken();
   const accessToken = token?.token?.accessToken || token?.token;
@@ -41,8 +65,11 @@ export async function getInternshipStudents(internshipId: string) {
   }
 
   return rawPlacements
-    .map((placement: any) => {
-      const student = placement?.studentId || placement || {};
+    .map((placement: RawPlacement) => {
+      const student =
+        typeof placement?.studentId === "object" && placement?.studentId
+          ? (placement.studentId as RawStudent)
+          : placement || {};
       const fullName =
         [student?.firstName, student?.lastName].filter(Boolean).join(" ") ||
         student?.fullName ||
@@ -55,7 +82,13 @@ export async function getInternshipStudents(internshipId: string) {
         placementId: String(
           placement?.placementId || placement?._id || placement?.id || "",
         ),
-        studentId: String(student?._id || student?.id || ""),
+        studentId: String(
+          student?._id ||
+            student?.id ||
+            placement?.student ||
+            placement?.studentId ||
+            "",
+        ),
         studentName: String(fullName),
         studentEmail: String(student?.email || placement?.email || "N/A"),
         currentPerformance: Number(placement?.currentPerformance ?? 0),

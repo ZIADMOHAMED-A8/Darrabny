@@ -3,55 +3,95 @@
 import { useMemo, useState } from "react";
 import RankedHeader from "./_components/ranked-header";
 import CandidatesTable from "./_components/candidates-table";
-import CandidatePreview from "./_components/candidate-preview";
-
 import { useApplicationDetails } from "./hooks/use-application-details";
 import { useApplicationStatus } from "./hooks/use-application-status";
+import { useParams } from "next/navigation";
 
 export default function AiRankedApplicantsPage() {
-  const [activeId, setActiveId] = useState(
-    "69ee27d887475ba91c328ce8"
-  );
+  const { id } = useParams();
 
-  const { data, isLoading } = useApplicationDetails(activeId);
+  if (Array.isArray(id)) return null;
+
+  const [activeId, setActiveId] = useState<string | null>(null);
+
+  const { data, isLoading } = useApplicationDetails(id);
   const { mutate: updateStatus, isPending } = useApplicationStatus();
+
+  // ✅ applications array
+  const applications = data?.Applications || [];
 
   // ✅ table data
   const items = useMemo(() => {
-    if (!data) return [];
+    return applications.map((app: any) => ({
+      id: app.id,
+      name: app.snapshot?.studentName,
+      email: app.snapshot?.email,
+      score: app.aiAnalysis?.score || 0,
+      status: app.currentStatus,
+      skills: app.snapshot?.skills || [],
+    }));
+  }, [applications]);
 
-    return [
-      {
-        id: data.id,
-        name: data.snapshot.studentName,
-        email: data.snapshot.email,
-        score: data.aiAnalysis.score,
-        status: data.currentStatus,
-        skills: data.snapshot.skills || [],
-      },
-    ];
-  }, [data]);
+  // ✅ default selected candidate
+  const selectedId =
+    activeId || applications?.[0]?.id;
+
+  // ✅ active application
+  const activeApplication = useMemo(() => {
+    return applications.find(
+      (app: any) => app.id === selectedId
+    );
+  }, [applications, selectedId]);
 
   // ✅ preview data
   const active = useMemo(() => {
-    if (!data) return null;
+    if (!activeApplication) return null;
 
     return {
-      name: data.snapshot.studentName,
-      headline: data.internshipId.internshipTittle,
-      score: data.aiAnalysis.score,
-      strengths: data.aiAnalysis.keyStrengths,
-      reviewNotes: data.aiAnalysis.areasForReview,
-      recent: data.snapshot.skills,
+      id: activeApplication.id,
+      name:
+        activeApplication.snapshot?.studentName ||
+        "Unknown",
+      headline:
+        data?.internshipTitle || "Internship Candidate",
+      score:
+        activeApplication.aiAnalysis?.score || 0,
+      strengths:
+        activeApplication.aiAnalysis
+          ?.keyStrengths || [],
+      reviewNotes:
+        activeApplication.aiAnalysis
+          ?.areasForReview || [],
+      recent:
+        activeApplication.snapshot?.skills || [],
+      status:
+        activeApplication.currentStatus,
     };
-  }, [data]);
+  }, [activeApplication, data]);
 
   if (isLoading)
-    return <p className="p-10 text-white">Loading...</p>;
+    return (
+      <p className="p-10 text-white">
+        Loading...
+      </p>
+    );
 
   if (!data)
-    return <p className="p-10 text-red-500">No Data</p>;
+    return (
+      <p className="p-10 text-red-500">
+        No Data
+      </p>
+    );
+    // if(data.length===0){
+    //   return(
+    // <main className="min-h-screen bg-[#F5F7FB] text-slate-800">
+    //   <div className="max-w-[1400px] mx-auto px-8 py-10">
+    //   <RankedHeader />
+    //   <div className="mt-10 flex gap-8 items-start">
+    //   <div className="flex-1">
 
+    //   )
+    // }
   return (
     <main className="min-h-screen bg-[#F5F7FB] text-slate-800">
       <div className="max-w-[1400px] mx-auto px-8 py-10">
@@ -64,7 +104,7 @@ export default function AiRankedApplicantsPage() {
           <div className="flex-1">
             <CandidatesTable
               items={items}
-              activeId={activeId}
+              activeId={selectedId}
               onSelect={setActiveId}
             />
           </div>
@@ -83,12 +123,16 @@ export default function AiRankedApplicantsPage() {
                   <div className="w-20 h-20 rounded-full bg-pink-300 flex items-center justify-center text-white text-xl font-bold">
                     {active.name
                       .split(" ")
-                      .map((n) => n[0])
+                      .map((n: string) => n[0])
                       .join("")}
                   </div>
 
                   <p className="mt-3 font-semibold text-lg">
                     {active.name}
+                  </p>
+
+                  <p className="text-sm text-gray-500 mt-1">
+                    {active.headline}
                   </p>
                 </div>
 
@@ -98,6 +142,7 @@ export default function AiRankedApplicantsPage() {
                     <p className="font-semibold text-sm text-blue-600">
                       AI MATCH ANALYSIS
                     </p>
+
                     <span className="font-bold text-blue-600">
                       {active.score}%
                     </span>
@@ -108,10 +153,15 @@ export default function AiRankedApplicantsPage() {
                     <p className="text-green-600 text-xs font-semibold mb-1">
                       KEY STRENGTHS
                     </p>
+
                     <ul className="text-xs space-y-1">
-                      {active.strengths.map((s: string) => (
-                        <li key={s}>• {s}</li>
-                      ))}
+                      {active.strengths.map(
+                        (s: string) => (
+                          <li key={s}>
+                            • {s}
+                          </li>
+                        )
+                      )}
                     </ul>
                   </div>
 
@@ -120,11 +170,36 @@ export default function AiRankedApplicantsPage() {
                     <p className="text-orange-500 text-xs font-semibold mb-1">
                       AREAS FOR REVIEW
                     </p>
+
                     <ul className="text-xs space-y-1">
-                      {active.reviewNotes.map((r: string) => (
-                        <li key={r}>⚠ {r}</li>
-                      ))}
+                      {active.reviewNotes.map(
+                        (r: string) => (
+                          <li key={r}>
+                            ⚠ {r}
+                          </li>
+                        )
+                      )}
                     </ul>
+                  </div>
+                </div>
+
+                {/* SKILLS */}
+                <div className="mt-5">
+                  <p className="text-sm font-semibold mb-2">
+                    Skills
+                  </p>
+
+                  <div className="flex flex-wrap gap-2">
+                    {active.recent.map(
+                      (skill: string) => (
+                        <span
+                          key={skill}
+                          className="px-3 py-1 rounded-full bg-blue-50 text-blue-600 text-xs font-medium"
+                        >
+                          {skill}
+                        </span>
+                      )
+                    )}
                   </div>
                 </div>
 
@@ -134,7 +209,7 @@ export default function AiRankedApplicantsPage() {
                     disabled={isPending}
                     onClick={() =>
                       updateStatus({
-                        id: activeId,
+                        id: active.id,
                         status: "rejected",
                       })
                     }
@@ -147,7 +222,7 @@ export default function AiRankedApplicantsPage() {
                     disabled={isPending}
                     onClick={() =>
                       updateStatus({
-                        id: activeId,
+                        id: active.id,
                         status: "accepted",
                       })
                     }

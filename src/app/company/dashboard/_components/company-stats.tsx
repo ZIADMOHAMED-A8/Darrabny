@@ -1,96 +1,115 @@
 "use client";
 
-import { CalendarDays, Users } from "lucide-react";
+import { Briefcase, Users } from "lucide-react";
+import type { CompanyKpis } from "../actions/get-company-dashboard.action";
 
-export default function DashboardTopRow() {
+interface DashboardTopRowProps {
+  kpis: CompanyKpis;
+}
+
+export default function DashboardTopRow({ kpis }: DashboardTopRowProps) {
   return (
-    <div className="grid gap-7 md:grid-cols-6 items-stretch">
-      {/* Left (4 cols): 2 stats */}
-      <div className="md:col-span-4 h-full">
-        <div className="grid gap-7 md:grid-cols-4 h-full items-stretch">
-          <div className="md:col-span-2 h-full">
-            <TotalApplicantsCard />
-          </div>
-
-          <div className="md:col-span-2 h-full">
-            <TotalCompletedCard />
-          </div>
-        </div>
-      </div>
-
-      {/* Right (2 cols): active postings */}
-      <div className="md:col-span-2 h-full">
-        <ActivePostingsCard />
-      </div>
+    <div className="grid gap-6 lg:grid-cols-3 items-stretch">
+      <TotalApplicantsCard
+        count={kpis.totalApplicants.count}
+        growth={kpis.totalApplicants.growthPct}
+      />
+      <TotalCompletedCard
+        count={kpis.totalCompletedTrainees.count}
+        growth={kpis.totalCompletedTrainees.growthPct}
+      />
+      <ActivePostingsCard
+        total={kpis.activePostings.total}
+        internships={kpis.activePostings.internships}
+        jobs={kpis.activePostings.jobs}
+      />
     </div>
   );
 }
 
-/* --- Cards (no props) --- */
+interface TotalApplicantsCardProps {
+  count: number;
+  growth: number;
+}
 
-function TotalApplicantsCard() {
+function TotalApplicantsCard({ count, growth }: TotalApplicantsCardProps) {
   return (
-    <div className="w-full h-full rounded-2xl bg-[#dbeafe] text-[#0b1f33] shadow-[0_18px_60px_rgba(0,0,0,0.35)]">
-      <div className="flex items-start justify-between px-7 pt-7">
-        <div className="text-sm font-extrabold text-[#0b1f33]/80">
-          Total Applicants
-        </div>
-        <Users className="h-5 w-5 text-[#0b1f33]/70" />
+    <div className="rounded-xl bg-blue-50 p-6 shadow-sm border border-blue-100">
+      <div className="flex items-start justify-between mb-4">
+        <h3 className="text-sm font-semibold text-gray-700">Total Applicants</h3>
+        <Users className="h-5 w-5 text-blue-600" />
       </div>
-
-      <div className="px-7 pb-7 pt-4">
-        <div className="flex items-end gap-3">
-          <div className="text-3xl font-extrabold">124</div>
-          <div className="pb-1 text-sm font-bold text-[#2f7d32]">↗ +12%</div>
-        </div>
-        <div className="mt-2 text-sm text-[#0b1f33]/60">From last month</div>
+      <div className="flex items-end gap-2">
+        <div className="text-3xl font-bold text-gray-900">{count}</div>
+        {growth > 0 && (
+          <span className="text-sm font-semibold text-green-600">
+            ↗ +{growth}%
+          </span>
+        )}
+        {growth < 0 && (
+          <span className="text-sm font-semibold text-red-600">
+            ↘ {growth}%
+          </span>
+        )}
       </div>
+      <p className="text-xs text-gray-500 mt-2">From last month</p>
     </div>
   );
 }
 
-function TotalCompletedCard() {
+interface TotalCompletedCardProps {
+  count: number;
+  growth: number;
+}
+
+function TotalCompletedCard({ count, growth }: TotalCompletedCardProps) {
   return (
-    <div className="w-full h-full rounded-2xl bg-[#dbeafe] text-[#0b1f33] shadow-[0_18px_60px_rgba(0,0,0,0.35)]">
-      <div className="flex items-start justify-between px-7 pt-7">
-        <div className="text-sm font-extrabold text-[#0b1f33]/80">
+    <div className="rounded-xl bg-blue-50 p-6 shadow-sm border border-blue-100">
+      <div className="flex items-start justify-between mb-4">
+        <h3 className="text-sm font-semibold text-gray-700">
           Total Completed Trainees
-        </div>
-        <Users className="h-5 w-5 text-[#0b1f33]/70" />
+        </h3>
+        <Users className="h-5 w-5 text-blue-600" />
       </div>
-
-      <div className="px-7 pb-7 pt-4">
-        <div className="flex items-end gap-3">
-          <div className="text-3xl font-extrabold">625</div>
-          <div className="pb-1 text-sm font-bold text-[#2f7d32]">↗ +24%</div>
-        </div>
-        <div className="mt-2 text-sm text-[#0b1f33]/60">From last year</div>
+      <div className="flex items-end gap-2">
+        <div className="text-3xl font-bold text-gray-900">{count}</div>
+        {growth > 0 && (
+          <span className="text-sm font-semibold text-green-600">
+            ↗ +{growth}%
+          </span>
+        )}
+        {growth < 0 && (
+          <span className="text-sm font-semibold text-red-600">
+            ↘ {growth}%
+          </span>
+        )}
       </div>
+      <p className="text-xs text-gray-500 mt-2">From last year</p>
     </div>
   );
 }
 
-function ActivePostingsCard() {
+interface ActivePostingsCardProps {
+  total: number;
+  internships: number;
+  jobs: number;
+}
+
+function ActivePostingsCard({ total, internships, jobs }: ActivePostingsCardProps) {
   return (
-    <div className="w-full h-full rounded-2xl bg-[#dbeafe] text-[#0b1f33] shadow-[0_18px_60px_rgba(0,0,0,0.35)]">
-      <div className="flex items-start justify-between px-7 pt-7">
-        <div className="text-sm font-extrabold text-[#0b1f33]/80">
-          Active Postings
-        </div>
-        <CalendarDays className="h-5 w-5 text-[#0b1f33]/70" />
+    <div className="rounded-xl bg-blue-50 p-6 shadow-sm border border-blue-100">
+      <div className="flex items-start justify-between mb-4">
+        <h3 className="text-sm font-semibold text-gray-700">Active Postings</h3>
+        <Briefcase className="h-5 w-5 text-blue-600" />
       </div>
-
-      <div className="px-7 pb-7 pt-4">
-        <div className="text-3xl font-extrabold">35</div>
-
-        <div className="mt-3 flex items-center gap-3">
-          <span className="rounded-md bg-[#c7ddff] px-3 py-1 text-xs font-semibold text-[#0b1f33]/80">
-            20 Internships
-          </span>
-          <span className="rounded-md bg-[#c7ddff] px-3 py-1 text-xs font-semibold text-[#0b1f33]/80">
-            15 Jobs
-          </span>
-        </div>
+      <div className="text-3xl font-bold text-gray-900">{total}</div>
+      <div className="flex gap-2 mt-3">
+        <span className="inline-flex px-2 py-1 text-xs font-semibold bg-blue-100 text-blue-700 rounded">
+          {internships} Internships
+        </span>
+        <span className="inline-flex px-2 py-1 text-xs font-semibold bg-blue-100 text-blue-700 rounded">
+          {jobs} Jobs
+        </span>
       </div>
     </div>
   );

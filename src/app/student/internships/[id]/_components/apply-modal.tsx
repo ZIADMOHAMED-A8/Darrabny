@@ -119,7 +119,7 @@ export default function ApplyModal({
   const { toast } = useToast();
   const [coverLetter, setCoverLetter] = useState("");
   const [submitError, setSubmitError] = useState("");
-  const { mutate, isPending, reset } = useApplyToInternship();
+  const { mutate, isPending, reset,isError:isApplyError,error:applyError } = useApplyToInternship();
 
   const { data, isLoading, isError, error, isFetching } = useGetApplyProfile(open);
 
@@ -315,7 +315,6 @@ export default function ApplyModal({
                       disabled
                       className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-[#0b1f33]/12 text-[#0b1f33]/35"
                     >
-                      <Trash2 className="h-5 w-5" />
                     </button>
                   </div>
                 </div>

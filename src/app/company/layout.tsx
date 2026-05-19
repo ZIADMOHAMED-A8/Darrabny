@@ -6,7 +6,6 @@ import StudentTopBar from "../_components/StudentTopBar";
 export default function CompanyLayout({ children }: { children: ReactNode }) {
   return (
     <div className="min-h-screen flex flex-col text-white">
-      <StudentTopBar></StudentTopBar>
       <main className="flex-1">{children}</main>
 
       <Footer />

@@ -8,7 +8,6 @@ export default function StudentLayout({
 }) {
   return (
     <div className="min-h-screen flex flex-col">
-      <StudentTopBar />
 
       <div className="flex flex-1">
         <Sidebar />

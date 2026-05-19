@@ -3,7 +3,7 @@ import Image from "next/image";
 import { MapPin, Briefcase, Calendar } from "lucide-react";
 interface JobCardProps {
   _id: string;
-  internshipTittle: string;
+  internshipTitle: string;
   internshipLocation: string;
   workingTime: string;
   internshipDescription: string;
@@ -13,7 +13,7 @@ interface JobCardProps {
 }
 
 export default function JobCard({
-  internshipTittle,
+  internshipTitle,
   internshipLocation,
   workingTime,
   durationInMonths,
@@ -26,7 +26,7 @@ export default function JobCard({
       <div className="w-16 h-16 rounded-xl overflow-hidden flex-shrink-0 bg-neutral-100">
         <Image
           src={thumbnail}
-          alt={internshipTittle}
+          alt={internshipTitle}
           width={64}
           height={64}
           className="object-cover w-full h-full"
@@ -38,7 +38,7 @@ export default function JobCard({
         <p className="text-sm text-neutral-500 truncate">{postedAgo}</p>
 
         <p className="text-base font-semibold text-neutral-900 dark:text-white truncate">
-          {internshipTittle}
+          {internshipTitle}
         </p>
 
         {/* Meta */}

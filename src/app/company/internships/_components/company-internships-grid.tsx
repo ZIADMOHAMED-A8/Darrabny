@@ -6,7 +6,6 @@ import useGetCompanyInternships from "../hooks/useGetCompanyInternships";
 export default function CompanyInternshipsGrid() {
   const { data, isLoading, isError, error } = useGetCompanyInternships();
   const internships = Array.isArray(data) ? data : data?.data ?? [];
-
   if (isLoading) {
     return (
       <div className="grid items-stretch gap-6 md:grid-cols-2">
@@ -35,11 +34,13 @@ export default function CompanyInternshipsGrid() {
       </p>
     );
   }
+  console.log('kosom eldata',data.data[0])
 
+  console.log('innnnnn',internships[0])
   return (
     <div className="grid items-stretch gap-6 md:grid-cols-2">
       {internships.map((it: any) => (
-        <InternshipCard key={it.id} data={it} href={`./internships/${it.id}`} />
+        <InternshipCard key={it.id} data={it} id={it._id} href={`./internships/${it._id}`} />
       ))}
     </div>
   );

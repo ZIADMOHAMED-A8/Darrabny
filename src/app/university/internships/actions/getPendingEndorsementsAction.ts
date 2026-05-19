@@ -13,11 +13,8 @@ export default async function getPendingEndorsementsAction() {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
-<<<<<<< HEAD
-      Authorization: "college eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5ZjBjZWNhMjBhZjJjMTVhMjUwYmEwZCIsInJvbGUiOiJjb2xsZWdlIiwiaWF0IjoxNzc4NjY5OTcyLCJleHAiOjE3NzkyNzQ3NzJ9.vI6CzAaxVY1jGNbUmVt3KrLKx73Z-2zBI5AW3RDesPE",
-=======
-      Authorization: "college eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5ZjBjZWNhMjBhZjJjMTVhMjUwYmEwZCIsInJvbGUiOiJjb2xsZWdlIiwiaWF0IjoxNzc3ODE0MjQ3LCJleHAiOjE3Nzg0MTkwNDd9.k7PmBdA9bhGC2X-BRefk4FFI9smRdt3nUiqFeuXJBUY",
->>>>>>> e1e0fccde5a9f1a6f63a8a8a8180c740144450bf
+      Authorization: "college eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5ZjBjZWNhMjBhZjJjMTVhMjUwYmEwZCIsInJvbGUiOiJjb2xsZWdlIiwiaWF0IjoxNzc4NjY5OTcyLCJleHAiOjE3NzkyNzQ3NzJ9.vI6CzAaxVY1jGNbUmVt3KrLKx73Z-2zBI5AW3RDesPE"
+
     },
     cache: "no-store",
   });

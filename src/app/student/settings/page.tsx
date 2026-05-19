@@ -12,7 +12,10 @@ export type SettingsFormValues = {
   fullName: string;
   email: string;
   phone: string;
-  address: string;
+  address: {
+    city:string,
+    state:string
+  };
   emailNotifications: boolean;
   pushNotifications: boolean;
   smsNotifications: boolean;
@@ -26,7 +29,7 @@ export default function SettingsPage() {
       fullName: "Sophia Chen",
       email: "sophia.chen@example.com",
       phone: "(123) 456-7890",
-      address: "San Francisco, CA",
+      address: "",
       emailNotifications: true,
       pushNotifications: true,
       smsNotifications: false,
@@ -80,9 +83,11 @@ export default function SettingsPage() {
     setSubmitError(null);
 
     try {
+      const user = userData?.data ?? userData?.user ?? userData;
+
       await updateFullName({
         fullName: data.fullName,
-        links: null,
+        links: user?.links ?? {},
       });
       await updateProfile(data);
       await updateNotif({

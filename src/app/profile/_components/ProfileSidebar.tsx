@@ -1,6 +1,6 @@
 "use client";
 
-import { ChangeEvent, useRef, useState } from "react";
+import { ChangeEvent, FormEvent, useEffect, useRef, useState } from "react";
 import {
   Camera,
   Github,
@@ -13,7 +13,14 @@ import {
 } from "lucide-react";
 import useUploadProfilePic from "../_hooks/useUploadProfilePic";
 import { useToast } from "@/hooks/use-toast";
-import useGetUser from "@/app/student/hooks/useGetLoginUser";
+import Modal from "@/components/ui/Modal";
+import useUpdateFullName from "@/app/student/settings/hooks/useUpdateFullName";
+import useGetLoginStudent from "@/app/student/settings/hooks/useGetLoginStudent";
+
+type LinkFormValues = {
+  linkedin: string;
+  github: string;
+};
 
 const extractProfilePicUrl = (payload: unknown): string | null => {
   if (!payload || typeof payload !== "object") return null;
@@ -46,9 +53,38 @@ const extractProfilePicUrl = (payload: unknown): string | null => {
 export default function ProfileSidebar() {
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
+  const [linksModalOpen, setLinksModalOpen] = useState(false);
+  const [linksForm, setLinksForm] = useState<LinkFormValues>({
+    linkedin: "",
+    github: "",
+  });
   const { toast } = useToast();
   const { uploadProfilePic, isPending } = useUploadProfilePic();
-  const {data,isLoading}=useGetUser()
+  const { updateFullName, isPending: isUpdatingLinks } = useUpdateFullName();
+  const { data, isLoading } = useGetLoginStudent();
+  const user = data?.user;
+  const links = user?.links ?? {};
+  const fullName =
+    user?.fullName ||
+    [user?.firstName, user?.lastName].filter(Boolean).join(" ").trim() ||
+    "";
+  const linkedin = links?.linkedin || "linkedin.com/in/sophia-clark";
+  const github = links?.github || "github.com/sophia-clark";
+
+  useEffect(() => {
+    setLinksForm({
+      linkedin: links?.linkedin || "",
+      github: links?.github || "",
+    });
+  }, [links?.linkedin, links?.github]);
+
+  const handleOpenLinksModal = () => {
+    setLinksForm({
+      linkedin: links?.linkedin || "",
+      github: links?.github || "",
+    });
+    setLinksModalOpen(true);
+  };
 
   const handlePickImage = () => {
     if (isPending) return;
@@ -89,6 +125,35 @@ export default function ProfileSidebar() {
       });
     }
   };
+
+  const handleLinksSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    try {
+      await updateFullName({
+        fullName,
+        links: {
+          ...links,
+          linkedin: linksForm.linkedin.trim(),
+          github: linksForm.github.trim(),
+        },
+      });
+
+      setLinksModalOpen(false);
+      toast({
+        title: "Links updated",
+        description: "Your profile links were saved successfully.",
+      });
+    } catch (error) {
+      toast({
+        title: "Update failed",
+        description:
+          error instanceof Error ? error.message : "Failed to update profile links.",
+        variant: "destructive",
+      });
+    }
+  };
+
   if(isLoading){
     return (
     <aside className="w-full flex justify-center items-center border-b border-slate-200 bg-[#f7f8fb] px-6 py-8 lg:w-[420px] lg:border-b-0 lg:border-r lg:px-10">
@@ -129,7 +194,7 @@ export default function ProfileSidebar() {
           />
         </div>
 
-        <h2 className="mt-5 text-3xl font-bold text-[#111f37] sm:text-3xl"> {data?.fullName}</h2>
+        <h2 className="mt-5 text-3xl font-bold text-[#111f37] sm:text-3xl"> {fullName}</h2>
         <p className="text-lg text-slate-600">Student at State University</p>
         <p className="mt-1 text-sm text-slate-500">Joined in 2022</p>
       </div>
@@ -141,19 +206,19 @@ export default function ProfileSidebar() {
             <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-[#e5f1ff]">
               <Mail className="h-5 w-5 text-[#2280cc]" />
             </span>
-            <span className="break-all">{data?.email}</span>
+            <span className="break-all">{user?.email}</span>
           </li>
           <li className="flex items-center gap-3">
             <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-[#e5f1ff]">
               <Phone className="h-5 w-5 text-[#2280cc]" />
             </span>
-            <span>{data?.phoneNumber}</span>
+            <span>{user?.mobileNumber}</span>
           </li>
           <li className="flex items-center gap-3">
             <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-[#e5f1ff]">
               <MapPin className="h-5 w-5 text-[#2280cc]" />
             </span>
-            <span>{data?.address?.city}, {data?.address?.country}</span>
+            <span>{user?.address?.city}, {user?.address?.country}</span>
           </li>
         </ul>
       </div>
@@ -163,6 +228,7 @@ export default function ProfileSidebar() {
           <h3 className="text-xl font-semibold text-[#111f37]">Links</h3>
           <button
             type="button"
+            onClick={handleOpenLinksModal}
             className="rounded-lg p-1 text-slate-700 transition hover:bg-slate-100"
             aria-label="Edit links"
           >
@@ -174,16 +240,76 @@ export default function ProfileSidebar() {
             <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-[#e5f1ff]">
               <Linkedin className="h-5 w-5 text-[#2280cc]" />
             </span>
-            <span className="break-all">linkedin.com/in/sophia-clark</span>
+            <span className="break-all">{linkedin}</span>
           </li>
           <li className="flex items-center gap-3">
             <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-[#e5f1ff]">
               <Github className="h-5 w-5 text-[#2280cc]" />
             </span>
-            <span className="break-all">github.com/sophia-clark</span>
+            <span className="break-all">{github}</span>
           </li>
         </ul>
       </div>
+
+      <Modal open={linksModalOpen} onClose={() => setLinksModalOpen(false)}>
+        <form onSubmit={handleLinksSubmit} className="space-y-5">
+          <div>
+            <h2 className="text-xl font-semibold text-white">Edit links</h2>
+            <p className="mt-1 text-sm text-white/60">Update the links shown on your profile.</p>
+          </div>
+
+          <label className="block space-y-2">
+            <span className="text-sm font-medium text-white/80">LinkedIn</span>
+            <input
+              type="text"
+              value={linksForm.linkedin}
+              onChange={(event) =>
+                setLinksForm((current) => ({
+                  ...current,
+                  linkedin: event.target.value,
+                }))
+              }
+              placeholder="https://www.linkedin.com/in/username"
+              className="w-full rounded-lg border border-white/10 bg-white/10 px-3 py-2 text-sm text-white outline-none transition placeholder:text-white/35 focus:border-[#54a3e8]"
+            />
+          </label>
+
+          <label className="block space-y-2">
+            <span className="text-sm font-medium text-white/80">GitHub</span>
+            <input
+              type="text"
+              value={linksForm.github}
+              onChange={(event) =>
+                setLinksForm((current) => ({
+                  ...current,
+                  github: event.target.value,
+                }))
+              }
+              placeholder="https://github.com/username"
+              className="w-full rounded-lg border border-white/10 bg-white/10 px-3 py-2 text-sm text-white outline-none transition placeholder:text-white/35 focus:border-[#54a3e8]"
+            />
+          </label>
+
+          <div className="flex justify-end gap-3 pt-2">
+            <button
+              type="button"
+              onClick={() => setLinksModalOpen(false)}
+              className="rounded-lg px-4 py-2 text-sm font-medium text-white/70 transition hover:bg-white/10 hover:text-white"
+              disabled={isUpdatingLinks}
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              className="inline-flex items-center gap-2 rounded-lg bg-[#1176c8] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#0b67b0] disabled:cursor-not-allowed disabled:opacity-70"
+              disabled={isUpdatingLinks}
+            >
+              {isUpdatingLinks ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
+              Save
+            </button>
+          </div>
+        </form>
+      </Modal>
     </aside>
   );
 }

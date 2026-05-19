@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 export const internshipSchema = z.object({
-  internshipTittle: z
+  internshipTitle: z
     .string()
     .trim()
     .min(3, "Title is too short")

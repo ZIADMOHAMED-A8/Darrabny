@@ -11,14 +11,17 @@ export default function Modal({
   onClose: () => void;
   children: ReactNode;
 }) {
-  useEffect(()=>{
-    if(!contentRef.current){
-      return
-    }
-    contentRef.current.querySelector('input, textarea, select, button').focus()
-   
-  },[open])
-  const contentRef=useRef(null)
+  const contentRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!open) return;
+    contentRef.current?.querySelector<HTMLElement>("input, textarea, select, button")?.focus();
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [open]);
+
   if (!open) return null;
 
   return (
@@ -26,11 +29,14 @@ export default function Modal({
       {/* Overlay */}
       <div
         onClick={onClose}
-        className="absolute inset-0  bg-black/50 backdrop-blur-sm"
+        className="absolute inset-0 bg-black/50 backdrop-blur-sm"
       />
 
       {/* Content */}
-      <div ref={contentRef} className="relative z-10 w-full max-w-md bg-[#041f36] rounded-2xl p-6 border border-white/10">
+      <div
+        ref={contentRef}
+        className="relative z-10 w-full max-w-md max-h-[85vh] overflow-y-auto bg-[#041f36] rounded-2xl p-6 border border-white/10"
+      >
         {children}
       </div>
     </div>

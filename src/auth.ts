@@ -145,14 +145,20 @@ export const authOptions: NextAuthOptions = {
   }
 
   console.log("Final URL:", url);
+  const body=credentials?.role === "college" ? {
+    collegeEmail: credentials?.email,
+    password: credentials?.password,
+  } :
+  {
+    email: credentials?.email,
+    password: credentials?.password,
+  }
 
+  
   const response = await fetch(url, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      email: credentials?.email,
-      password: credentials?.password,
-    }),
+    body: JSON.stringify(body),
   });
 
   console.log("Response status:", response.status);

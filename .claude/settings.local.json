@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__ide__getDiagnostics",
+      "Bash(npm run *)",
+      "Bash(npx tsc *)",
+      "Bash(Select-String -Pattern \"internship-post-form|internship-detail-page|delete-internship|use-delete\")",
+      "PowerShell(npx tsc --noEmit --pretty 2>&1 | Select-Object -First 50)"
+    ]
+  }
+}
