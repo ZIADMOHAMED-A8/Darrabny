@@ -1,5 +1,7 @@
 "use server";
 
+import { getToken } from "@/lib/utils/get-token.util";
+
 type PendingEndorsementsResponse<TData = unknown> = {
   success: boolean;
   message?: string;
@@ -8,13 +10,17 @@ type PendingEndorsementsResponse<TData = unknown> = {
 
 export default async function getPendingEndorsementsAction() {
   const baseUrl = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:5000";
+  const token = await getToken();
+
+  if (!token) {
+    throw new Error("Unauthorized");
+  }
 
   const res = await fetch(`${baseUrl}/college/pending-endorsements`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
-      Authorization: "college eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5ZjBjZWNhMjBhZjJjMTVhMjUwYmEwZCIsInJvbGUiOiJjb2xsZWdlIiwiaWF0IjoxNzc4NjY5OTcyLCJleHAiOjE3NzkyNzQ3NzJ9.vI6CzAaxVY1jGNbUmVt3KrLKx73Z-2zBI5AW3RDesPE"
-
+      Authorization: `college ${token?.token}`,
     },
     cache: "no-store",
   });

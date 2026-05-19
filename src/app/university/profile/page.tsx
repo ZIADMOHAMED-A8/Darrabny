@@ -125,7 +125,7 @@ export default function UniversityDashboardPage() {
                                                         alt="intern profile picture"
                                                         width={34}
                                                         height={34}
-                                                        src={intern.student.profilePic.secure_url}
+                                                        src={intern?.student?.profilePic?.secure_url}
                                                         style={{
                                                             width: 34,
                                                             height: 34,

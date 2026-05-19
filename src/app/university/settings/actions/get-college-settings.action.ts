@@ -1,7 +1,6 @@
 "use server";
 
-const COLLEGE_TOKEN =
-  "college eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5ZjBjZWNhMjBhZjJjMTVhMjUwYmEwZCIsInJvbGUiOiJjb2xsZWdlIiwiaWF0IjoxNzc4NjY5OTcyLCJleHAiOjE3NzkyNzQ3NzJ9.vI6CzAaxVY1jGNbUmVt3KrLKx73Z-2zBI5AW3RDesPE";
+import { getToken } from "@/lib/utils/get-token.util";
 
 export type CollegeSettingsResponse = unknown;
 
@@ -9,11 +8,17 @@ export async function getCollegeSettingsAction(): Promise<CollegeSettingsRespons
   const baseUrl =
     process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:5000";
 
+  const token = await getToken();
+
+  if (!token) {
+    throw new Error("Unauthorized");
+  }
+
   const res = await fetch(`${baseUrl}/college/settings`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
-      Authorization: COLLEGE_TOKEN,
+      Authorization: `college ${token?.token}`,
     },
     cache: "no-store",
   });

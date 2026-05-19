@@ -232,10 +232,7 @@ export default function UniversityReportPage() {
                 {formatDate(report.periodEnd)}
               </p>
             </div>
-            <button className="inline-flex items-center gap-2 rounded-lg bg-[#087bd3] px-5 py-3 font-semibold text-white shadow-sm transition hover:bg-[#056bb9]">
-              <CheckCircle2 size={18} />
-              Approve Report
-            </button>
+
           </section>
 
           <section className="mt-8 grid gap-7 lg:grid-cols-[300px_1fr]">

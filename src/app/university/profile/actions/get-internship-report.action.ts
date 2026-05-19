@@ -13,11 +13,11 @@ export default async function getInternshipReportAction(reportId: string) {
   }
 
   const res = await fetch(
-    `${baseUrl}/internshipreport/69e6a99baae2bd638128449a`,
+    `${baseUrl}/internshipreport/${reportId}`,
     {
       method: "GET",
       headers: {
-        Authorization: `college eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5ZjBjZWNhMjBhZjJjMTVhMjUwYmEwZCIsInJvbGUiOiJjb2xsZWdlIiwiaWF0IjoxNzc4NjY5OTcyLCJleHAiOjE3NzkyNzQ3NzJ9.vI6CzAaxVY1jGNbUmVt3KrLKx73Z-2zBI5AW3RDesPE`,
+        Authorization: `college ${token?.token}`,
       },
       cache: "no-store",
     }

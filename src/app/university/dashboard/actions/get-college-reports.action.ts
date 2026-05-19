@@ -17,7 +17,7 @@ export default async function getCollegeReportsAction() {
     {
       method: "GET",
       headers: {
-        Authorization: `college eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5ZjBjZWNhMjBhZjJjMTVhMjUwYmEwZCIsInJvbGUiOiJjb2xsZWdlIiwiaWF0IjoxNzc3ODE0MjQ3LCJleHAiOjE3Nzg0MTkwNDd9.k7PmBdA9bhGC2X-BRefk4FFI9smRdt3nUiqFeuXJBUY`,
+        Authorization: `college ${token?.token}`,
       },
       cache: "no-store",
     }
