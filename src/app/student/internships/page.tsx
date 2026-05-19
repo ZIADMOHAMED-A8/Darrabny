@@ -66,10 +66,17 @@ function ensureStringArray(value: unknown): string[] {
 
 function mapInternships(data: unknown[]): Internship[] {
   return (Array.isArray(data) ? data : []).map((rawItem, index) => {
+  return (Array.isArray(data) ? data : []).map((rawItem, index) => {
     const item = rawItem as RawInternship;
     const durationInMonths = item.durationInMonths || 3;
 
     return {
+      id: String(item._id ?? item.id ?? index),
+
+      company:
+        item.companyId?.companyName ||
+        item.companyName ||
+        "Unknown Company",
       id: String(item._id ?? item.id ?? index),
 
       company:
@@ -81,7 +88,17 @@ function mapInternships(data: unknown[]): Internship[] {
         item.internshipTitle ||
         item.internshipTittle ||
         "Internship",
+      title:
+        item.internshipTitle ||
+        item.internshipTittle ||
+        "Internship",
 
+      workMode:
+        item.internshipLocation === "onsite"
+          ? "On-site"
+          : item.internshipLocation === "hybrid"
+          ? "Hybrid"
+          : "Remote",
       workMode:
         item.internshipLocation === "onsite"
           ? "On-site"
@@ -93,16 +110,31 @@ function mapInternships(data: unknown[]): Internship[] {
         item.workingTime === "part-time"
           ? "Part-time"
           : "Full-time",
+      type:
+        item.workingTime === "part-time"
+          ? "Part-time"
+          : "Full-time",
 
+      duration: `${durationInMonths} months`,
       duration: `${durationInMonths} months`,
 
       match:
         typeof item.matchScore === "number"
           ? Math.round(item.matchScore * 100)
           : undefined,
+      match:
+        typeof item.matchScore === "number"
+          ? Math.round(item.matchScore * 100)
+          : undefined,
 
       reason: item.why,
+      reason: item.why,
 
+      image: item.thumbnail || "/placeholder.png",
+
+      matchedSkills: ensureStringArray(item.matchedSkills),
+      technicalSkills: ensureStringArray(item.technicalSkills),
+      softSkills: ensureStringArray(item.softSkills),
       image: item.thumbnail || "/placeholder.png",
 
       matchedSkills: ensureStringArray(item.matchedSkills),
@@ -115,7 +147,13 @@ function mapInternships(data: unknown[]): Internship[] {
 export default function InternshipsPage() {
   const { data, isLoading, isError } = useGetRecommendedInternships();
 
+
   const { data: savedInternshipsData } = useGetSavedInternships();
+
+  const {
+    toggleSaveInternship,
+    isPending: isTogglePending,
+  } = useToggleSaveInternship();
 
   const {
     toggleSaveInternship,
@@ -135,6 +173,7 @@ export default function InternshipsPage() {
     if (searchResults !== null) {
       return mapInternships(searchResults);
     }
+
 
     return recommended;
   }, [searchResults, recommended]);
@@ -184,10 +223,12 @@ export default function InternshipsPage() {
             {searchResults !== null
               ? "Search Results"
               : "Recommended Internships"}
+            {searchResults !== null
+              ? "Search Results"
+              : "Recommended Internships"}
           </h2>
         </div>
 
-        {/* Grid */}
         <section className="mt-6 grid gap-6 md:grid-cols-2">
           {/* Loading */}
           {isLoading && !searchResults && (
@@ -203,14 +244,12 @@ export default function InternshipsPage() {
             </div>
           )}
 
-          {/* Empty */}
           {!isLoading && shown.length === 0 && (
             <div className="col-span-full text-center text-slate-500">
               No internships found
             </div>
           )}
 
-          {/* Cards */}
           {shown.map((it, idx) => (
             <InternshipCard
               key={it.id}
@@ -299,8 +338,10 @@ function InternshipCard({
           )}
         </div>
 
-        {/* Content */}
         <div className="flex-1">
+          <p className="text-xs text-slate-500">
+            {it.company}
+          </p>
           <p className="text-xs text-slate-500">
             {it.company}
           </p>
@@ -310,17 +351,30 @@ function InternshipCard({
           </h3>
 
           <div className="mt-2 flex flex-wrap gap-x-3 gap-y-1 text-xs text-slate-500">
+          <h3 className="text-lg font-bold text-slate-900">
+            {it.title}
+          </h3>
+
+          <div className="mt-2 flex flex-wrap gap-x-3 gap-y-1 text-xs text-slate-500">
             <span className="inline-flex items-center gap-1">
+              <MapPin className="h-3 w-3" />
+              {it.workMode}
               <MapPin className="h-3 w-3" />
               {it.workMode}
             </span>
 
+
             <span className="inline-flex items-center gap-1">
+              <Briefcase className="h-3 w-3" />
+              {it.type}
               <Briefcase className="h-3 w-3" />
               {it.type}
             </span>
 
+
             <span className="inline-flex items-center gap-1">
+              <Clock className="h-3 w-3" />
+              {it.duration}
               <Clock className="h-3 w-3" />
               {it.duration}
             </span>
@@ -330,11 +384,14 @@ function InternshipCard({
             <div className="mt-3 rounded-xl bg-blue-50/60 p-3">
               <div className="flex items-center gap-2 text-xs font-semibold text-blue-700">
                 <div className="flex h-6 w-6 items-center justify-center rounded-md bg-blue-600 text-white">
+                <div className="flex h-6 w-6 items-center justify-center rounded-md bg-blue-600 text-white">
                   <Building2 className="h-4 w-4" />
                 </div>
 
+
                 WHY THIS MATCHES YOU
               </div>
+
 
               {it.reason && (
                 <p className="mt-2 text-xs text-slate-700">
@@ -382,11 +439,18 @@ function InternshipCard({
                   ? "Unsave internship"
                   : "Save internship"
               }
+              aria-label={
+                isSaved
+                  ? "Unsave internship"
+                  : "Save internship"
+              }
               aria-pressed={isSaved}
             >
               {isSaved ? (
                 <BookmarkCheck className="h-4 w-4" />
+                <BookmarkCheck className="h-4 w-4" />
               ) : (
+                <Bookmark className="h-4 w-4" />
                 <Bookmark className="h-4 w-4" />
               )}
             </button>
