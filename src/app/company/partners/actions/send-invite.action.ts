@@ -20,8 +20,9 @@ export default async function sendInviteAction(payload: {
     }
   );
   console.log(res)
+  const ress=await res.text()
 
-  if (!res.ok) throw new Error(`Failed to send invite with status code ${res.statusText}`);
+  if (!res.ok) throw new Error(ress ||' Failed to send invite `');
 
   return res.json();
 }

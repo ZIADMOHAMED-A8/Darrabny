@@ -23,27 +23,34 @@ function getTopbarConfig(role?: string): {
         homeHref: "/company/dashboard",
         links: [
           { href: "/company/dashboard", label: "Dashboard" },
-          { href: "/company/internships", label: "Internships" },
-          { href: "/company/candidates/ai-ranked", label: "Candidates" },
-          { href: "/company/partners", label: "Partners" },
+          { href: "/company/internships", label: "internships" },
+          { href: "/company/candidates/ai-ranked", label: "candidates" },
+          { href: "/company/partners", label: "partners" },
+          { href: "/company/verification", label: "verification" },
         ],
         notificationsHref: "/company/settings",
         profileHref: '/company/profile'
 
       };
-    case "university":
+    case "college":
       return {
         homeHref: "/university/dashboard",
         links: [
           { href: "/university/dashboard", label: "Dashboard" },
-          { href: "/university/internships", label: "Internships" },
+          { href: "/university/internships", label: "internships" },
+          { href: "/university/candidates/ai-ranked", label: "candidates" },
+          { href: "/university/partners", label: "partners" },
+          { href: "/university/settings", label: "settings" },
+          { href: "/university/verification", label: "verification" },
+
+
+
         ],
         notificationsHref: "/university/dashboard",
-        profileHref: '/unviersity/profile'
+        profileHref: '/university/profile'
 
       };
-    case "student":
-    default:
+    case "user":
       return {
         homeHref: "/student/dashboard",
         links: [
@@ -51,11 +58,23 @@ function getTopbarConfig(role?: string): {
           { href: "/student/internships", label: "Internships" },
           { href: "/student/companies", label: "Companies" },
           { href: "/student/applications", label: "Applications" },
+          
         ],
         notificationsHref: "/student/notifications",
         profileHref: '/profile'
       };
-  }
+  
+  default:
+    return {
+      homeHref: "",
+      links: [
+        { href: "", label: "" },
+        
+      ],
+      notificationsHref: "",
+      profileHref: ''
+    };
+}
 }
 
 export default function StudentTopBar() {

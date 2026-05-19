@@ -1,8 +1,40 @@
-import InternshipCard from "@/components/shared/internship-card";
-import { getInternships } from "@/lib/api/company/company-internships.api";
+"use client";
 
-export default async function CompanyInternshipsGrid() {
-  const internships = await getInternships();
+import InternshipCard from "@/components/shared/internship-card";
+import useGetCompanyInternships from "../hooks/useGetCompanyInternships";
+
+export default function CompanyInternshipsGrid() {
+  const { data, isLoading, isError, error } = useGetCompanyInternships();
+  const internships = Array.isArray(data) ? data : data?.data ?? [];
+
+  if (isLoading) {
+    return (
+      <div className="grid items-stretch gap-6 md:grid-cols-2">
+        {Array.from({ length: 4 }).map((_, index) => (
+          <div
+            key={index}
+            className="h-[180px] animate-pulse rounded-[22px] bg-white/15"
+          />
+        ))}
+      </div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <p className="rounded-lg bg-red-500/10 p-4 text-sm text-red-100">
+        {error instanceof Error ? error.message : "Failed to load internships."}
+      </p>
+    );
+  }
+
+  if (internships.length === 0) {
+    return (
+      <p className="rounded-lg bg-white/10 p-4 text-sm text-white/80">
+        No internships found.
+      </p>
+    );
+  }
 
   return (
     <div className="grid items-stretch gap-6 md:grid-cols-2">

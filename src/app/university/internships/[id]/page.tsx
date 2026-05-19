@@ -3,16 +3,41 @@
 import { useState } from "react";
 import { X, CheckCircle2, Star } from "lucide-react";
 import { useInternshipDetails } from "@/app/student/internships/[id]/hooks/use-internship-details";
+<<<<<<< HEAD
+import { useParams, useSearchParams } from "next/navigation";
+=======
 import { useParams } from "next/navigation";
+>>>>>>> e1e0fccde5a9f1a6f63a8a8a8180c740144450bf
 import { useInternshipReviews } from "@/app/student/internships/[id]/hooks/use-internship-reviews";
 import { useRouter } from 'next/navigation';
 import useRespondToEndorsementRequest from "../hooks/useRespondToEndorsementRequest";
 
+<<<<<<< HEAD
+type InternshipReview = {
+  _id: string;
+  userId?: {
+    firstName?: string;
+    lastName?: string;
+  };
+  createdAt: string;
+  rating: number;
+  comment: string;
+};
+
+export default function UniversityInternshipDetailsPanel() {
+  const [tab, setTab] = useState<"overview" | "reviews">("overview");
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  const { id } = useParams() as { id: string };
+  const endorsementId = searchParams.get("endorsementId") || id;
+=======
 export default function UniversityInternshipDetailsPanel() {
   const [tab, setTab] = useState<"overview" | "reviews">("overview");
   const router = useRouter();
 
   const { id } = useParams() as { id: string };
+>>>>>>> e1e0fccde5a9f1a6f63a8a8a8180c740144450bf
 
   const {
     data,
@@ -40,7 +65,10 @@ export default function UniversityInternshipDetailsPanel() {
   // ================= MAPPING =================
   const title = data.internshipTitle || data.internshipTittle;
   const company = data.companyId?.companyName;
+<<<<<<< HEAD
+=======
   const image = data.thumbnail || "/placeholder.png";
+>>>>>>> e1e0fccde5a9f1a6f63a8a8a8180c740144450bf
 
   const workMode =
     data.internshipLocation === "onsite"
@@ -57,11 +85,19 @@ export default function UniversityInternshipDetailsPanel() {
   const reviews = Array.isArray(reviewsData) ? reviewsData : reviewsData?.data || [];
 
   const handleAccept = () => {
+<<<<<<< HEAD
+    respondToEndorsement({ id: endorsementId, decision: "approved" });
+  };
+
+  const handleReject = () => {
+    respondToEndorsement({ id: endorsementId, decision: "rejected" });
+=======
     respondToEndorsement({ id, decision: "approved" });
   };
 
   const handleReject = () => {
     respondToEndorsement({ id, decision: "rejected" });
+>>>>>>> e1e0fccde5a9f1a6f63a8a8a8180c740144450bf
   };
 
   return (
@@ -226,7 +262,11 @@ export default function UniversityInternshipDetailsPanel() {
                 )}
 
                 {/* Reviews list */}
+<<<<<<< HEAD
+                {reviews.map((r: InternshipReview) => (
+=======
                 {reviews.map((r: any) => (
+>>>>>>> e1e0fccde5a9f1a6f63a8a8a8180c740144450bf
                   <div
                     key={r._id}
                     className="rounded-2xl border border-[#0b1f33]/10 p-6"

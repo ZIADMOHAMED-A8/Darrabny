@@ -67,7 +67,6 @@ export default function ProfilePage() {
             </div>
           </div>
 
-          <AboutSection isEditing={isEditing} />
           <SkillsSection isEditing={isEditing}  />
           <ProjectsSection isEditing={isEditing}  />
           <ResumeSection isEditing={isEditing} />

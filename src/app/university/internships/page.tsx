@@ -16,7 +16,11 @@ import {
 } from "lucide-react";
 import useGetPendingEndorsements from "./hooks/useGetPendingEndorsements";
 import useRespondToEndorsementRequest from "./hooks/useRespondToEndorsementRequest";
+<<<<<<< HEAD
+import { useRouter } from "next/navigation";
+=======
 
+>>>>>>> e1e0fccde5a9f1a6f63a8a8a8180c740144450bf
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 type InternshipStatus = "Active" | "Closed" | "Starting soon";
@@ -30,6 +34,10 @@ interface Internship {
   type: string;
   duration: string;
   image: string;
+<<<<<<< HEAD
+  internshipId: string;
+=======
+>>>>>>> e1e0fccde5a9f1a6f63a8a8a8180c740144450bf
 }
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -56,6 +64,14 @@ function mapEndorsementToInternship(raw: unknown, idx: number): Internship {
 
   // Support both direct fields and nested internshipId object
   const internshipObj = getNested(raw, "internshipId");
+<<<<<<< HEAD
+  const internshipId =
+    asString(getNested(internshipObj, "_id")) ??
+    asString(getNested(internshipObj, "id")) ??
+    asString(getNested(raw, "internshipId")) ??
+    id;
+=======
+>>>>>>> e1e0fccde5a9f1a6f63a8a8a8180c740144450bf
 
   const title =
     asString(getNested(internshipObj, "internshipTittle")) ??
@@ -103,7 +119,21 @@ function mapEndorsementToInternship(raw: unknown, idx: number): Internship {
     asString(getNested(raw, "thumbnail")) ??
     "";
 
+<<<<<<< HEAD
+  return {
+    id,
+    internshipId,
+    company,
+    title,
+    status,
+    location,
+    type,
+    duration,
+    image,
+  };
+=======
   return { id, company, title, status, location, type, duration, image };
+>>>>>>> e1e0fccde5a9f1a6f63a8a8a8180c740144450bf
 }
 
 // ─── Status badge ─────────────────────────────────────────────────────────────
@@ -166,6 +196,11 @@ function InternshipCard({
   onReject: (id: string) => void;
   busy?: boolean;
 }) {
+<<<<<<< HEAD
+  const router = useRouter();
+
+=======
+>>>>>>> e1e0fccde5a9f1a6f63a8a8a8180c740144450bf
   return (
     <div style={{
       display: "flex", alignItems: "flex-start", gap: 16,
@@ -217,7 +252,17 @@ function InternshipCard({
 
         {/* Actions */}
         <div style={{ marginTop: 12, display: "flex", alignItems: "center", gap: 8 }}>
+<<<<<<< HEAD
+          <button
+          onClick={() => {
+            router.push(
+              `/university/internships/${item.internshipId}?endorsementId=${item.id}`
+            );
+          }}
+          style={{
+=======
           <button style={{
+>>>>>>> e1e0fccde5a9f1a6f63a8a8a8180c740144450bf
             background: "#1565C0", color: "#fff", border: "none",
             borderRadius: 8, padding: "6px 16px", fontSize: 12, fontWeight: 600, cursor: "pointer",
           }}>
@@ -318,7 +363,11 @@ function Pagination({ current, total, onChange }: { current: number; total: numb
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
 export default function InternshipListingsPage() {
+<<<<<<< HEAD
+  const { endorsements, isLoading, isError, error, refetch, isFetching } =
+=======
   let { endorsements, isLoading, isError, error, refetch, isFetching } =
+>>>>>>> e1e0fccde5a9f1a6f63a8a8a8180c740144450bf
     useGetPendingEndorsements();
   const respondMutation = useRespondToEndorsementRequest();
   const [busyId, setBusyId] = useState<string | null>(null);
@@ -476,7 +525,11 @@ export default function InternshipListingsPage() {
   return (
     <div style={{ minHeight: "100vh", background: "#eef2fb", fontFamily: "sans-serif" }}>
       {/* ── Main ── */}
+<<<<<<< HEAD
+      <main className="min-h-screen" style={{ maxWidth: 1100, margin: "0 auto", padding: "40px 16px" }}>
+=======
       <main style={{ maxWidth: 1100, margin: "0 auto", padding: "40px 16px" }}>
+>>>>>>> e1e0fccde5a9f1a6f63a8a8a8180c740144450bf
 
         {/* Search bar + title */}
         <div style={{ marginBottom: 32, textAlign: "center" }}>
@@ -529,4 +582,8 @@ export default function InternshipListingsPage() {
       <style>{`@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }`}</style>
     </div>
   );
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> e1e0fccde5a9f1a6f63a8a8a8180c740144450bf
