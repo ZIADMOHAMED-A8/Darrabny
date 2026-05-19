@@ -145,14 +145,11 @@ export const authOptions: NextAuthOptions = {
   }
 
   console.log("Final URL:", url);
-  const body=credentials?.role === "college" ? {
-    collegeEmail: credentials?.email,
-    password: credentials?.password,
-  } :
-  {
+  const body= {
     email: credentials?.email,
     password: credentials?.password,
   }
+ 
 
   
   const response = await fetch(url, {
