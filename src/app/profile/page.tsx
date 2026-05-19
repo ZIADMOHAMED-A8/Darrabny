@@ -37,7 +37,6 @@ export default function ProfilePage() {
 
   return (
     <div className="min-h-screen bg-[#e8eefc]">
-      <StudentTopBar />
       <div className="mx-auto flex w-full  flex-col lg:flex-row">
         <ProfileSidebar />
 
