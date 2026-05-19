@@ -8,17 +8,17 @@ const badgeLevels = [
   {
     level: 1,
     title: "Level 1",
-    src: "/level 1.jpeg",
+    src: "/level 1.png",
   },
   {
     level: 2,
     title: "Level 2",
-    src: "/level 2.jpeg",
+    src: "/level 2.png",
   },
   {
     level: 3,
     title: "Level 3",
-    src: "/level 3.jpeg",
+    src: "/level 3.png",
   },
 ];
 
