@@ -38,12 +38,7 @@ function getTopbarConfig(role?: string): {
         links: [
           { href: "/university/dashboard", label: "Dashboard" },
           { href: "/university/internships", label: "internships" },
-          { href: "/university/candidates/ai-ranked", label: "candidates" },
-          { href: "/university/partners", label: "partners" },
           { href: "/university/settings", label: "settings" },
-          { href: "/university/verification", label: "verification" },
-
-
 
         ],
         notificationsHref: "/university/dashboard",
