@@ -24,7 +24,6 @@ function getTopbarConfig(role?: string): {
         links: [
           { href: "/company/dashboard", label: "Dashboard" },
           { href: "/company/internships", label: "internships" },
-          { href: "/company/candidates/ai-ranked", label: "candidates" },
           { href: "/company/partners", label: "partners" },
           { href: "/company/verification", label: "verification" },
         ],
