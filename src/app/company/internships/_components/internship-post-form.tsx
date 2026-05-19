@@ -33,6 +33,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useUpdateInternship } from "../_hooks/use-update-internship";
+import { useToast } from "@/hooks/use-toast";
 
 const DEFAULT_CITIES = [
   { value: "cairo", label: "Cairo" },
@@ -41,7 +42,7 @@ const DEFAULT_CITIES = [
 ];
 
 const DEFAULT_VALUES: InternshipPostFormValues = {
-  internshipTittle: "Frontend Developer Intern",
+  internshipTitle: "Frontend Developer Intern",
   internshipDescription:
     "Internship focused on building modern web applications",
   internshipLocation: "remote",
@@ -155,13 +156,14 @@ export default function InternshipPostForm({
     isPending: isUpdating,
     error: updateError,
   } = useUpdateInternship();
+  const { toast } = useToast();
   function submit(values: InternshipPostFormValues) {
     const formData = new FormData();
 
     // =========================
     // Basic Fields
     // =========================
-    formData.append("internshipTittle", values.internshipTittle);
+    formData.append("internshipTitle", values.internshipTitle);
     formData.append("internshipDescription", values.internshipDescription);
     formData.append("internshipLocation", values.internshipLocation);
     formData.append("workingTime", values.workingTime);
@@ -198,20 +200,45 @@ export default function InternshipPostForm({
     }
     console.log("==============================");
 
-    // =========================
-    // Create Internship
-    // =========================
-    addInternship(formData, {
-      onSuccess: () => {
-        alert("Internship posted successfully 🎉");
-        form.reset({
-          ...DEFAULT_VALUES,
-        });
-      },
-      onError: (error) => {
-        alert(error.message);
-      },
-    });
+    if (mode === "edit" && internshipId) {
+      updateInternship(
+        { id: internshipId, data: formData },
+        {
+          onSuccess: () => {
+            toast({
+              title: "Internship updated",
+              description: "Your internship has been updated successfully.",
+            });
+          },
+          onError: (error) => {
+            toast({
+              title: "Update failed",
+              description: error.message,
+              variant: "destructive",
+            });
+          },
+        },
+      );
+    } else {
+      addInternship(formData, {
+        onSuccess: () => {
+          toast({
+            title: "Internship posted",
+            description: "Your internship has been posted successfully.",
+          });
+          form.reset({
+            ...DEFAULT_VALUES,
+          });
+        },
+        onError: (error) => {
+          toast({
+            title: "Post failed",
+            description: error.message,
+            variant: "destructive",
+          });
+        },
+      });
+    }
   }
   function saveDraft() {
     const values = form.getValues();
@@ -239,7 +266,7 @@ export default function InternshipPostForm({
               {/* Internship Title */}
               <FormField
                 control={form.control}
-                name="internshipTittle"
+                name="internshipTitle"
                 render={({ field }) => (
                   <FormItem>
                     <Label className={smallCaps}>Internship Title</Label>
@@ -646,7 +673,6 @@ export default function InternshipPostForm({
             </div>
             {/* </div> */}
 
-            {error && <p className="text-[#B00020]">{error.message}</p>}
 
             <div className="flex items-center justify-between pt-6">
               <Button

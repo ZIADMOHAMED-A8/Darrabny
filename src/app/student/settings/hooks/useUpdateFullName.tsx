@@ -14,6 +14,7 @@ export default function useUpdateFullName() {
     mutationFn: (values: UpdateFullNamePayload) => updateFullNameAction(values),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["getUser"] });
+      queryClient.invalidateQueries({ queryKey: ["getLoginStudent"] });
     },
   });
 

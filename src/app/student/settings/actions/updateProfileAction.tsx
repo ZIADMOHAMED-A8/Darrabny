@@ -25,7 +25,10 @@ export default async function updateProfileAction(
     // email: values.email,
     // phoneNumber: values.phone,
     mobileNumber: values.phone,
-    address: values.address,
+    address: {
+      city:values.address.split(',')[0].trim()
+      ,country:values.address.split(',')[1].trim()
+    },
     // notifications: {
     //   email: values.emailNotifications,
     //   push: values.pushNotifications,

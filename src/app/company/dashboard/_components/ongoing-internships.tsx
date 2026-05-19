@@ -1,141 +1,119 @@
 "use client";
 
-import { Users } from "lucide-react";
+import type { CompanyInternship } from "../actions/get-company-dashboard.action";
 
-export default function OngoingInternships() {
+interface OngoingInternshipsProps {
+  internships: CompanyInternship[];
+}
+
+export default function OngoingInternships({
+  internships,
+}: OngoingInternshipsProps) {
   return (
-    <div className="rounded-2xl bg-[#dbeafe] text-[#0b1f33] shadow-[0_18px_60px_rgba(0,0,0,0.35)] overflow-hidden">
-      <div className="px-8 pt-7 pb-4">
-        <h2 className="text-lg font-extrabold">Ongoing Internships</h2>
+    <div className="rounded-xl bg-white border border-gray-200 shadow-sm overflow-hidden">
+      <div className="px-6 py-5 border-b border-gray-200">
+        <h2 className="text-lg font-semibold text-gray-900">
+          Ongoing Internships
+        </h2>
       </div>
 
-      <div className="px-8 pb-2">
-        <div className="grid grid-cols-[1.4fr_1.4fr_1.1fr_1fr_0.7fr] text-sm font-bold text-[#0b1f33]/70">
-          <div>Title</div>
-          <div>Role</div>
-          <div>University</div>
-          <div>Status</div>
-          <div className="text-right">Student</div>
+      {internships.length === 0 ? (
+        <div className="px-6 py-12 text-center text-gray-500">
+          No ongoing internships
         </div>
-      </div>
+      ) : (
+        <>
+          <div className="px-6 py-3 bg-gray-50">
+            <div className="grid grid-cols-[2fr_1.5fr_1fr_0.8fr] gap-4 text-xs font-semibold text-gray-600 uppercase tracking-wide">
+              <div>Student</div>
+              <div>Role</div>
+              <div>Status</div>
+              <div className="text-right">Count</div>
+            </div>
+          </div>
 
-      <div className="px-6 pb-4">
-        <RowJD />
-        <RowAS />
-        <RowMK />
-      </div>
+          <div className="divide-y divide-gray-200">
+            {internships.map((internship) => (
+              <InternshipRow key={internship.internshipId} internship={internship} />
+            ))}
+          </div>
 
-      <div className="px-8 pb-6 pt-2 text-center text-sm text-[#0b1f33]/45">
-        Showing 3 of 12 active interns
-      </div>
+          <div className="px-6 py-4 bg-gray-50 text-center text-xs text-gray-500">
+            Showing {internships.length} internship{internships.length !== 1 ? "s" : ""}
+          </div>
+        </>
+      )}
     </div>
   );
 }
 
-/* Rows */
-
-function RowJD() {
-  return (
-    <div className="mt-3 rounded-xl px-2 py-3">
-      <div className="grid grid-cols-[1.4fr_1.4fr_1.1fr_1fr_0.7fr] items-center">
-        <div className="flex items-center gap-4">
-          <div className="grid h-10 w-10 place-items-center rounded-full bg-[#f2f2f2] text-sm font-extrabold text-[#e7728c] shadow-sm">
-            JD
-          </div>
-          <div className="min-w-0">
-            <div className="text-sm font-semibold">Jane Doe</div>
-            <div className="text-xs text-[#0b1f33]/50">Jane@Darrabny.com</div>
-          </div>
-        </div>
-
-        <div className="text-sm">
-          <div className="font-semibold">Frontend Dev</div>
-          <div className="text-xs text-[#0b1f33]/50">Summer Internship</div>
-        </div>
-
-        <div className="text-sm text-[#0b1f33]/70">Tech University</div>
-
-        <div>
-          <span className="inline-flex rounded-full px-3 py-1 text-xs font-bold bg-[#74d18b] text-[#0b1f33]">
-            Active
-          </span>
-        </div>
-
-        <div className="flex items-center justify-end gap-4">
-          <div className="text-sm font-bold text-[#1f7ed6]">45</div>
-          <Users className="h-5 w-5 text-[#0b1f33]/60" />
-        </div>
-      </div>
-    </div>
-  );
+interface InternshipRowProps {
+  internship: CompanyInternship;
 }
 
-function RowAS() {
+function InternshipRow({ internship }: InternshipRowProps) {
+  const getStatusColor = (status: string) => {
+    switch (status.toLowerCase()) {
+      case "active":
+        return "bg-green-100 text-green-800";
+      case "onboarding":
+        return "bg-yellow-100 text-yellow-800";
+      case "completed":
+        return "bg-blue-100 text-blue-800";
+      default:
+        return "bg-gray-100 text-gray-800";
+    }
+  };
+
+  const initials = internship.student.name
+    .split(" ")
+    .map((word) => word[0])
+    .join("")
+    .toUpperCase();
+
+  const getInitialColor = (str: string) => {
+    const colors = [
+      "bg-red-100 text-red-700",
+      "bg-blue-100 text-blue-700",
+      "bg-purple-100 text-purple-700",
+      "bg-pink-100 text-pink-700",
+      "bg-indigo-100 text-indigo-700",
+    ];
+    return colors[str.charCodeAt(0) % colors.length];
+  };
+
   return (
-    <div className="mt-3 rounded-xl px-2 py-3">
-      <div className="grid grid-cols-[1.4fr_1.4fr_1.1fr_1fr_0.7fr] items-center">
-        <div className="flex items-center gap-4">
-          <div className="grid h-10 w-10 place-items-center rounded-full bg-[#f2f2f2] text-sm font-extrabold text-[#7b7df1] shadow-sm">
-            AS
+    <div className="px-6 py-4 hover:bg-gray-50 transition-colors">
+      <div className="grid grid-cols-[2fr_1.5fr_1fr_0.8fr] gap-4 items-center">
+        <div className="flex items-center gap-3 min-w-0">
+          <div
+            className={`flex-shrink-0 h-10 w-10 rounded-full font-semibold flex items-center justify-center ${getInitialColor(initials)}`}
+          >
+            {initials}
           </div>
           <div className="min-w-0">
-            <div className="text-sm font-semibold">Alex Smith</div>
-            <div className="text-xs text-[#0b1f33]/50">alex@Darrabny.com</div>
+            <div className="text-sm font-semibold text-gray-900 truncate">
+              {internship.student.name}
+            </div>
+            <div className="text-xs text-gray-500 truncate">
+              {internship.student.email}
+            </div>
           </div>
         </div>
 
-        <div className="text-sm">
-          <div className="font-semibold">Product Design</div>
-          <div className="text-xs text-[#0b1f33]/50">Fall Co-op</div>
-        </div>
-
-        <div className="text-sm text-[#0b1f33]/70">State College</div>
+        <div className="text-sm text-gray-700">{internship.role}</div>
 
         <div>
-          <span className="inline-flex rounded-full px-3 py-1 text-xs font-bold bg-[#d8dd6f] text-[#0b1f33]">
-            Onboarding
+          <span
+            className={`inline-flex px-3 py-1 text-xs font-semibold rounded-full ${getStatusColor(internship.status)}`}
+          >
+            {internship.status}
           </span>
         </div>
 
-        <div className="flex items-center justify-end gap-4">
-          <div className="text-sm font-bold text-[#1f7ed6]">50</div>
-          <Users className="h-5 w-5 text-[#0b1f33]/60" />
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function RowMK() {
-  return (
-    <div className="mt-3 rounded-xl px-2 py-3">
-      <div className="grid grid-cols-[1.4fr_1.4fr_1.1fr_1fr_0.7fr] items-center">
-        <div className="flex items-center gap-4">
-          <div className="grid h-10 w-10 place-items-center rounded-full bg-[#f2f2f2] text-sm font-extrabold text-[#7b7df1] shadow-sm">
-            MK
-          </div>
-          <div className="min-w-0">
-            <div className="text-sm font-semibold">Maria Kline</div>
-            <div className="text-xs text-[#0b1f33]/50">maria@Darrabny.com</div>
-          </div>
-        </div>
-
-        <div className="text-sm">
-          <div className="font-semibold">Data Analyst</div>
-          <div className="text-xs text-[#0b1f33]/50">6-Month Contract</div>
-        </div>
-
-        <div className="text-sm text-[#0b1f33]/70">Central Uni</div>
-
-        <div>
-          <span className="inline-flex rounded-full px-3 py-1 text-xs font-bold bg-[#74d18b] text-[#0b1f33]">
-            Active
-          </span>
-        </div>
-
-        <div className="flex items-center justify-end gap-4">
-          <div className="text-sm font-bold text-[#1f7ed6]">120</div>
-          <Users className="h-5 w-5 text-[#0b1f33]/60" />
+        <div className="text-right text-sm font-semibold text-blue-600">
+          {internship.studentCount.current}
+          {internship.studentCount.capacity != null && `/${internship.studentCount.capacity}`}
         </div>
       </div>
     </div>

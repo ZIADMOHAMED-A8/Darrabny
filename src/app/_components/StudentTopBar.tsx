@@ -100,7 +100,7 @@ export default function StudentTopBar() {
 
         {/* Center */}
         <nav className="hidden items-center gap-8 text-sm font-medium text-[#0b1f33]/70 md:flex">
-          {links.map((l) => {
+          {links?.map((l) => {
             const active = pathname === l.href || pathname.startsWith(`${l.href}/`);
             console.log(l)
             return (

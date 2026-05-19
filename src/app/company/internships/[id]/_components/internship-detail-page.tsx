@@ -3,22 +3,44 @@
 import { useState } from "react";
 import { X, CheckCircle2 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import JobCard from "./job-card";
-import { useUpdateInternship } from "../../_hooks/use-update-internship";
 import InternshipPostForm from "../../_components/internship-post-form";
+import { useDeleteInternship } from "../../_hooks/use-delete-internship";
+import { useToast } from "@/hooks/use-toast";
+
+type CompanyId = {
+  _id: string;
+  companyName: string;
+};
+
+type ReviewSummary = {
+  averageRating: number;
+  totalReviews: number;
+};
+
+type InternshipData = {
+  data:{
+    _id:string
+    internshipTitle: string;
+    internshipLocation: string;
+    workingTime: string;
+    internshipDescription: string;
+    isFeatured: boolean;
+    technicalSkills: string[];
+    softSkills: string[];
+    status: string;
+    startDate: string;
+    durationInMonths: number;
+    thumbnail: string | null;
+    closed: boolean;
+    companyId: CompanyId;
+    endDate: string;
+    createdAt: string;
+    updatedAt: string;
+    reviewSummary: ReviewSummary;}
+};
 
 type InternshipApi = {
-  _id: string;
-  internshipTittle: string;
-  internshipLocation: string;
-  workingTime: string;
-  postedAgo: string;
-  internshipDescription: string;
-  technicalSkills: string[];
-  softSkills: string[];
-  seniorityLevel: string;
-  durationInMonths: number;
-  thumbnail: string;
+  json: InternshipData;
 };
 
 function CheckItem({ text }: { text: string }) {
@@ -51,43 +73,56 @@ export default function InternshipDetailPage({
   data: InternshipApi;
 }) {
   const router = useRouter();
-
   const [openForm, setOpenForm] = useState(false);
+  const { deleteInternship, isPending: isDeleting } = useDeleteInternship();
+  const { toast } = useToast();
   const mode = "edit";
 
   const {
-    internshipTittle,
+  data:{
+    _id,
+    internshipTitle,
     internshipLocation,
     workingTime,
-    postedAgo,
     internshipDescription,
     technicalSkills,
     softSkills,
-    seniorityLevel,
     durationInMonths,
+    startDate,
+    endDate,
+    status,
+    companyId,
+  }
   } = data;
+
+  const formattedStart = new Date(startDate).toLocaleDateString("en-US", {
+    month: "short",
+    year: "numeric",
+  });
+  const formattedEnd = new Date(endDate).toLocaleDateString("en-US", {
+    month: "short",
+    year: "numeric",
+  });
 
   return (
     <div className="min-h-screen bg-white">
-      {/* Job Card */}
-      <div className="px-16 pt-8 pb-6 border-b">
-        <JobCard {...data} />
-      </div>
-
-      {/* Details Section */}
       <div className="px-16">
         {/* Header */}
         <div className="flex justify-between items-start mt-7">
           <div>
             <h1 className="text-[28px] font-bold text-[#0B1B35]">
-              {internshipTittle}
+              {internshipTitle}
             </h1>
             <div className="mt-2 flex flex-wrap items-center gap-2 text-sm text-[#6B7280]">
+              <span>{companyId.companyName}</span>
+              <span className="text-[#D1D5DB]">·</span>
               <span>{internshipLocation}</span>
               <span className="bg-[#1686E6] text-white px-3 py-0.5 rounded-full text-xs">
                 {workingTime}
               </span>
-              <span>Posted {postedAgo}</span>
+              <span className="capitalize bg-[#F3F4F6] text-[#374151] px-3 py-0.5 rounded-full text-xs">
+                {status}
+              </span>
             </div>
           </div>
           <button onClick={() => router.back()}>
@@ -95,62 +130,97 @@ export default function InternshipDetailPage({
           </button>
         </div>
 
-        <Section title="About">
+        {/* Overview Tab */}
+        <div className="mt-5 border-b border-[#E5E7EB]">
+          <button className="pb-2 text-sm font-medium text-[#1686E6] border-b-2 border-[#1686E6]">
+            Overview
+          </button>
+        </div>
+
+        {/* About */}
+        <Section title="About the Internship">
           <p className="text-[15px] text-[#374151]">{internshipDescription}</p>
         </Section>
 
-        <Section title="Technical Skills">
-          <ul className="grid md:grid-cols-2 gap-3">
-            {technicalSkills.map((item, i) => (
-              <CheckItem key={i} text={item} />
-            ))}
-          </ul>
-        </Section>
+        {/* Technical Skills */}
+        {technicalSkills.length > 0 && (
+          <Section title="Technical Skills">
+            <ul className="grid md:grid-cols-2 gap-3">
+              {technicalSkills.map((item, i) => (
+                <CheckItem key={i} text={item} />
+              ))}
+            </ul>
+          </Section>
+        )}
 
-        <Section title="Soft Skills">
-          <ul className="grid md:grid-cols-2 gap-3">
-            {softSkills.map((item, i) => (
-              <CheckItem key={i} text={item} />
-            ))}
-          </ul>
-        </Section>
+        {/* Soft Skills */}
+        {softSkills.length > 0 && (
+          <Section title="Soft Skills">
+            <ul className="grid md:grid-cols-2 gap-3">
+              {softSkills.map((item, i) => (
+                <CheckItem key={i} text={item} />
+              ))}
+            </ul>
+          </Section>
+        )}
 
+        {/* Details */}
         <Section title="Details">
           <ul className="space-y-2">
             <CheckItem text={`Duration: ${durationInMonths} months`} />
-            <CheckItem text={`Level: ${seniorityLevel}`} />
+            <CheckItem text={`Timeline: ${formattedStart} – ${formattedEnd}`} />
           </ul>
         </Section>
 
         {/* Footer */}
         <div className="flex justify-end gap-3 mt-8 pb-8">
-          <button className="border border-red-200 text-red-600 hover:bg-red-50 px-6 py-2 rounded-lg text-sm transition">
-            Delete
+          <button
+            disabled={isDeleting}
+            onClick={() => {
+              if (!confirm("Are you sure you want to delete this internship?")) return;
+              deleteInternship(_id, {
+                onSuccess: () => {
+                  toast({
+                    title: "Internship deleted",
+                    description: "The internship has been deleted successfully.",
+                  });
+                  router.push("/company/internships");
+                },
+                onError: (error) => {
+                  toast({
+                    title: "Delete failed",
+                    description: error.message,
+                    variant: "destructive",
+                  });
+                },
+              });
+            }}
+            className="border border-red-200 text-red-600 hover:bg-red-50 px-6 py-2 rounded-lg text-sm transition disabled:opacity-50"
+          >
+            {isDeleting ? "Deleting..." : "Delete"}
           </button>
-
           <button
             onClick={() => setOpenForm(true)}
-            className="border border-blue-200 text-blue-600 hover:bg-blue-50 px-6 py-2 rounded-lg text-sm transition"
+            className="bg-[#1686E6] text-white hover:bg-[#1270C4] px-6 py-2 rounded-lg text-sm transition flex items-center gap-1.5"
           >
-            Edit
+            ✎ Edit
           </button>
         </div>
 
         {/* Modal */}
         {openForm && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-           <div className="bg-white w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-xl relative shadow-lg">
+            <div className="bg-white w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-xl relative shadow-lg">
               <button
                 onClick={() => setOpenForm(false)}
                 className="absolute top-3 right-3"
               >
                 <X />
               </button>
-
               <InternshipPostForm
                 mode={mode}
-                internshipId={data._id}
-                defaultValues={data}
+                internshipId={_id}
+                defaultValues={data.json}
                 onCancel={() => setOpenForm(false)}
               />
             </div>

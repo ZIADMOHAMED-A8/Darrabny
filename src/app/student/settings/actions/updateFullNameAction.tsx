@@ -4,7 +4,10 @@ import { getToken } from "@/lib/utils/get-token.util";
 
 export type UpdateFullNamePayload = {
   fullName: string;
-  links: null;
+  links: {
+    linkedin?: string;
+    github?: string;
+  } | null;
 };
 
 export default async function updateFullNameAction(
@@ -23,9 +26,7 @@ export default async function updateFullNameAction(
     },
     body: JSON.stringify({
       fullName: values.fullName,
-      links: {
-        'linkedin':"https://www.linkedin.com/in/ziad-etoo/"
-      },
+      links: values.links,
     }),
   });
 

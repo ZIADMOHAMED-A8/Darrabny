@@ -12,7 +12,7 @@ import useGetUser from "../student/hooks/useGetLoginUser";
 
 export default function ProfilePage() {
   const [isEditing,setIsEditing]=useState(false)
-  const { isLoading, isError, error } = useGetUser();
+  const { data, isLoading, isError, error } = useGetUser();
 
   if (isLoading) {
     return (
@@ -34,8 +34,9 @@ export default function ProfilePage() {
       </div>
     );
   }
-
+  data.badges= ["Rising Star", "Pro","expert"]
   return (
+    
     <div className="min-h-screen bg-[#e8eefc]">
       <div className="mx-auto flex w-full  flex-col lg:flex-row">
         <ProfileSidebar />
@@ -69,7 +70,7 @@ export default function ProfilePage() {
           <SkillsSection isEditing={isEditing}  />
           <ProjectsSection isEditing={isEditing}  />
           <ResumeSection isEditing={isEditing} />
-          <AchievementsSection />
+          <AchievementsSection profileData={data} />
         </div>
       </div>
     </div>

@@ -20,9 +20,9 @@ export default async function sendInviteAction(payload: {
     }
   );
   console.log(res)
-  const ress=await res.text()
+  const ress=await res.json()
 
-  if (!res.ok) throw new Error(ress ||' Failed to send invite `');
+  if (!res.ok) throw new Error(ress.message ||' Failed to send invite `');
 
   return res.json();
 }

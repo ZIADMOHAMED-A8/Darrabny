@@ -12,7 +12,7 @@ export default async function InternshipStudentsPage({
   params,
 }: InternshipStudentsPageProps) {
   const students = await getInternshipStudents(params.internshipId);
-
+  console.log('students',students)
   return (
     <main className="min-h-screen bg-slate-50 px-4 py-8 md:px-8">
       <div className="mx-auto max-w-6xl space-y-6">
@@ -37,7 +37,7 @@ export default async function InternshipStudentsPage({
           <h2 className="mb-4 text-lg font-semibold text-slate-900">
             Students List View
           </h2>
-          <StudentsTable initialData={students} />
+          <StudentsTable initialData={students} internshipId={params.internshipId} />
         </section>
       </div>
     </main>

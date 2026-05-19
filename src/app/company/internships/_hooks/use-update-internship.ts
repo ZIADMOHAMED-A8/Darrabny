@@ -11,7 +11,7 @@ export function useUpdateInternship() {
       data,
     }: {
       id: string;
-      data: any;
+      data: FormData;
     }) => updateInternshipAction(id, data),
   });
 

@@ -199,27 +199,8 @@ export default function UniversityReportPage() {
     4;
       const router=useRouter()
   return (
-    <div className="min-h-screen bg-[#eef4ff] text-slate-950">
-      <header className="border-b border-blue-100 bg-white">
-        <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6">
-          <Link
-            href="/university/dashboard"
-            className="flex items-center gap-2 text-xl font-bold text-[#087bd3]"
-          >
-            <span className="grid h-8 w-8 place-items-center rounded-lg bg-[#087bd3] text-white">
-              <BriefcaseBusiness size={18} />
-            </span>
-            Darrabny
-          </Link>
-          <nav className="hidden items-center gap-8 text-sm font-semibold text-slate-600 md:flex">
-            <Link href="/university/dashboard">Dashboard</Link>
-            <Link href="/university/internships">Internships</Link>
-            <Link className="border-b-2 border-[#087bd3] py-5 text-[#087bd3]" href="/university/profile">
-              Profile
-            </Link>
-          </nav>
-        </div>
-      </header>
+    <div className="min-h-screen w-full bg-[#eef4ff] text-slate-950">
+
 
       <main className="px-6 py-10">
         <div className="mx-auto max-w-7xl">

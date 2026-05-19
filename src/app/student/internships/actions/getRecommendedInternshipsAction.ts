@@ -21,8 +21,8 @@ export default async function getRecommendedInternshipsAction() {
   });
 
   if (!res.ok) {
-    const message = await res.text();
-    throw new Error(message || "Failed to get recommended internships");
+    const message = await res.json();
+    throw new Error(message.message || "Failed to get recommended internships");
   }
 
   return res.json();
