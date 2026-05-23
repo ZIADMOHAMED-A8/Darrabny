@@ -281,22 +281,22 @@ export default function UniversityInternshipDetailsPanel() {
 
         {/* Actions */}
         <div className="mt-12 flex justify-end gap-3">
-          <button
-            onClick={handleReject}
-            disabled={isPending}
-            className="px-6 py-2 border border-red-300 text-red-600 rounded-md hover:bg-red-50 disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            {isPending ? "Processing..." : "Reject"}
-          </button>
-          <button
-            type="button"
-            onClick={handleAccept}
-            disabled={isPending}
-            className="px-6 py-2 bg-[#0a79c9] text-white rounded-md hover:bg-[#0a6ab5] disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            {isPending ? "Processing..." : "Accept"}
-          </button>
-        </div>
+  <button
+    onClick={handleReject}
+    disabled={isPending}
+    className="px-10 py-2 border border-gray-300 text-gray-600 rounded-xl bg-white hover:bg-gray-50 text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+  >
+    {isPending ? "Processing..." : "Reject"}
+  </button>
+  <button
+    type="button"
+    onClick={handleAccept}
+    disabled={isPending}
+    className=" py-2 bg-blue-500 px-10 text-white rounded-xl hover:bg-blue-600 text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+  >
+    {isPending ? "Processing..." : "Accept"}
+  </button>
+</div>
         {isRespondError && <div className="text-red-500">
           {error.message}
           </div>}

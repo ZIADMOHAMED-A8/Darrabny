@@ -128,23 +128,12 @@ export default function CompanyDetailsPage({
                     <MapPin className="h-4 w-4" />{" "}
                     {company.address || "Address unavailable (dummy)"}
                   </span>
-                  <span>48k followers (dummy)</span>
                   <span>{size}</span>
                 </div>
               </div>
             </div>
 
-            <div className="flex gap-2">
-              <button className="rounded-md bg-[#1787d8] px-5 py-2 text-sm font-semibold text-white">
-                + Follow
-              </button>
-              <Link
-                href={`/student/companies/${companyId}/contact`}
-                className="rounded-md border border-[#0b1f33]/15 px-5 py-2 text-sm font-semibold text-[#0b1f33]"
-              >
-                Contact Us
-              </Link>
-            </div>
+
           </div>
 
           <div className="mt-5 grid gap-5 md:grid-cols-3">
@@ -193,12 +182,9 @@ export default function CompanyDetailsPage({
                       <div className="flex items-start justify-between gap-3">
                         <div>
                           <h3 className="text-lg font-bold text-[#0b1f33]">
-                            {internship.internshipTittle ?? 'Internship Title not found'} 
+                            {internship.internshipTitle ?? 'Internship Title not found'} 
                           </h3>
-                          <p className="text-xs text-[#0b1f33]/60">
-                            Remote (dummy) &bull; 3 Months (dummy) &bull; Paid
-                            (dummy)
-                          </p>
+
                           <p className="mt-1 text-xs text-[#0b1f33]/50">
                             Posted {internship.postedAgo || "recently (dummy)"}
                           </p>
@@ -207,18 +193,7 @@ export default function CompanyDetailsPage({
                           Apply Now
                         </button>
                       </div>
-                      <div className="mt-2 flex flex-wrap gap-2">
-                        {["React (dummy)", "TypeScript (dummy)", "API (dummy)"].map(
-                          (tag) => (
-                            <span
-                              key={tag}
-                              className="rounded bg-[#f0f6ff] px-2 py-0.5 text-xs text-[#0b1f33]/70"
-                            >
-                              {tag}
-                            </span>
-                          )
-                        )}
-                      </div>
+
                     </div>
                   ))}
                 </div>
@@ -276,10 +251,10 @@ export default function CompanyDetailsPage({
                       <div className="flex items-center justify-between gap-3">
                         <div>
                           <p className="font-semibold text-[#0b1f33]">
-                            {review.name || review.userName || "Student (dummy)"}
+                            {review.name || review.user.fullName|| "Student (dummy)"}
                           </p>
                           <p className="text-xs text-[#0b1f33]/55">
-                            {formatDate(review.createdAt)}
+                            {formatDate(review.date)}
                           </p>
                         </div>
                         <Stars rating={Number(review.rating || 0)} />
@@ -311,12 +286,7 @@ export default function CompanyDetailsPage({
               </h2>
               <div className="mt-4 space-y-4 text-sm">
                 <div>
-                  <p className="text-xs font-bold text-[#0b1f33]/60">
-                    WEBSITE
-                  </p>
-                  <p className="text-[#0b1f33]/80">
-                    company.example.com (dummy)
-                  </p>
+
                 </div>
                 <div>
                   <p className="text-xs font-bold text-[#0b1f33]/60">

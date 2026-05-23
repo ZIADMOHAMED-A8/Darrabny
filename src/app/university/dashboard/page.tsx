@@ -81,8 +81,6 @@ function StatCard({
         </p>
         {progress === undefined ? (
           <span className="mb-1 inline-flex items-center gap-1 text-sm font-bold text-emerald-600">
-            <LineChart size={16} />
-            +12%
           </span>
         ) : (
           <span className="mb-1 text-base font-bold text-slate-950">Avg.</span>

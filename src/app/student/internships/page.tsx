@@ -151,7 +151,7 @@ export default function InternshipsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#EEF4FF] via-[#F7FAFF] to-white">
+    <div className="min-h-screen bg-gradient-to-b ">
       <div className="mx-auto max-w-6xl px-4 py-10">
         <header className="mt-6 text-center">
           <h1 className="text-4xl font-extrabold tracking-tight text-slate-900 md:text-5xl">

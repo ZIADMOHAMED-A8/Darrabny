@@ -97,7 +97,7 @@ export default function CompaniesSection() {
   );
 
   return (
-    <section className="w-full py-4 md:py-6">
+    <section className="w-full ">
       <div className="rounded-2xl border border-[#0b1f33]/10 bg-white p-6 shadow-[0_20px_60px_rgba(16,24,40,0.08)] md:p-8">
         <CompaniesHero query={q} onChange={setQ} />
 

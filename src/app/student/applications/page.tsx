@@ -3,7 +3,8 @@
 import { useState } from "react";
 import { ApplicationTab } from "@/data/applications";
 import ApplicationCard from "./components/ApplicationCard";
-import useGetMyApplications from "@/app/student/applications/hooks/useGetMyApplications";
+import useGetMyApplications from "./hooks/useGetMyApplications";
+
 type ApplicationResponseItem = {
   id: string;
   internship?: {
@@ -64,6 +65,7 @@ export default function ApplicationsPage() {
           <button
             key={tab.key}
             onClick={() => {
+              console.log(tab.key)
               setActiveTab(tab.key);
               setPage(1);
             }}
@@ -121,7 +123,7 @@ export default function ApplicationsPage() {
 }
 
 function normalizeApplicationStatus(status: string) {
-  if (status === "inconsideration") return "under-review";
+  if (status === "pending") return "under-review";
   if (status === "in-progress") return "under-review";
   return status;
 }
@@ -130,7 +132,7 @@ function getStepLabel(status: string) {
   const normalized = normalizeApplicationStatus(status);
 
   if (normalized === "applied") return "Applied";
-  if (normalized === "under-review") return "Under Review";
+  if (normalized === "under-review") return "pending";
   if (normalized === "accepted") return "Accepted";
   if (normalized === "rejected") return "Rejected";
 
