@@ -23,6 +23,7 @@ import { Eye, EyeOff, Lock, Mail, Github, Chrome } from "lucide-react";
 import { useLogin } from "../_hooks/use-login";
 import { loginSchema, LoginValues } from "@/lib/schemas/auth/login.schema";
 import type { Role } from "@/lib/types/signup";
+import Link from "next/link";
 
 type Props = {
   onForgotPassword?: () => void;
@@ -176,7 +177,14 @@ export default function LoginFormCard({
               )}
             />
 
-            <div className="flex justify-end">
+            <div className="flex justify-between">
+            <Button
+                type="button"
+                className="text-sm text-[#0A79C9] hover:underline bg-transparent shadow-none p-0 h-auto"
+              >
+                <Link href="/signup">Create an account</Link>
+                
+              </Button>
               <Button
                 type="button"
                 onClick={onForgotPassword}

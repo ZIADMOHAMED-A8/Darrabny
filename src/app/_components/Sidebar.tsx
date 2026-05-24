@@ -155,7 +155,7 @@ export default function Sidebar() {
         </>
       )}
 
-      <aside className="sticky top-0 z-10 hidden min-h-screen w-64 flex-col justify-between bg-white px-4 py-6 md:flex lg:w-72">
+      <aside className="max-h-[calc(100vh-64px)]  overflow-y-hidden sticky top-0 z-10 hidden min-h-[calc(100vh-16px)]w-64 flex-col justify-between bg-white px-4 py-6 md:flex lg:w-72">
         {sidebarContent}
       </aside>
     </>

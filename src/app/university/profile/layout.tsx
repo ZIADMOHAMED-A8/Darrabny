@@ -28,138 +28,75 @@ export default function Layout({ children }: PropsWithChildren) {
     ];
 
     return (
-        <div
-            style={{
-                display: "flex",
-                minHeight: "100vh",
-                background: "#F5F7FB",
-                fontFamily: "sans-serif",
-                fontSize: 14,
-            }}
-        >
-            {/* Sidebar */}
-            <aside
-                style={{
-                    width: 200,
-                    background: "#fff",
-                    borderRight: "0.5px solid #e5e7eb",
-                    display: "flex",
-                    flexDirection: "column",
-                    padding: "20px 0",
-                    flexShrink: 0,
-                }}
-            >
-                <div
-                    style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: 8,
-                        padding: "0 20px 20px",
-                        borderBottom: "0.5px solid #e5e7eb",
-                    }}
-                >
-                    <div
-                        style={{
-                            width: 32,
-                            height: 32,
-                            background: "#1565C0",
-                            borderRadius: 8,
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
-                        }}
-                    >
+        <div className="bg-[#F5F7FB] font-sans text-sm">
+            
+            {/* Fixed Sidebar */}
+            <aside className="fixed left-0 top-16 flex h-[calc(100vh-64px)] w-[220px] flex-col border-r border-gray-200 bg-white">
+
+                {/* Logo */}
+                <div className="flex items-center gap-2 border-b border-gray-200 px-5 py-5">
+                    <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#1565C0]">
                         <svg viewBox="0 0 24 24" fill="white" width={18} height={18}>
-                            <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14H7v-2h5v2zm5-4H7v-2h10v2zm0-4H7V7h10v2z" />
+                            <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 0 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14H7v-2h5v2zm5-4H7v-2h10v2zm0-4H7V7h10v2z" />
                         </svg>
                     </div>
 
                     <div>
-                        <div
-                            style={{
-                                fontSize: 15,
-                                fontWeight: 700,
-                                color: "#1565C0",
-                            }}
-                        >
+                        <h2 className="text-[15px] font-bold text-[#1565C0]">
                             Darrabny
-                        </div>
+                        </h2>
 
-                        <div
-                            style={{
-                                fontSize: 9,
-                                color: "#aaa",
-                                letterSpacing: "0.5px",
-                                textTransform: "uppercase",
-                            }}
-                        >
+                        <p className="text-[9px] uppercase tracking-[0.5px] text-gray-400">
                             Internship Hub
-                        </div>
+                        </p>
                     </div>
                 </div>
 
-                <div style={{ marginTop: 16 }}>
-                    {sidebarItems.map(({ label, icon, path, navigateTo }) => {
+                {/* Menu */}
+                <div className="flex-1 overflow-y-auto py-4">
 
-                        const active =
-                            path === "/profile"
-                                ? pathname.includes("profile") &&
-                                !pathname.includes("partners")
-                                : pathname.includes(path);
+                    {sidebarItems.map(
+                        ({ label, icon, path, navigateTo }) => {
+                            const active =
+                                path === "/profile"
+                                    ? pathname.includes("profile") &&
+                                      !pathname.includes("partners")
+                                    : pathname.includes(path);
 
-                        return (
-                            <div
-                                key={label}
-                                onClick={() => router.push(navigateTo)}
-                                style={{
-                                    display: "flex",
-                                    alignItems: "center",
-                                    gap: 10,
-                                    padding: "9px 20px",
-                                    fontSize: 13,
-                                    color: active ? "#1565C0" : "#555",
-                                    cursor: "pointer",
-                                    background: active ? "#EEF3FF" : "transparent",
-                                    borderRight: active
-                                        ? "2px solid #1565C0"
-                                        : "none",
-                                    fontWeight: active ? 500 : 400,
-                                    transition: "0.2s",
-                                }}
-                            >
-                                <svg
-                                    viewBox="0 0 24 24"
-                                    fill="currentColor"
-                                    width={16}
-                                    height={16}
+                            return (
+                                <button
+                                    key={label}
+                                    onClick={() => router.push(navigateTo)}
+                                    className={`flex w-full items-center gap-3 px-5 py-3 text-left text-[13px] transition-all duration-200
+                                    ${
+                                        active
+                                            ? "border-r-2 border-[#1565C0] bg-[#EEF3FF] font-medium text-[#1565C0]"
+                                            : "text-gray-600 hover:bg-gray-50"
+                                    }`}
                                 >
-                                    {icon}
-                                </svg>
+                                    <svg
+                                        viewBox="0 0 24 24"
+                                        fill="currentColor"
+                                        width={16}
+                                        height={16}
+                                    >
+                                        {icon}
+                                    </svg>
 
-                                {label}
-                            </div>
-                        );
-                    })}
+                                    {label}
+                                </button>
+                            );
+                        }
+                    )}
                 </div>
 
-                <div style={{ marginTop: "auto", padding: "0 12px" }}>
+                {/* Logout */}
+                <div className="border-t border-gray-200 p-3">
                     <button
                         onClick={() => {
                             signOut({ callbackUrl: "/login" });
                         }}
-                        style={{
-                            display: "flex",
-                            alignItems: "center",
-                            gap: 8,
-                            background: "#1565C0",
-                            color: "white",
-                            border: "none",
-                            padding: "9px 16px",
-                            borderRadius: 8,
-                            fontSize: 13,
-                            cursor: "pointer",
-                            width: "100%",
-                        }}
+                        className="flex w-full items-center justify-center gap-2 rounded-lg bg-[#1565C0] px-4 py-2.5 text-[13px] font-medium text-white transition hover:opacity-90"
                     >
                         <svg
                             viewBox="0 0 24 24"
@@ -175,7 +112,10 @@ export default function Layout({ children }: PropsWithChildren) {
                 </div>
             </aside>
 
-            {children}
+            {/* Main Content */}
+            <main className="ml-[220px] h-screen overflow-y-auto">
+                {children}
+            </main>
         </div>
     );
 }

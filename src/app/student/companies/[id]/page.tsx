@@ -13,6 +13,7 @@ import StudentFooter from "@/components/shared/student-footer";
 import useGetCompanyDetails from "./hooks/use-get-company-details";
 import useGetCompanyInternships from "./hooks/use-get-company-internships";
 import useGetCompanyReviews from "./hooks/use-get-company-reviews";
+import { useRouter } from "next/navigation";
 
 function Stars({ rating }: { rating: number }) {
   return (
@@ -41,6 +42,7 @@ export default function CompanyDetailsPage({
     isLoading: isDetailsLoading,
     isError: isDetailsError,
   } = useGetCompanyDetails(params.id);
+  const router=useRouter()
   const { data: internshipsData, isLoading: isInternshipsLoading } =
     useGetCompanyInternships(params.id);
   const { data: reviewsData, isLoading: isReviewsLoading } =
@@ -189,7 +191,11 @@ export default function CompanyDetailsPage({
                             Posted {internship.postedAgo || "recently (dummy)"}
                           </p>
                         </div>
-                        <button className="rounded bg-[#1689dc] px-3 py-1.5 text-xs font-semibold text-white">
+                        <button 
+                        onClick={()=>{
+                          router.push(`/student/internships/${internship._id}`)
+                        }}
+                        className="rounded bg-[#1689dc] px-3 py-1.5 text-xs font-semibold text-white">
                           Apply Now
                         </button>
                       </div>

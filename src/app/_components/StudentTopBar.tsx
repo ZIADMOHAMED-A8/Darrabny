@@ -62,7 +62,7 @@ function getTopbarConfig(role?: string): {
     return {
       homeHref: "",
       links: [
-        { href: "", label: "" },
+        { href: "_", label: "" },
         
       ],
       notificationsHref: "",
@@ -78,7 +78,6 @@ export default function StudentTopBar() {
   console.log(data)
   const role = (data?.user as { role?: string } | undefined)?.role;
   const { homeHref, links, notificationsHref } = getTopbarConfig(role);
-
   return (
     <header className="sticky top-0 z-50 border-b border-[#0b1f33]/10 bg-white/85 backdrop-blur">
       <div className="mx-auto flex min-h-[64px] max-w-7xl items-center justify-between gap-3 px-4 py-3 sm:min-h-[72px] md:px-8">
