@@ -20,7 +20,10 @@ const menu = [
   { label: "Dashboard", href: "/student/dashboard", icon: Home },
   { label: "Internships", href: "/student/Inprogressinternships", icon: Briefcase },
   { label: "Applications", href: "/student/applications", icon: FileText },
+  { label: "Resume", href: "/profile", icon: User },
+
   { label: "Settings", href: "/student/settings", icon: Settings },
+
 ];
 
 export default function Sidebar() {

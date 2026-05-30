@@ -25,25 +25,12 @@ export default function HeroSection() {
             </p>
 
             <div className="mx-auto mt-8 w-full max-w-2xl">
-              <div className="relative flex items-center rounded-full bg-white shadow-[var(--ds-soft-shadow)] ring-1 ring-[var(--ds-border)]">
-                <Search className="pointer-events-none absolute left-4 h-5 w-5 text-[#063058]/70" />
-                <Input
-                  placeholder="Search internships by title, company, or keyword"
-                  className="h-12 rounded-full border-0 bg-transparent pl-12 pr-28 text-[#063058] placeholder:text-[#063058]/50 focus-visible:ring-0 focus:border-transparent"
-                />
-                <Button className="absolute right-1 top-1/2 h-10 -translate-y-1/2 rounded-full bg-[var(--ds-primary)] px-8 text-white hover:bg-[var(--ds-primary-dark)]">
-                  Search
-                </Button>
-              </div>
+
             </div>
           </div>
 
           <div className="absolute right-10 top-1/2 hidden -translate-y-2 md:block">
-            <div className="grid h-16 w-16 place-items-center rounded-2xl bg-white/70 shadow-[var(--ds-soft-shadow)] ring-1 ring-[var(--ds-border)]">
-              <div className="grid h-10 w-10 place-items-center rounded-xl bg-[var(--ds-soft)]">
-                <Bot className="h-6 w-6 text-[var(--ds-primary)]" />
-              </div>
-            </div>
+
           </div>
         </div>
       </div>

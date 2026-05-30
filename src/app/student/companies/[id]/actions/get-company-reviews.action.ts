@@ -14,6 +14,9 @@ export type CompanyReviewApiItem = {
   comment?: string;
   likes?: number;
   comments?: number;
+  user?: {
+    fullName?: string;
+  };
 };
 
 export type GetCompanyReviewsResponse = {

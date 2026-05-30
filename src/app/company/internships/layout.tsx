@@ -13,7 +13,6 @@ export default function Layout({
 
   return (
     <>
-    <StudentTopBar></StudentTopBar>
     <div className="min-h-screen flex flex-col px-16">
 
       {/* الزرار فوق يمين */}

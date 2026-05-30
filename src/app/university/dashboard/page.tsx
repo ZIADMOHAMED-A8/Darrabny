@@ -3,14 +3,11 @@
 
 import type { ReactNode } from "react";
 import Link from "next/link";
+import Footer from "@/components/shared/footer";
 import {
   Bell,
-  BriefcaseBusiness,
-  Check,
   ChevronRight,
   CircleCheck,
-  GraduationCap,
-  LayoutDashboard,
   LineChart,
   Menu,
   PieChart,
@@ -384,30 +381,7 @@ export default function UniversityDashboardPage() {
         </div>
       </main>
 
-      <footer className="border-t border-slate-200 bg-white px-6 py-10 md:px-24">
-        <div className="mx-auto max-w-[1580px]">
-          <Link
-            href="/university/dashboard"
-            className="flex items-center gap-2 text-lg font-bold text-[#2396ec]"
-          >
-            <span className="grid h-7 w-7 place-items-center rounded-md bg-[#2396ec] text-white">
-              <BriefcaseBusiness size={16} />
-            </span>
-            Darrabny
-          </Link>
-          <div className="mt-10 border-t border-slate-500 pt-10">
-            <div className="flex flex-col gap-6 text-slate-400 md:flex-row md:items-center md:justify-between">
-              <p>(c) 2025 Darrabny. All rights reserved.</p>
-              <div className="flex items-center gap-7 text-slate-950">
-                <LayoutDashboard size={24} />
-                <span className="text-2xl font-bold">X</span>
-                <GraduationCap size={25} />
-                <Check size={25} />
-              </div>
-            </div>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }

@@ -107,6 +107,8 @@ export default function InternshipDetailPage({
   return (
     <div className="min-h-screen bg-white">
       <div className="px-16">
+
+        
         {/* Header */}
         <div className="flex justify-between items-start mt-7">
           <div>

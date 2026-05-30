@@ -1,11 +1,14 @@
 "use client";
 
 import Link from "next/link";
+import { FormEvent, useState } from "react";
 import {
   ArrowLeft,
   Building2,
+  Loader2,
   MapPin,
   MessageCircle,
+  Send,
   Star,
   ThumbsUp,
 } from "lucide-react";
@@ -13,6 +16,7 @@ import StudentFooter from "@/components/shared/student-footer";
 import useGetCompanyDetails from "./hooks/use-get-company-details";
 import useGetCompanyInternships from "./hooks/use-get-company-internships";
 import useGetCompanyReviews from "./hooks/use-get-company-reviews";
+import useAddCompanyReview from "./hooks/use-add-company-review";
 import { useRouter } from "next/navigation";
 
 function Stars({ rating }: { rating: number }) {
@@ -36,6 +40,9 @@ export default function CompanyDetailsPage({
 }: {
   params: { id: string };
 }) {
+  const [reviewComment, setReviewComment] = useState("");
+  const [reviewRating, setReviewRating] = useState(0);
+  const [reviewMessage, setReviewMessage] = useState("");
   const {
     data: detailsData,
     error: detailsError,
@@ -47,6 +54,11 @@ export default function CompanyDetailsPage({
     useGetCompanyInternships(params.id);
   const { data: reviewsData, isLoading: isReviewsLoading } =
     useGetCompanyReviews(params.id);
+  const {
+    mutateAsync: addReview,
+    isPending: isAddingReview,
+    error: addReviewError,
+  } = useAddCompanyReview();
 
   if (isDetailsLoading) {
     return (
@@ -87,6 +99,8 @@ export default function CompanyDetailsPage({
   );
 
   const companyId = company.id || company._id || params.id;
+  const reviewInternshipId =
+    internships[0]?._id || internships[0]?.id || params.id;
   const companyName = company.companyName || "Company";
   const size =
     company.numberOfEmployees?.from || company.numberOfEmployees?.to
@@ -101,6 +115,33 @@ export default function CompanyDetailsPage({
     star,
     percent: totalReviews > 0 && Math.round(averageRating) === star ? 100 : 0,
   }));
+
+  const handleReviewSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    const comment = reviewComment.trim();
+    if (!comment || reviewRating === 0 || !reviewInternshipId) {
+      setReviewMessage("Add a comment and rating before submitting.");
+      return;
+    }
+
+    setReviewMessage("");
+
+    try {
+      await addReview({
+        companyId,
+        internshipId: reviewInternshipId,
+        rating: reviewRating,
+        comment,
+      });
+
+      setReviewComment("");
+      setReviewRating(0);
+      setReviewMessage("Review submitted.");
+    } catch {
+      setReviewMessage("");
+    }
+  };
 
   return (
     <main className="min-h-screen bg-[#f3f7ff] px-4 py-6 md:px-8">
@@ -242,6 +283,86 @@ export default function CompanyDetailsPage({
                   </div>
                 </div>
 
+                <form
+                  onSubmit={handleReviewSubmit}
+                  className="mt-4 rounded-lg border border-[#0b1f33]/10 p-4"
+                >
+                  <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+                    <div className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-[#e8f3ff] text-sm font-bold text-[#0a79c9]">
+                      U
+                    </div>
+                    <div className="flex min-w-0 flex-1 items-center rounded-lg border border-[#0b1f33]/10 bg-white px-3">
+                      <input
+                        value={reviewComment}
+                        onChange={(event) =>
+                          setReviewComment(event.target.value)
+                        }
+                        placeholder="Add a comment"
+                        className="h-11 min-w-0 flex-1 bg-transparent text-sm text-[#0b1f33] outline-none placeholder:text-[#0b1f33]/35"
+                        disabled={isAddingReview}
+                      />
+                      <button
+                        type="submit"
+                        disabled={
+                          isAddingReview ||
+                          !reviewComment.trim() ||
+                          reviewRating === 0
+                        }
+                        className="grid h-9 w-9 shrink-0 place-items-center rounded-full text-[#0a79c9] transition hover:bg-[#e8f3ff] disabled:cursor-not-allowed disabled:text-[#0b1f33]/25"
+                        aria-label="Submit review"
+                      >
+                        {isAddingReview ? (
+                          <Loader2 className="h-4 w-4 animate-spin" />
+                        ) : (
+                          <Send className="h-4 w-4" />
+                        )}
+                      </button>
+                    </div>
+                    <div className="flex shrink-0 items-center justify-end gap-1">
+                      {Array.from({ length: 5 }).map((_, index) => {
+                        const rating = index + 1;
+
+                        return (
+                          <button
+                            key={rating}
+                            type="button"
+                            onClick={() => setReviewRating(rating)}
+                            disabled={isAddingReview}
+                            className="rounded p-0.5 text-[#d5dbe8] transition hover:text-[#f5b301] disabled:cursor-not-allowed"
+                            aria-label={`Rate ${rating} star${
+                              rating === 1 ? "" : "s"
+                            }`}
+                          >
+                            <Star
+                              className={`h-5 w-5 ${
+                                rating <= reviewRating
+                                  ? "text-[#f5b301]"
+                                  : "text-[#d5dbe8]"
+                              }`}
+                              fill={
+                                rating <= reviewRating ? "currentColor" : "none"
+                              }
+                            />
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                  {(reviewMessage || addReviewError) && (
+                    <p
+                      className={`mt-2 text-xs ${
+                        addReviewError
+                          ? "text-red-600"
+                          : "text-[#0b1f33]/55"
+                      }`}
+                    >
+                      {addReviewError instanceof Error
+                        ? addReviewError.message
+                        : reviewMessage}
+                    </p>
+                  )}
+                </form>
+
                 <div className="mt-4 space-y-3">
                   {reviews.length === 0 && (
                     <p className="rounded-lg border border-[#0b1f33]/10 p-4 text-sm text-[#0b1f33]/60">
@@ -257,7 +378,9 @@ export default function CompanyDetailsPage({
                       <div className="flex items-center justify-between gap-3">
                         <div>
                           <p className="font-semibold text-[#0b1f33]">
-                            {review.name || review.user.fullName|| "Student (dummy)"}
+                            {review.name ||
+                              review.user?.fullName ||
+                              "Student (dummy)"}
                           </p>
                           <p className="text-xs text-[#0b1f33]/55">
                             {formatDate(review.date)}

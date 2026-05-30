@@ -1,61 +1,66 @@
 "use client";
 
 import Link from "next/link";
-import { Facebook, Instagram, Linkedin, X } from "lucide-react";
+import {
+  BriefcaseBusiness,
+  Facebook,
+  Instagram,
+  Linkedin,
+  X,
+} from "lucide-react";
+import { cn } from "@/lib/utils";
 
-export default function Footer() {
-  const year = new Date().getFullYear();
+type FooterProps = {
+  className?: string;
+};
 
+export default function Footer({ className }: FooterProps) {
   return (
-    <footer className="px-16 bg-[--ic-bg] text-white">
-      <div className="mx-auto px-4 py-6">
-        {/* Divider */}
-        <div className="h-px w-full bg-white/15 mb-6" />
+    <footer className={cn("bg-white px-6 py-8 text-[#07182c] md:px-20", className)}>
+      <div className="w-full">
+        <Link href="/" className="inline-flex items-center gap-2">
+          <span className="grid h-6 w-6 place-items-center rounded-[5px] bg-[#2396ec] text-white">
+            <BriefcaseBusiness className="h-4 w-4" strokeWidth={2.4} />
+          </span>
+          <span className="text-sm font-bold text-[#2396ec]">Darrabny</span>
+        </Link>
 
-        <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-          {/* Logo */}
-          <Link href="/" className="flex items-center gap-2">
-            <span className="flex h-8 w-8 items-center justify-center rounded-md bg-[#0b2a44] text-sm font-bold">
-              D
-            </span>
-            <span className="font-semibold text-[#4bb4ff]">Darrabny</span>
-          </Link>
+        <div className="mt-9 border-t border-[#07182c]/35 pt-8">
+          <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
+            <p className="text-xs text-[#07182c]/40">
+              © 2025 Darrabny. All rights reserved.
+            </p>
 
-          {/* Copyright */}
-          <p className="text-sm text-white/70">
-            © {year} Darrabny. All rights reserved.
-          </p>
-
-          {/* Social links */}
-          <div className="flex items-center gap-4">
-            <a
-              href="#"
-              aria-label="Facebook"
-              className="text-white/80 hover:text-white"
-            >
-              <Facebook className="h-5 w-5" />
-            </a>
-            <a
-              href="#"
-              aria-label="X"
-              className="text-white/80 hover:text-white"
-            >
-              <X className="h-5 w-5" />
-            </a>
-            <a
-              href="#"
-              aria-label="Instagram"
-              className="text-white/80 hover:text-white"
-            >
-              <Instagram className="h-5 w-5" />
-            </a>
-            <a
-              href="#"
-              aria-label="LinkedIn"
-              className="text-white/80 hover:text-white"
-            >
-              <Linkedin className="h-5 w-5" />
-            </a>
+            <div className="flex items-center gap-5 text-[#07182c]">
+              <a
+                href="#"
+                aria-label="Facebook"
+                className="transition-colors hover:text-[#2396ec]"
+              >
+                <Facebook className="h-5 w-5" fill="currentColor" strokeWidth={0} />
+              </a>
+              <a
+                href="#"
+                aria-label="X"
+                className="transition-colors hover:text-[#2396ec]"
+              >
+                <X className="h-5 w-5" strokeWidth={2.2} />
+              </a>
+              <a
+                href="#"
+                aria-label="Instagram"
+                className="transition-colors hover:text-[#2396ec]"
+              >
+                <Instagram className="h-5 w-5" strokeWidth={2.2} />
+              </a>
+              <a
+                href="#"
+                aria-label="LinkedIn"
+                className="transition-colors hover:text-[#2396ec]"
+              >
+                <Linkedin className="h-5 w-5" fill="currentColor" strokeWidth={0} />
+              </a>
+            </div>
           </div>
         </div>
       </div>

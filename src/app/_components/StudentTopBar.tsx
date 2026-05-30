@@ -48,14 +48,13 @@ function getTopbarConfig(role?: string): {
       return {
         homeHref: "/student/dashboard",
         links: [
-          { href: "/student/dashboard", label: "Dashboard" },
+          { href: "/", label: "Home" },
           { href: "/student/internships", label: "Internships" },
           { href: "/student/companies", label: "Companies" },
-          { href: "/student/applications", label: "Applications" },
           
         ],
-        notificationsHref: "/student/notifications",
-        profileHref: '/profile'
+        notificationsHref: "/student/not",
+        profileHref: "/student/dashboard"
       };
   
   default:
@@ -80,7 +79,7 @@ export default function StudentTopBar() {
   const { homeHref, links, notificationsHref } = getTopbarConfig(role);
   return (
     <header className="sticky top-0 z-50 border-b border-[#0b1f33]/10 bg-white/85 backdrop-blur">
-      <div className="mx-auto flex min-h-[64px] max-w-7xl items-center justify-between gap-3 px-4 py-3 sm:min-h-[72px] md:px-8">
+      <div className="mx-auto flex min-h-[64px] max-w-7xl items-center justify-between gap-3  py-3 sm:min-h-[72px] md:px-8">
         {/* Left */}
         <Link href={homeHref} className="flex items-center gap-3">
           <div className="grid h-9 w-9 place-items-center rounded-lg bg-[var(--ds-primary)] text-white">

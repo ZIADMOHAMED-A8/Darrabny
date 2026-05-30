@@ -1,5 +1,6 @@
 "use client";
 
+import Footer from "@/components/shared/footer";
 import { useMemo, useState } from "react";
 import {
   MapPin,
@@ -516,26 +517,10 @@ export default function InternshipListingsPage() {
       </main>
 
       {/* ── Footer ── */}
-      <footer style={{ borderTop: "1px solid #e2e8f0", background: "#fff", padding: "24px 32px" }}>
-        <div style={{ maxWidth: 1100, margin: "0 auto" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-            <div style={{ width: 28, height: 28, borderRadius: 8, background: "#1565C0", display: "grid", placeItems: "center" }}>
-              <Briefcase size={14} color="white" />
-            </div>
-            <span style={{ fontWeight: 800, color: "#0f172a", letterSpacing: "-0.3px" }}>Darrabny</span>
-          </div>
-          <div style={{ marginTop: 16, display: "flex", alignItems: "center", justifyContent: "space-between", borderTop: "1px solid #f1f5f9", paddingTop: 16 }}>
-            <p style={{ fontSize: 12, color: "#94a3b8", margin: 0 }}>© 2025 Darrabny. All rights reserved.</p>
-            <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
-              {["Facebook", "X", "Instagram", "LinkedIn"].map((s) => (
-                <button key={s} style={{ fontSize: 12, fontWeight: 500, color: "#64748b", background: "none", border: "none", cursor: "pointer" }}>{s}</button>
-              ))}
-            </div>
-          </div>
-        </div>
-      </footer>
+      <Footer />
 
       <style>{`@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }`}</style>
     </div>
   );
 }
+

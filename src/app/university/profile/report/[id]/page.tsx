@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
+import Footer from "@/components/shared/footer";
 import { useParams, useRouter } from "next/navigation";
 import {
   ArrowLeft,
@@ -424,22 +424,7 @@ export default function UniversityReportPage() {
         </div>
       </main>
 
-      <footer className="mt-20 border-t border-slate-200 bg-white px-6 py-10">
-        <div className="mx-auto max-w-7xl">
-          <Link
-            href="/university/dashboard"
-            className="flex items-center gap-2 text-lg font-bold text-[#2396ec]"
-          >
-            <span className="grid h-7 w-7 place-items-center rounded-md bg-[#2396ec] text-white">
-              <BriefcaseBusiness size={16} />
-            </span>
-            Darrabny
-          </Link>
-          <div className="mt-8 border-t border-slate-400 pt-8 text-sm text-slate-400">
-            (c) 2025 Darrabny. All rights reserved.
-          </div>
-        </div>
-      </footer>
+      <Footer className="mt-20" />
     </div>
   );
 }
