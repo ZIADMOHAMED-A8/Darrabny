@@ -151,10 +151,10 @@ export default function InternshipsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b ">
-      <div className="mx-auto max-w-6xl px-4 py-10">
-        <header className="mt-6 text-center">
-          <h1 className="text-4xl font-extrabold tracking-tight text-slate-900 md:text-5xl">
+    <main className="relative min-h-screen w-full">
+      <div className="w-full px-4 py-6 sm:px-6 md:p-8">
+        <header className="mt-2 text-center sm:mt-6">
+          <h1 className="text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl md:text-5xl">
             Explore{" "}
             <span className="text-blue-600">
               Internship
@@ -162,26 +162,26 @@ export default function InternshipsPage() {
             Opportunities
           </h1>
 
-          <p className="mx-auto mt-4 max-w-3xl text-slate-600">
+          <p className="mx-auto mt-4 max-w-3xl text-sm leading-6 text-slate-600 sm:text-base">
             Find the perfect internship to kickstart your career.
             Use the filters below to narrow down your search and
             discover opportunities that match your interests and skills.
           </p>
 
-          <div className="mt-10">
+          <div className="mt-8 sm:mt-10">
             <InternshipsFilters onResults={setSearchResults} />
           </div>
         </header>
 
-        <div className="mt-14">
-          <h2 className="text-2xl font-bold text-slate-900">
+        <div className="mt-10 sm:mt-14">
+          <h2 className="text-xl font-bold text-slate-900 sm:text-2xl">
             {searchResults !== null
               ? "Search Results"
               : "Recommended Internships"}
           </h2>
         </div>
 
-        <section className="mt-6 grid gap-6 md:grid-cols-2">
+        <section className="mt-6 grid gap-4 md:grid-cols-2 md:gap-6">
           {isLoading && !searchResults && (
             <div className="col-span-full text-center text-slate-600">
               Loading recommended internships...
@@ -214,7 +214,7 @@ export default function InternshipsPage() {
 
         <StudentFooter />
       </div>
-    </div>
+    </main>
   );
 }
 
@@ -260,8 +260,8 @@ function InternshipCard({
         </div>
       )}
 
-      <div className="flex gap-4 p-4">
-        <div className="relative h-24 w-28 flex-shrink-0 overflow-hidden rounded-xl bg-slate-100">
+      <div className="flex flex-col gap-4 p-4 sm:flex-row">
+        <div className="relative h-40 w-full flex-shrink-0 overflow-hidden rounded-xl bg-slate-100 sm:h-24 sm:w-28">
           {it.image ? (
             <Image
               src={it.image}
@@ -275,7 +275,7 @@ function InternshipCard({
           )}
         </div>
 
-        <div className="flex-1">
+        <div className="min-w-0 flex-1">
           <p className="text-xs text-slate-500">
             {it.company}
           </p>
@@ -327,7 +327,7 @@ function InternshipCard({
             </div>
           )}
 
-          <div className="mt-4 flex items-center justify-between">
+          <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <Link
               href={`/student/internships/${it.id}`}
               className="inline-flex items-center justify-center rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700"

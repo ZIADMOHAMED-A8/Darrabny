@@ -10,7 +10,7 @@ export default function CompanyDashboardPage() {
 
   if (isLoading) {
     return (
-      <main className="px-8 py-10 min-h-screen">
+      <main className="min-h-screen px-4 py-8 sm:px-6 md:px-8 md:py-10">
         <div className="text-center text-gray-500">Loading dashboard...</div>
       </main>
     );
@@ -18,7 +18,7 @@ export default function CompanyDashboardPage() {
 
   if (error) {
     return (
-      <main className="px-8 py-10 min-h-screen">
+      <main className="min-h-screen px-4 py-8 sm:px-6 md:px-8 md:py-10">
         <div className="text-center text-red-500">Failed to load dashboard</div>
       </main>
     );
@@ -27,8 +27,8 @@ export default function CompanyDashboardPage() {
   if (!data) return null;
 
   return (
-    <main className="px-8 py-10 min-h-screen bg-white">
-      <h1 className="text-3xl font-bold text-gray-900 mb-8">
+    <main className="min-h-screen bg-white px-4 py-8 sm:px-6 md:px-8 md:py-10">
+      <h1 className="mb-8 text-2xl font-bold text-gray-900 sm:text-3xl">
         Company Overview
       </h1>
 
@@ -36,7 +36,7 @@ export default function CompanyDashboardPage() {
         <DashboardTopRow kpis={data.kpis} />
       </div>
 
-      <section className="mt-8 grid gap-7 lg:grid-cols-6 items-start">
+      <section className="mt-8 grid items-start gap-6 lg:grid-cols-6 lg:gap-7">
         <div className="lg:col-span-4">
           <OngoingInternships internships={data.ongoingInternships} />
         </div>

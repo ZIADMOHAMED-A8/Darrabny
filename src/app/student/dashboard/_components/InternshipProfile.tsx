@@ -19,14 +19,14 @@ export default function InternshipCard({
   type,
 }: Props) {
   return (
-    <div className="flex gap-2 rounded-2xl border bg-white/60 backdrop-blur  shadow-sm">
-      <div className="w-24  flex items-center rounded-2xl justify-center h-full p-5 pr-0 ">
-      <Image src={us} className="w-full h-[50%] rounded-2xl" alt='company image'></Image>
+    <div className="flex flex-col gap-2 rounded-2xl border bg-white/60 shadow-sm backdrop-blur sm:flex-row">
+      <div className="flex h-36 w-full items-center justify-center rounded-2xl p-4 sm:h-auto sm:w-24 sm:pr-0">
+      <Image src={us} className="h-full w-full rounded-2xl object-cover sm:h-[50%]" alt='company image'></Image>
       </div>
     <div className="flex-1 p-5">
-      <div className="flex justify-between items-start">
-        <div>
-          <div className="flex gap-2 mb-2">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+        <div className="min-w-0">
+          <div className="mb-2 flex flex-wrap gap-2">
             {type.map((t) => (
               <span
                 key={t}
@@ -43,8 +43,8 @@ export default function InternshipCard({
           </p>
         </div>
 
-        <button className="  flex justify-center items-center text-center text-blue-500    ">
-          <ArrowRight size={40} className="rounded-full w-12 h-12 p-[4px]  border-blue-700 border   "></ArrowRight>
+        <button className="flex items-center justify-center self-start text-center text-blue-500 sm:self-auto">
+          <ArrowRight size={40} className="h-10 w-10 rounded-full border border-blue-700 p-[4px] sm:h-12 sm:w-12"></ArrowRight>
         </button>
       </div>
 

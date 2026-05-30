@@ -89,10 +89,10 @@ export default function DashboardPage() {
   }));
 
   return (
-    <section className=" min-h-screen flex flex-col gap-[12px]  ">
+    <section className="flex min-h-screen flex-col gap-4">
       {/* Header */}
       <div className="w-full">
-        <h1 className="text-3xl font-bold">Welcome back, {fullName}</h1>
+        <h1 className="text-2xl font-bold sm:text-3xl">Welcome back, {fullName}</h1>
         <p className="text-gray-600 mt-1">
           Currently Active Internship
         </p>
@@ -113,11 +113,11 @@ export default function DashboardPage() {
       </div>
 
       {/* Bottom Section */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         {/* Details */}
         <div className="lg:col-span-2 space-y-4">
           <h2 className="text-lg font-semibold">Details</h2>
-          <div className="grid sm:grid-cols-2 gap-4">
+          <div className="grid gap-4 sm:grid-cols-2">
             {dashboardStats.map((stat) => (
               <StatsCard key={stat.label} {...stat} />
             ))}

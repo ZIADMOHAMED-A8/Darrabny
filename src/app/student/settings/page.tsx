@@ -128,8 +128,8 @@ export default function SettingsPage() {
 
     return (
     
-    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-10">
-      <h1 className="text-3xl font-bold">Settings</h1>
+    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 sm:space-y-10">
+      <h1 className="text-2xl font-bold sm:text-3xl">Settings</h1>
 
       <PersonalInfoForm form={form} />
       <NotificationSettings form={form} />
@@ -150,11 +150,11 @@ export default function SettingsPage() {
         <p className="text-sm text-red-600">{submitError}</p>
       ) : null}
 
-      <div className="flex justify-end">
+      <div className="flex justify-stretch sm:justify-end">
         <button
           type="submit"
           disabled={isProfilePending || isNotifPending || isFullNamePending}
-          className="px-6 py-2 z-10 rounded-lg bg-blue-600 text-white disabled:opacity-60"
+          className="z-10 w-full rounded-lg bg-blue-600 px-6 py-2 text-white disabled:opacity-60 sm:w-auto"
         >
           {isProfilePending || isNotifPending || isFullNamePending ? "Saving..." : "Save Changes"}
         </button>

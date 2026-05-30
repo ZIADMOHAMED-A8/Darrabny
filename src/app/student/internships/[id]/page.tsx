@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { X, CheckCircle2, Star, Bookmark } from "lucide-react";
+import { X, CheckCircle2, Star } from "lucide-react";
 import { useInternshipDetails } from "./hooks/use-internship-details";
 import { useParams } from "next/navigation";
 import { useInternshipReviews } from "./hooks/use-internship-reviews";
@@ -93,15 +93,15 @@ export default function InternshipDetailsPanel() {
 
   return (
     <>
-      <div className="w-full max-w-4xl mx-auto py-10 space-y-4">
+      <div className="mx-auto w-full max-w-4xl space-y-4 px-4 py-6 sm:py-10">
 
         {/* ── Job Card (above detail panel) ── */}
-        <div className="flex items-center gap-4 px-4 py-8 border border-[#E5E7EB] rounded-2xl bg-white shadow-sm">
-          <div className="w-[72px] h-[72px] rounded-xl overflow-hidden bg-[#F3F4F6] shrink-0">
+        <div className="flex flex-col gap-4 rounded-2xl border border-[#E5E7EB] bg-white px-4 py-6 shadow-sm sm:flex-row sm:items-center sm:py-8">
+          <div className="h-24 w-full shrink-0 overflow-hidden rounded-xl bg-[#F3F4F6] sm:h-[72px] sm:w-[72px]">
             <img src={thumbnail} alt={company} className="w-full h-full object-cover" />
           </div>
 
-          <div className="flex-1 min-w-0">
+          <div className="min-w-0 flex-1">
             <p className="text-sm text-[#6B7280]">{company}</p>
             <h2 className="text-[17px] font-bold text-[#0b1f33] mt-0.5 truncate">{title}</h2>
             <div className="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-[#6B7280]">
@@ -142,14 +142,14 @@ export default function InternshipDetailsPanel() {
           {/* Close */}
           <button
             onClick={() => router.back()}
-            className="absolute right-6 top-6 text-[#9CA3AF] hover:text-[#0b1f33] transition"
+            className="absolute right-4 top-4 text-[#9CA3AF] transition hover:text-[#0b1f33] sm:right-6 sm:top-6"
           >
             <X className="w-6 h-6" />
           </button>
 
-          <div className="px-10 pt-10">
+          <div className="px-4 pt-10 sm:px-6 md:px-10">
             {/* Title row */}
-            <h1 className="text-[28px] font-extrabold text-[#0b1f33] pr-10">{title}</h1>
+            <h1 className="pr-10 text-2xl font-extrabold text-[#0b1f33] sm:text-[28px]">{title}</h1>
 
             <div className="mt-2 flex flex-wrap items-center gap-2 text-sm text-[#6B7280]">
               <span>{company}</span>
@@ -162,12 +162,12 @@ export default function InternshipDetailsPanel() {
             </div>
 
             {/* Tabs */}
-            <div className="mt-7 flex gap-6 border-b border-[#E5E7EB]">
+            <div className="mt-7 flex gap-6 overflow-x-auto border-b border-[#E5E7EB]">
               {(["overview", "reviews"] as const).map((t) => (
                 <button
                   key={t}
                   onClick={() => setTab(t)}
-                  className={`pb-2.5 text-sm capitalize transition ${
+                  className={`shrink-0 pb-2.5 text-sm capitalize transition ${
                     tab === t
                       ? "border-b-2 border-[#0a79c9] text-[#0a79c9] font-medium"
                       : "text-[#6B7280] hover:text-[#0b1f33]"
@@ -179,7 +179,7 @@ export default function InternshipDetailsPanel() {
             </div>
           </div>
 
-          <div className="px-10 pb-10 pt-8">
+          <div className="px-4 pb-8 pt-6 sm:px-6 sm:pb-10 sm:pt-8 md:px-10">
 
             {/* ── OVERVIEW ── */}
             {tab === "overview" && (
@@ -192,7 +192,7 @@ export default function InternshipDetailsPanel() {
 
                 {data.technicalSkills?.length > 0 && (
                   <Section title="Responsibilities">
-                    <ul className="grid md:grid-cols-2 gap-3">
+                    <ul className="grid gap-3 md:grid-cols-2">
                       {data.technicalSkills.map((s: string, i: number) => (
                         <CheckItem key={i} text={s} />
                       ))}
@@ -202,7 +202,7 @@ export default function InternshipDetailsPanel() {
 
                 {data.softSkills?.length > 0 && (
                   <Section title="Requirements">
-                    <ul className="grid md:grid-cols-2 gap-3">
+                    <ul className="grid gap-3 md:grid-cols-2">
                       {data.softSkills.map((s: string, i: number) => (
                         <CheckItem key={i} text={s} />
                       ))}
@@ -231,8 +231,8 @@ export default function InternshipDetailsPanel() {
                 {!reviewsLoading && !reviewsError && (
                   <>
                     {/* Summary */}
-                    <div className="rounded-xl border border-[#E5E7EB] p-6">
-                      <div className="flex items-center gap-6">
+                    <div className="rounded-xl border border-[#E5E7EB] p-4 sm:p-6">
+                      <div className="flex flex-col gap-6 sm:flex-row sm:items-center">
                         <div>
                           <div className="text-5xl font-extrabold text-[#0b1f33]">{rating}</div>
                           <div className="flex mt-2 gap-0.5">
@@ -261,9 +261,9 @@ export default function InternshipDetailsPanel() {
                     {reviews.map((r) => (
                       <div
                         key={r._id || `${r.userId?.firstName}-${r.createdAt}`}
-                        className="rounded-xl border border-[#E5E7EB] p-6"
+                        className="rounded-xl border border-[#E5E7EB] p-4 sm:p-6"
                       >
-                        <div className="flex justify-between items-start">
+                        <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                           <div>
                             <p className="font-semibold text-[#0b1f33]">
                               {r.userId?.firstName} {r.userId?.lastName}
@@ -300,12 +300,12 @@ export default function InternshipDetailsPanel() {
             )}
 
             {/* ── Actions ── */}
-            <div className="mt-10 flex justify-end gap-3">
+            <div className="mt-10 flex justify-stretch gap-3 sm:justify-end">
 
               <button
                 type="button"
                 onClick={() => setApplyOpen(true)}
-                className="px-6 py-2 bg-[#0a79c9] text-white rounded-lg text-sm hover:bg-[#0868ae] transition"
+                className="w-full rounded-lg bg-[#0a79c9] px-6 py-2 text-sm text-white transition hover:bg-[#0868ae] sm:w-auto"
               >
                 Apply Now
               </button>

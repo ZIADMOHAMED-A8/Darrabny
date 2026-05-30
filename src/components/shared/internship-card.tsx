@@ -44,9 +44,9 @@ export default function InternshipCard({
           "hover:shadow-[0_10px_30px_rgba(15,23,42,0.08)]"
         )}
       >
-        <div className="grid grid-cols-[140px_1fr] gap-4 p-4 md:gap-5 md:p-5">
+        <div className="grid gap-4 p-4 sm:grid-cols-[140px_1fr] md:gap-5 md:p-5">
           {/* Left image */}
-          <div className="relative h-full w-full overflow-hidden rounded-[14px] bg-[#EEF3F8]">
+          <div className="relative h-40 w-full overflow-hidden rounded-[14px] bg-[#EEF3F8] sm:h-full">
             <Image
               src={thumbnail || ''}
               alt={`${internshipTittle} - ${companyId.companyName}`}
@@ -93,10 +93,10 @@ export default function InternshipCard({
 
             {/* bottom row */}
             {showDetailsButton && (
-              <div className="mt-auto pt-4 flex flex-wrap items-center gap-3">
+            <div className="mt-auto flex flex-col gap-3 pt-4 sm:flex-row sm:flex-wrap sm:items-center">
                 <span
                   className={cn(
-                    "inline-flex h-[42px] cursor-pointer items-center justify-center rounded-[10px]",
+                    "inline-flex h-[42px] w-full cursor-pointer items-center justify-center rounded-[10px] sm:w-auto",
                     "bg-[#1686E6] px-5 text-[15px] font-bold text-white",
                     "transition-colors duration-200 group-hover:bg-[#0F78D3]"
                   )}
@@ -113,7 +113,7 @@ export default function InternshipCard({
                     router.push(`/company/report/${id}`);
                   }}
                   className={cn(
-                    "inline-flex h-[42px] cursor-pointer items-center justify-center rounded-[10px]",
+                    "inline-flex h-[42px] w-full cursor-pointer items-center justify-center rounded-[10px] sm:w-auto",
                     "bg-[#0B1B35] px-5 text-[15px] font-bold text-white",
                     "transition-colors duration-200 hover:bg-[#162845]"
                   )}
@@ -129,7 +129,7 @@ export default function InternshipCard({
                     router.push(`/company/candidates/ai-ranked/${id}`);
                   }}
                   className={cn(
-                    "inline-flex h-[42px] cursor-pointer items-center justify-center rounded-[10px]",
+                    "inline-flex h-[42px] w-full cursor-pointer items-center justify-center rounded-[10px] sm:w-auto",
                     "bg-[#0B1B35] px-5 text-[15px] font-bold text-white",
                     "transition-colors duration-200 hover:bg-[#162845]"
                   )}

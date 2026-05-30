@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { getu } from "./getloginstudent";
 import {
   Home,
   Briefcase,
@@ -13,8 +12,6 @@ import {
   X,
 } from "lucide-react";
 import useGetUser from "../student/hooks/useGetLoginUser";
-import { headers } from "next/headers";
-import { getToken } from "@/lib/utils/get-token.util";
 import { signOut } from "next-auth/react"
 const menu = [
   { label: "Dashboard", href: "/student/dashboard", icon: Home },
@@ -158,7 +155,7 @@ export default function Sidebar() {
         </>
       )}
 
-      <aside className="max-h-[calc(100vh-64px)]  overflow-y-hidden sticky top-0 z-10 hidden min-h-[calc(100vh-16px)]w-64 flex-col justify-between bg-white px-4 py-6 md:flex lg:w-72">
+      <aside className="sticky top-0 z-10 hidden max-h-screen min-h-screen w-64 flex-col justify-between overflow-y-auto bg-white px-4 py-6 md:flex lg:w-72">
         {sidebarContent}
       </aside>
     </>

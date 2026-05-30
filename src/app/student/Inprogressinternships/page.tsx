@@ -65,20 +65,20 @@ export default function InternshipsPage() {
     <section className="space-y-8">
       {/* Header */}
       <div>
-        <h1 className="text-3xl font-bold">My Internships</h1>
+        <h1 className="text-2xl font-bold sm:text-3xl">My Internships</h1>
         <p className="text-gray-600 mt-1">
           Track your active progress and view your professional history.
         </p>
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-6 border-b pb-2">
+      <div className="flex gap-4 overflow-x-auto border-b pb-2 sm:gap-6">
         <button
           onClick={() => {
             setActiveTab("in-progress");
             setPage(1);
           }}
-          className={`pb-2 ${
+          className={`shrink-0 pb-2 ${
             activeTab === "in-progress"
               ? "text-blue-600 border-b-2 border-blue-600 font-medium"
               : "text-gray-400"
@@ -92,7 +92,7 @@ export default function InternshipsPage() {
             setActiveTab("completed");
             setPage(1);
           }}
-          className={`pb-2 ${
+          className={`shrink-0 pb-2 ${
             activeTab === "completed"
               ? "text-blue-600 border-b-2 border-blue-600 font-medium"
               : "text-gray-400"
@@ -126,7 +126,7 @@ export default function InternshipsPage() {
         )}
       </div>
 
-      <div className="flex items-center justify-between text-sm text-gray-600">
+      <div className="flex flex-col gap-3 text-sm text-gray-600 sm:flex-row sm:items-center sm:justify-between">
         <p>{isFetching ? "Refreshing..." : `Page ${page} of ${totalPages}`}</p>
         <div className="flex items-center gap-2">
           <button

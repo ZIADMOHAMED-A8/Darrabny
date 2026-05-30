@@ -8,7 +8,7 @@ export default function CompanyInternshipsGrid() {
   const internships = Array.isArray(data) ? data : data?.data ?? [];
   if (isLoading) {
     return (
-      <div className="grid items-stretch gap-6 md:grid-cols-2">
+      <div className="grid items-stretch gap-4 md:grid-cols-2 md:gap-6">
         {Array.from({ length: 4 }).map((_, index) => (
           <div
             key={index}
@@ -38,7 +38,7 @@ export default function CompanyInternshipsGrid() {
 
   console.log('innnnnn',internships[0])
   return (
-    <div className="grid items-stretch gap-6 md:grid-cols-2">
+    <div className="grid items-stretch gap-4 md:grid-cols-2 md:gap-6">
       {internships.map((it: any) => (
         <InternshipCard key={it.id} data={it} id={it._id} href={`./internships/${it._id}`} />
       ))}

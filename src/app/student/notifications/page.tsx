@@ -28,9 +28,9 @@ export default function NotificationsPage() {
 
   return (
     <div className="relative">
-      <div className="mx-auto max-w-6xl py-8 md:py-10">
-        <div className="mb-6 flex items-center justify-between gap-4">
-          <h1 className="text-4xl font-extrabold tracking-tight text-[#0b1f33]">
+      <div className="mx-auto max-w-6xl px-4 py-6 sm:px-0 md:py-10">
+        <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
+          <h1 className="text-3xl font-extrabold tracking-tight text-[#0b1f33] sm:text-4xl">
             Notifications
           </h1>
           <button
@@ -47,14 +47,14 @@ export default function NotificationsPage() {
           {items.map((item) => (
             <article
               key={item.id}
-              className="flex items-start gap-4 border-b border-[#0b1f33]/10 px-6 py-5 last:border-b-0"
+              className="flex items-start gap-3 border-b border-[#0b1f33]/10 px-4 py-5 last:border-b-0 sm:gap-4 sm:px-6"
             >
               <div className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-[#f2f7fd]">
                 {iconByType[item.type]}
               </div>
 
               <div className="min-w-0 flex-1">
-                <h2 className="text-xl font-bold leading-6 text-[#0b1f33]">
+                <h2 className="text-lg font-bold leading-6 text-[#0b1f33] sm:text-xl">
                   {item.title}
                 </h2>
                 <p className="mt-2 text-sm text-[#0b1f33]/70">{item.message}</p>

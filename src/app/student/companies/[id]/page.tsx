@@ -155,12 +155,12 @@ export default function CompanyDetailsPage({
 
         <div className="rounded-2xl border border-[#0b1f33]/10 bg-white p-4 shadow-sm md:p-6">
           <div className="flex flex-col items-start justify-between gap-4 border-b border-[#0b1f33]/10 pb-5 md:flex-row md:items-center">
-            <div className="flex items-center gap-4">
-              <div className="grid h-20 w-20 place-items-center overflow-hidden rounded-xl bg-[#e9f0ff]">
+            <div className="flex w-full flex-col gap-4 sm:flex-row sm:items-center">
+              <div className="grid h-16 w-16 shrink-0 place-items-center overflow-hidden rounded-xl bg-[#e9f0ff] sm:h-20 sm:w-20">
                 <Building2 className="h-9 w-9 text-[#0a79c9]" />
               </div>
-              <div>
-                <h1 className="text-4xl font-extrabold text-[#0b1f33]">
+              <div className="min-w-0">
+                <h1 className="break-words text-2xl font-semibold text-[#0b1f33] sm:text-3xl md:text-4xl">
                   {companyName}
                 </h1>
                 <p className="text-[#0b1f33]/65">
@@ -182,14 +182,14 @@ export default function CompanyDetailsPage({
           <div className="mt-5 grid gap-5 md:grid-cols-3">
             <section className="space-y-5 md:col-span-2">
               <article className="rounded-xl border border-[#0b1f33]/10 p-4">
-                <h2 className="text-3xl font-bold text-[#0b1f33]">
+                <h2 className="text-2xl font-semibold text-[#0b1f33] sm:text-3xl">
                   About Us
                 </h2>
                 <p className="mt-3 text-sm leading-7 text-[#0b1f33]/75">
                   {company.description ||
                     "We are a growing company building internship opportunities for students. (dummy)"}
                 </p>
-                <h3 className="mt-5 text-sm font-extrabold text-[#0b1f33]">
+                <h3 className="mt-5 text-sm font-semibold text-[#0b1f33]">
                   INDUSTRY SECTORS
                 </h3>
                 <div className="mt-2 flex flex-wrap gap-2">
@@ -205,7 +205,7 @@ export default function CompanyDetailsPage({
               </article>
 
               <article className="rounded-xl border border-[#0b1f33]/10 p-4">
-                <h2 className="text-3xl font-bold text-[#0b1f33]">
+                <h2 className="text-2xl font-semibold text-[#0b1f33] sm:text-3xl">
                   Active Internships
                 </h2>
                 <div className="mt-4 space-y-3">
@@ -222,9 +222,9 @@ export default function CompanyDetailsPage({
                       key={internship.id || internship._id || index}
                       className="rounded-lg border border-[#0b1f33]/10 p-3"
                     >
-                      <div className="flex items-start justify-between gap-3">
-                        <div>
-                          <h3 className="text-lg font-bold text-[#0b1f33]">
+                      <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                        <div className="min-w-0">
+                          <h3 className="text-lg font-semibold text-[#0b1f33]">
                             {internship.internshipTitle ?? 'Internship Title not found'} 
                           </h3>
 
@@ -247,13 +247,13 @@ export default function CompanyDetailsPage({
               </article>
 
               <article className="rounded-xl border border-[#0b1f33]/10 p-4">
-                <h2 className="text-3xl font-bold text-[#0b1f33]">
+                <h2 className="text-2xl font-semibold text-[#0b1f33] sm:text-3xl">
                   Intern Reviews
                 </h2>
                 <div className="mt-4 rounded-lg border border-[#0b1f33]/10 p-4">
-                  <div className="flex items-center gap-4">
+                  <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
                     <div>
-                      <p className="text-5xl font-bold text-[#0b1f33]">
+                      <p className="text-5xl font-semibold text-[#0b1f33]">
                         {averageRating}
                       </p>
                       <Stars rating={averageRating} />
@@ -261,7 +261,7 @@ export default function CompanyDetailsPage({
                         Based on {totalReviews} reviews
                       </p>
                     </div>
-                    <div className="flex-1 space-y-2">
+                    <div className="w-full flex-1 space-y-2">
                       {reviewBars.map((bar) => (
                         <div
                           key={bar.star}
@@ -375,7 +375,7 @@ export default function CompanyDetailsPage({
                       key={review.id || review._id || index}
                       className="rounded-lg border border-[#0b1f33]/10 p-4"
                     >
-                      <div className="flex items-center justify-between gap-3">
+                      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                         <div>
                           <p className="font-semibold text-[#0b1f33]">
                             {review.name ||
@@ -410,7 +410,7 @@ export default function CompanyDetailsPage({
             </section>
 
             <aside className="rounded-xl border border-[#0b1f33]/10 p-4">
-              <h2 className="text-2xl font-bold text-[#0b1f33]">
+              <h2 className="text-xl font-semibold text-[#0b1f33] sm:text-2xl">
                 COMPANY DETAILS
               </h2>
               <div className="mt-4 space-y-4 text-sm">
@@ -418,7 +418,7 @@ export default function CompanyDetailsPage({
 
                 </div>
                 <div>
-                  <p className="text-xs font-bold text-[#0b1f33]/60">
+                  <p className="text-xs font-semibold text-[#0b1f33]/60">
                     HEADQUARTERS
                   </p>
                   <p className="text-[#0b1f33]/80">
@@ -426,11 +426,11 @@ export default function CompanyDetailsPage({
                   </p>
                 </div>
                 <div>
-                  <p className="text-xs font-bold text-[#0b1f33]/60">SIZE</p>
+                  <p className="text-xs font-semibold text-[#0b1f33]/60">SIZE</p>
                   <p className="text-[#0b1f33]/80">{size}</p>
                 </div>
                 <div>
-                  <p className="text-xs font-bold text-[#0b1f33]/60">
+                  <p className="text-xs font-semibold text-[#0b1f33]/60">
                     FOUNDED
                   </p>
                   <p className="text-[#0b1f33]/80">
@@ -438,7 +438,7 @@ export default function CompanyDetailsPage({
                   </p>
                 </div>
                 <div>
-                  <p className="text-xs font-bold text-[#0b1f33]/60">
+                  <p className="text-xs font-semibold text-[#0b1f33]/60">
                     ACTIVE INTERNSHIPS
                   </p>
                   <p className="text-[#0b1f33]/80">

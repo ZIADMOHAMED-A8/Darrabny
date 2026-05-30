@@ -97,19 +97,19 @@ export default function CompaniesSection() {
   );
 
   return (
-    <section className="w-full ">
-      <div className="rounded-2xl   p-6  md:p-8">
+    <section className="w-full">
+      <div className="rounded-2xl px-4 py-6 sm:px-6 md:p-8">
         <CompaniesHero query={q} onChange={setQ} />
 
         {!isSearching && (
           <>
             {/* Featured */}
             <div className="mt-10">
-              <h2 className="text-[34px] font-extrabold text-[#0b1f33]">
+              <h2 className="text-2xl font-semibold text-[#0b1f33] sm:text-[34px]">
                 Featured Companies
               </h2>
 
-              <div className="mt-4 grid gap-6 md:grid-cols-3">
+              <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 lg:gap-6">
                 {featured.map((c) => (
                   <CompanyCard key={c.id} c={c} />
                 ))}
@@ -140,11 +140,11 @@ export default function CompaniesSection() {
 
             {/* All */}
             <div className="mt-10">
-              <h2 className="text-[34px] font-extrabold text-[#0b1f33]">
+              <h2 className="text-2xl font-semibold text-[#0b1f33] sm:text-[34px]">
                 All Companies
               </h2>
 
-              <div className="mt-5 grid gap-6 md:grid-cols-3">
+              <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 lg:gap-6">
                 {allCompanies.map((c) => (
                   <CompanyCard key={c.id} c={c} />
                 ))}
@@ -186,12 +186,12 @@ export default function CompaniesSection() {
 
         {isSearching && (
           <div className="mt-10">
-            <h2 className="text-[34px] font-extrabold text-[#0b1f33]">
+            <h2 className="text-2xl font-semibold text-[#0b1f33] sm:text-[34px]">
               Search Results
             </h2>
 
 
-            <div className="mt-5 grid gap-6 md:grid-cols-3">
+            <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 lg:gap-6">
               {searchResults.map((c) => (
                 <CompanyCard key={c.id} c={c} />
               ))}

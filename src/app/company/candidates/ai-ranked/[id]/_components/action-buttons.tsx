@@ -21,13 +21,6 @@ export default function ActionButtons() {
         </Button>
       </div>
 
-      <Button
-        variant="secondary"
-        className="h-12 w-full rounded-xl bg-white text-[#0A79C9] hover:bg-white/95"
-      >
-        <Send className="mr-2 h-5 w-5" />
-        Message Candidate
-      </Button>
     </div>
   );
 }

@@ -18,7 +18,7 @@ export default function PersonalInfoForm({
         Personal Information
       </h2>
 
-      <div className="bg-white/60 backdrop-blur rounded-2xl p-6 shadow-sm grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 gap-5 rounded-2xl bg-white/60 p-4 shadow-sm backdrop-blur sm:p-6 md:grid-cols-2 md:gap-6">
         <Field
           label="Full Name"
           error={errors.fullName?.message}

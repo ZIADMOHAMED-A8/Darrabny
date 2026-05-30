@@ -6,7 +6,7 @@ import { addInternshipAction } from "../_actions/add-internship.action";
 
 export function useAddInternship() {
   const { mutate, isPending, error } = useMutation({
-    mutationFn: addInternshipAction,
+    mutationFn: (formData: FormData) => addInternshipAction(formData),
   });
 
   return {

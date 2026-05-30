@@ -20,13 +20,13 @@ export default function InternshipProgressCard({
   const isCompleted = status === "completed";
 
   return (
-    <div className="bg-white/60 backdrop-blur  rounded-r-2xl  shadow-sm relative">
-      <div className="flex gap-6">
+    <div className="relative overflow-hidden rounded-2xl bg-white/60 shadow-sm backdrop-blur">
+      <div className="flex flex-col gap-4 sm:flex-row sm:gap-6">
         {/* Image */}
         <Image
   src={us}
   alt="internship"
-  className=" w-64 "
+  className="h-44 w-full object-cover sm:h-auto sm:w-48 md:w-64"
 />
           {isCompleted && (
             <span className="absolute top-2 left-2 bg-green-500 text-white text-xs px-3 py-1 rounded-full">
@@ -35,12 +35,12 @@ export default function InternshipProgressCard({
           )}
 
         {/* Content */}
-        <div className="flex-1 p-4">
+        <div className="min-w-0 flex-1 p-4">
           <span className="text-sm text-blue-600 font-medium">
             {week}
           </span>
 
-          <h3 className="text-xl font-semibold mt-1">{title}</h3>
+          <h3 className="mt-1 text-lg font-semibold sm:text-xl">{title}</h3>
           <p className="text-gray-500 text-sm">
             {company} | {mode}
           </p>
@@ -60,19 +60,19 @@ export default function InternshipProgressCard({
           </div>
 
           {/* Actions */}
-          <div className="flex gap-3 mt-4">
+          <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
             {isCompleted ? (
-              <button className="px-6 py-2 rounded-lg bg-blue-600 text-white flex items-center gap-2">
+              <button className="flex items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-white sm:px-6">
                 ⬇ Download Certificate
               </button>
             ) : (
               <>
-                <button className="px-6 py-2 rounded-lg bg-blue-600 text-white">
+                <button className="rounded-lg bg-blue-600 px-4 py-2 text-white sm:px-6">
                   Manage Tasks
                 </button>
                 <button
                   disabled
-                  className="px-6 py-2 rounded-lg bg-gray-200 text-gray-400 cursor-not-allowed"
+                  className="cursor-not-allowed rounded-lg bg-gray-200 px-4 py-2 text-gray-400 sm:px-6"
                 >
                   Logbook
                 </button>

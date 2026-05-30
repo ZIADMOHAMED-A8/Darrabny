@@ -5,7 +5,7 @@ import { useSearchInternships } from "../hooks/use-search-internships";
 import { useEffect, useState } from "react";
 
 type Props = {
-  onResults: (data: any[] | null) => void;
+  onResults: (data: unknown[] | null) => void;
 };
 
 const SKILLS = ["React", "Node.js", "Python", "SQL"];
@@ -20,7 +20,13 @@ export default function InternshipsFilters({ onResults }: Props) {
   const [trainingType, setTrainingType] = useState("");
   const [duration, setDuration] = useState("");
 
-  const [filters, setFilters] = useState<any>(null);
+  const [filters, setFilters] = useState<{
+    q: string;
+    technicalSkills?: string;
+    workingTime?: string;
+    durationInMonths?: number;
+    internshipLocation?: string;
+  } | null>(null);
 
   const { data, isLoading, isError } = useSearchInternships(filters);
 
@@ -28,7 +34,7 @@ export default function InternshipsFilters({ onResults }: Props) {
     if (data !== undefined) {
       onResults(data);
     }
-  }, [data]);
+  }, [data, onResults]);
 
   function toggleSkill(skill: string) {
     setSkills((prev) =>
@@ -59,24 +65,27 @@ export default function InternshipsFilters({ onResults }: Props) {
   }
 
   return (
-    <section className="rounded-2xl border border-slate-200 bg-white/90 backdrop-blur shadow-sm p-6 md:p-7">
+    <section className="rounded-2xl border border-slate-200 bg-white/90 p-4 shadow-sm backdrop-blur sm:p-6 md:p-7">
       
-      {/* Search */}
-      <div className="flex items-center gap-2 border border-slate-200 bg-white px-3 py-2.5 rounded-lg">
-        <Search className="h-4 w-4 text-slate-500" />
-        <input
-          value={q}
-          onChange={(e) => setQ(e.target.value)}
-          placeholder="Search internships..."
-          className="w-full outline-none text-sm"
-        />
-      </div>
+      {/* Row 1: search, skills, location — Row 2: type, duration (each 1/3 width) */}
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
 
-      {/* Filters */}
-      <div className="grid gap-4 mt-4 md:grid-cols-3">
+        {/* Search */}
+        <div className="min-w-0">
+          <label className="text-xs text-slate-500">Search</label>
+          <div className="flex min-w-0 items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-2.5">
+            <Search className="h-4 w-4 shrink-0 text-slate-500" />
+            <input
+              value={q}
+              onChange={(e) => setQ(e.target.value)}
+              placeholder="Search internships..."
+              className="w-full min-w-0 outline-none text-sm"
+            />
+          </div>
+        </div>
 
         {/* Skills (multi select) */}
-        <div>
+        <div className="min-w-0">
           <label className="text-xs text-slate-500">Skills</label>
           <select
             onChange={(e) => {
@@ -99,7 +108,7 @@ export default function InternshipsFilters({ onResults }: Props) {
         </div>
 
         {/* Location */}
-        <div>
+        <div className="min-w-0">
           <label className="text-xs text-slate-500">Location</label>
           <select
             value={location}
@@ -116,7 +125,7 @@ export default function InternshipsFilters({ onResults }: Props) {
         </div>
 
         {/* Type */}
-        <div>
+        <div className="min-w-0">
           <label className="text-xs text-slate-500">Training Type</label>
           <select
             value={trainingType}
@@ -133,7 +142,7 @@ export default function InternshipsFilters({ onResults }: Props) {
         </div>
 
         {/* Duration */}
-        <div>
+        <div className="min-w-0">
           <label className="text-xs text-slate-500">Duration</label>
           <select
             value={duration}
@@ -168,7 +177,7 @@ export default function InternshipsFilters({ onResults }: Props) {
       )}
 
       {/* Buttons */}
-      <div className="mt-6 flex gap-3 justify-center">
+      <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:justify-center">
         <button
           type="button"
           onClick={clearFilters}

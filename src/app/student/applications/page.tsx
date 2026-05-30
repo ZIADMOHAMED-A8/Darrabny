@@ -56,11 +56,11 @@ export default function ApplicationsPage() {
     <section className="space-y-8">
       {/* Header */}
       <div>
-        <h1 className="text-3xl font-bold">My Applications</h1>
+        <h1 className="text-2xl font-bold sm:text-3xl">My Applications</h1>
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-6 border-b">
+      <div className="flex gap-4 overflow-x-auto border-b sm:gap-6">
         {tabs.map((tab) => (
           <button
             key={tab.key}
@@ -69,7 +69,7 @@ export default function ApplicationsPage() {
               setActiveTab(tab.key);
               setPage(1);
             }}
-            className={`pb-2 ${
+            className={`shrink-0 pb-2 ${
               activeTab === tab.key
                 ? "text-blue-600 border-b-2 border-blue-600 font-medium"
                 : "text-gray-400"
@@ -99,7 +99,7 @@ export default function ApplicationsPage() {
         )}
       </div>
 
-      <div className="flex items-center justify-between text-sm text-gray-600">
+      <div className="flex flex-col gap-3 text-sm text-gray-600 sm:flex-row sm:items-center sm:justify-between">
         <p>{isFetching ? "Refreshing..." : `Page ${page} of ${totalPages}`}</p>
         <div className="flex items-center gap-2">
           <button

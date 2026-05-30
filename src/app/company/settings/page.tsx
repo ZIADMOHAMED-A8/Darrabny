@@ -2,16 +2,8 @@
 
 import type { PropsWithChildren, ReactNode } from "react";
 import { useEffect, useMemo, useState } from "react";
-import Link from "next/link";
-import {
-  BarChart3,
-  Building2,
-  Home,
-  Settings,
-  UserRound,
-} from "lucide-react";
-
 import { useUpdateCollegeNotifications } from "./hooks/use-update-college-notifications";
+import CompanyAccountSidebar from "../_components/company-account-sidebar";
 import { useGetCollegeSettings } from "./hooks/use-get-college-settings";
 import { useUpdateCollegeSettings } from "./hooks/use-update-college-settings";
 type SettingsForm = {
@@ -25,35 +17,6 @@ type NotificationState = {
   email: boolean;
   push: boolean;
 };
-
-const sidebarItems = [
-  {
-    label: "Dashboard",
-    href: "/university/dashboard",
-    icon: <Home size={24} />,
-  },
-  {
-    label: "Monitoring Report",
-    href: "/university/profile",
-    icon: <BarChart3 size={24} />,
-  },
-  {
-    label: "Company Partners",
-    href: "/university/internships",
-    icon: <Building2 size={24} />,
-  },
-  {
-    label: "Student Directory",
-    href: "/university/profile",
-    icon: <UserRound size={24} />,
-  },
-  {
-    label: "Settings",
-    href: "/university/settings",
-    icon: <Settings size={24} />,
-    active: true,
-  },
-];
 
 function asRecord(value: unknown): Record<string, unknown> {
   return value &&
@@ -200,36 +163,7 @@ function FieldEditor({
   );
 }
 
-function SidebarLink({
-  href,
-  icon,
-  label,
-  active,
-}: {
-  href: string;
-  icon: ReactNode;
-  label: string;
-  active?: boolean;
-}) {
-  return (
-    <Link
-      href={href}
-      className={`flex items-center gap-4 rounded-lg px-5 py-4 text-lg font-semibold transition ${
-        active
-          ? "bg-[#e8f0ff] text-slate-950 shadow-sm"
-          : "text-slate-950 hover:bg-slate-50"
-      }`}
-    >
-      <span className="text-slate-950">
-        {icon}
-      </span>
-
-      {label}
-    </Link>
-  );
-}
-
-export default function UniversitySettingsPage() {
+export default function CompanySettingsPage() {
   const {
     data,
     isLoading,
@@ -343,7 +277,8 @@ export default function UniversitySettingsPage() {
 
   return (
     <div className="min-h-screen bg-[#eef4ff] text-slate-950">
-      <div className="flex min-h-[calc(100vh-68px)]">
+      <CompanyAccountSidebar />
+      <div className="ml-[220px] flex min-h-[calc(100vh-68px)]">
         <main className="relative flex-1 overflow-hidden px-6 py-10 md:px-10">
           <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_98%_25%,rgba(255,255,255,0.8),transparent_28%),radial-gradient(circle_at_50%_10%,rgba(255,255,255,0.55),transparent_32%)]" />
 

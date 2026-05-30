@@ -209,6 +209,7 @@ export default function InternshipPostForm({
               title: "Internship updated",
               description: "Your internship has been updated successfully.",
             });
+            onCancel?.();
           },
           onError: (error) => {
             toast({
@@ -229,6 +230,7 @@ export default function InternshipPostForm({
           form.reset({
             ...DEFAULT_VALUES,
           });
+          onCancel?.();
         },
         onError: (error) => {
           toast({

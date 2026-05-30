@@ -14,7 +14,7 @@ export default function NotificationSettings({
         Notification Preferences
       </h2>
 
-      <div className="bg-white/60 backdrop-blur rounded-2xl p-6 shadow-sm space-y-6">
+      <div className="space-y-6 rounded-2xl bg-white/60 p-4 shadow-sm backdrop-blur sm:p-6">
         <Toggle
           label="Email Notifications"
           description="Receive updates about new internships, application status changes, and platform announcements."
@@ -62,8 +62,8 @@ function Toggle({
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex items-center justify-between gap-6">
-      <div>
+    <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between sm:gap-6">
+      <div className="min-w-0">
         <p className="font-medium">{label}</p>
         <p className="text-sm text-gray-500">
           {description}

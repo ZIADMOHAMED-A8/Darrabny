@@ -15,7 +15,7 @@ export default function CompanyCard({ c }: { c: Company }) {
       </div>
 
       <div className="p-4">
-        <h3 className="text-2xl font-extrabold leading-7 text-[#0b1f33]">{c.name}</h3>
+        <h3 className="text-xl font-semibold leading-7 text-[#0b1f33] sm:text-2xl">{c.name}</h3>
         <p className="mt-2 text-sm leading-6 text-[#0b1f33]/70 line-clamp-2">{c.desc}</p>
       </div>
     </Link>

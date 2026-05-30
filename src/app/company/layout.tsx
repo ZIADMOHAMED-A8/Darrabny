@@ -1,7 +1,5 @@
 import type { ReactNode } from "react";
-import CompanyNavbar from "./dashboard/_components/company-navbar";
 import Footer from "@/components/shared/footer";
-import StudentTopBar from "../_components/StudentTopBar";
 
 export default function CompanyLayout({ children }: { children: ReactNode }) {
   return (
