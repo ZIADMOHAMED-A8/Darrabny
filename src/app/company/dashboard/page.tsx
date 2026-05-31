@@ -27,7 +27,7 @@ export default function CompanyDashboardPage() {
   if (!data) return null;
 
   return (
-    <main className="min-h-screen bg-white px-4 py-8 sm:px-6 md:px-8 md:py-10">
+    <main className="min-h-screen  bg-[#F3F4F6] px-4 py-8 sm:px-6 md:px-8 md:py-10">
       <h1 className="mb-8 text-2xl font-bold text-gray-900 sm:text-3xl">
         Company Overview
       </h1>

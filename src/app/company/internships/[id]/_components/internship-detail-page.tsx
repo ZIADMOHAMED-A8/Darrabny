@@ -18,8 +18,8 @@ type ReviewSummary = {
 };
 
 type InternshipData = {
-  data:{
-    _id:string
+  data: {
+    _id: string
     internshipTitle: string;
     internshipLocation: string;
     workingTime: string;
@@ -36,7 +36,8 @@ type InternshipData = {
     endDate: string;
     createdAt: string;
     updatedAt: string;
-    reviewSummary: ReviewSummary;}
+    reviewSummary: ReviewSummary;
+  }
 };
 
 type InternshipApi = {
@@ -79,20 +80,20 @@ export default function InternshipDetailPage({
   const mode = "edit";
 
   const {
-  data:{
-    _id,
-    internshipTitle,
-    internshipLocation,
-    workingTime,
-    internshipDescription,
-    technicalSkills,
-    softSkills,
-    durationInMonths,
-    startDate,
-    endDate,
-    status,
-    companyId,
-  }
+    data: {
+      _id,
+      internshipTitle,
+      internshipLocation,
+      workingTime,
+      internshipDescription,
+      technicalSkills,
+      softSkills,
+      durationInMonths,
+      startDate,
+      endDate,
+      status,
+      companyId,
+    }
   } = data;
 
   const formattedStart = new Date(startDate).toLocaleDateString("en-US", {
@@ -108,7 +109,7 @@ export default function InternshipDetailPage({
     <div className="min-h-screen bg-white">
       <div className="px-4 sm:px-6 lg:px-16">
 
-        
+
         {/* Header */}
         <div className="mt-7 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
           <div className="min-w-0">
@@ -211,8 +212,23 @@ export default function InternshipDetailPage({
 
         {/* Modal */}
         {openForm && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4">
-            <div className="relative max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-xl bg-white shadow-lg">
+          <div className="fixed inset-0 z-50 flex items-center justify-center  bg-black/50 px-4">
+            <div
+              className="
+              relative
+              z-50
+              max-h-[92vh]
+              w-[920px]
+              max-w-[95vw]
+              overflow-y-auto
+              rounded-[20px]
+              shadow-2xl
+              sm:rounded-[28px]
+              [scrollbar-width:none]
+              [-ms-overflow-style:none]
+              [&::-webkit-scrollbar]:hidden
+            "
+            >
               <button
                 onClick={() => setOpenForm(false)}
                 className="absolute top-3 right-3"

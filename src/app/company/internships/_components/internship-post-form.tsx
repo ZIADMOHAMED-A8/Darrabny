@@ -236,14 +236,14 @@ export default function InternshipPostForm({
   }
 
   return (
-    <Card className="w-full rounded-2xl border border-black/10 shadow-2xl bg-white backdrop-blur">
+    <Card className="w-full rounded-2xl border border-black/10 shadow-2xl scrollbar-none bg-white backdrop-blur">
       <CardHeader className="pb-4">
         <h2 className="text-2xl font-semibold">{title}</h2>
       </CardHeader>
 
       <Separator />
 
-      <CardContent className="p-4 sm:p-6 md:p-8">
+      <CardContent className="p-4 sm:p-6 md:p-8 scrollbar-none">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(submit)} className="space-y-6">
             {/* INTERNSHIP INFO */}
@@ -697,7 +697,7 @@ export default function InternshipPostForm({
             </div>
           </form>
           <pre className="text-red-500 text-xs">
-            {JSON.stringify(form.formState.errors, null, 2)}
+            {JSON.stringify(form.formState.errors.message)} 
           </pre>
         </Form>
       </CardContent>
