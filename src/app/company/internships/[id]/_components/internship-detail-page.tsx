@@ -106,13 +106,13 @@ export default function InternshipDetailPage({
 
   return (
     <div className="min-h-screen bg-white">
-      <div className="px-16">
+      <div className="px-4 sm:px-6 lg:px-16">
 
         
         {/* Header */}
-        <div className="flex justify-between items-start mt-7">
-          <div>
-            <h1 className="text-[28px] font-bold text-[#0B1B35]">
+        <div className="mt-7 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+          <div className="min-w-0">
+            <h1 className="break-words text-2xl font-bold text-[#0B1B35] sm:text-[28px]">
               {internshipTitle}
             </h1>
             <div className="mt-2 flex flex-wrap items-center gap-2 text-sm text-[#6B7280]">
@@ -127,7 +127,7 @@ export default function InternshipDetailPage({
               </span>
             </div>
           </div>
-          <button onClick={() => router.back()}>
+          <button className="self-start" onClick={() => router.back()}>
             <X />
           </button>
         </div>
@@ -147,7 +147,7 @@ export default function InternshipDetailPage({
         {/* Technical Skills */}
         {technicalSkills.length > 0 && (
           <Section title="Technical Skills">
-            <ul className="grid md:grid-cols-2 gap-3">
+            <ul className="grid gap-3 md:grid-cols-2">
               {technicalSkills.map((item, i) => (
                 <CheckItem key={i} text={item} />
               ))}
@@ -158,7 +158,7 @@ export default function InternshipDetailPage({
         {/* Soft Skills */}
         {softSkills.length > 0 && (
           <Section title="Soft Skills">
-            <ul className="grid md:grid-cols-2 gap-3">
+            <ul className="grid gap-3 md:grid-cols-2">
               {softSkills.map((item, i) => (
                 <CheckItem key={i} text={item} />
               ))}
@@ -175,7 +175,7 @@ export default function InternshipDetailPage({
         </Section>
 
         {/* Footer */}
-        <div className="flex justify-end gap-3 mt-8 pb-8">
+        <div className="mt-8 flex flex-col gap-3 pb-8 sm:flex-row sm:justify-end">
           <button
             disabled={isDeleting}
             onClick={() => {
@@ -197,13 +197,13 @@ export default function InternshipDetailPage({
                 },
               });
             }}
-            className="border border-red-200 text-red-600 hover:bg-red-50 px-6 py-2 rounded-lg text-sm transition disabled:opacity-50"
+            className="rounded-lg border border-red-200 px-6 py-2 text-sm text-red-600 transition hover:bg-red-50 disabled:opacity-50"
           >
             {isDeleting ? "Deleting..." : "Delete"}
           </button>
           <button
             onClick={() => setOpenForm(true)}
-            className="bg-[#1686E6] text-white hover:bg-[#1270C4] px-6 py-2 rounded-lg text-sm transition flex items-center gap-1.5"
+            className="flex items-center justify-center gap-1.5 rounded-lg bg-[#1686E6] px-6 py-2 text-sm text-white transition hover:bg-[#1270C4]"
           >
             ✎ Edit
           </button>
@@ -211,8 +211,8 @@ export default function InternshipDetailPage({
 
         {/* Modal */}
         {openForm && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-            <div className="bg-white w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-xl relative shadow-lg">
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4">
+            <div className="relative max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-xl bg-white shadow-lg">
               <button
                 onClick={() => setOpenForm(false)}
                 className="absolute top-3 right-3"

@@ -13,7 +13,7 @@ export default function CandidateProfilePage() {
 
   return (
     <main className="min-h-screen bg-[var(--ic-bg)] text-white">
-      <div className="mx-auto px-10 pb-16 pt-10">
+      <div className="mx-auto px-4 pb-16 pt-8 sm:px-6 md:px-10 md:pt-10">
         {/* Breadcrumb */}
         <p className="text-sm text-white/70">
           {candidateProfileDummy.breadcrumb}

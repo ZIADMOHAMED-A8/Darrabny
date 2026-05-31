@@ -9,7 +9,6 @@ import {
   Trash2,
   ShieldCheck,
   Clock3,
-  CircleDot,
   Landmark,
   ScrollText,
   CloudUpload,
@@ -20,6 +19,20 @@ import {
 import { useCompanyVerification } from "./hooks/use-company-verification";
 import { useUploadVerificationDocument } from "./hooks/use-upload-verification-document";
 import UseDeleteDoc from "./hooks/use-delete-document";
+
+type VerificationDocument = {
+  _id: string;
+  documentName: string;
+  fileUrl: string;
+  uploadDate: string;
+  status: string;
+};
+
+type VerificationHistoryItem = {
+  action: string;
+  date: string;
+  note: string;
+};
 
 function formatDate(date: string) {
   return new Date(date).toLocaleDateString("en-US", {
@@ -97,8 +110,14 @@ export default function VerificationPage() {
   const fileInputRef =
     useRef<HTMLInputElement | null>(null);
 
-  const documents = data?.documents || [];
-  const history = data?.history || [];
+  const documents = useMemo<VerificationDocument[]>(
+    () => data?.documents || [],
+    [data?.documents]
+  );
+  const history = useMemo<VerificationHistoryItem[]>(
+    () => data?.history || [],
+    [data?.history]
+  );
 
   const totalDocs = useMemo(
     () => documents.length,
@@ -150,10 +169,10 @@ export default function VerificationPage() {
 
   return (
     <div className="min-h-screen bg-[#EEF2F8]">
-      <main className="max-w-[1200px] mx-auto px-6 py-10">
+      <main className="mx-auto max-w-[1200px] px-4 py-8 sm:px-6 md:py-10">
         {/* HEADER */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-[#0F1A2E] tracking-tight">
+          <h1 className="text-2xl font-bold tracking-tight text-[#0F1A2E] sm:text-3xl">
             Manage Verification Credentials
           </h1>
 
@@ -164,7 +183,7 @@ export default function VerificationPage() {
         </div>
 
         {/* GRID */}
-        <div className="grid grid-cols-[1fr_320px] gap-5 items-start">
+        <div className="grid items-start gap-5 lg:grid-cols-[minmax(0,1fr)_320px]">
           {/* LEFT */}
           <div className="space-y-5">
             {/* STATUS */}
@@ -182,7 +201,7 @@ export default function VerificationPage() {
 
               <div className="px-6 py-5">
                 <div
-                  className={`rounded-xl px-5 py-4 flex items-center justify-between ${
+                  className={`flex flex-col gap-4 rounded-xl px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-5 ${
                     data?.status === "approved"
                       ? "bg-[#F0FDF4] border border-[#BBF7D0]"
                       : data?.status === "rejected"
@@ -216,7 +235,7 @@ export default function VerificationPage() {
                       )}
                     </div>
 
-                    <div>
+                    <div className="min-w-0">
                       <p className="font-bold text-[#0F1A2E] text-sm">
                         {data?.status ===
                         "approved"
@@ -240,7 +259,7 @@ export default function VerificationPage() {
                   </div>
 
                   {data?.validUntil && (
-                    <div className="text-right shrink-0">
+                    <div className="shrink-0 text-left sm:text-right">
                       <p className="text-sm font-semibold text-[#0F1A2E]">
                         Valid until{" "}
                         {formatDate(
@@ -281,7 +300,7 @@ export default function VerificationPage() {
               </div>
 
               {/* TABLE HEADER */}
-              <div className="grid grid-cols-[2fr_1fr_1fr_100px] px-6 py-3 text-[10px] uppercase tracking-widest text-slate-400 border-b border-slate-100 bg-slate-50/60">
+              <div className="hidden grid-cols-[2fr_1fr_1fr_100px] border-b border-slate-100 bg-slate-50/60 px-6 py-3 text-[10px] uppercase tracking-widest text-slate-400 md:grid">
                 <p>Document Name</p>
 
                 <p>Upload Date</p>
@@ -293,20 +312,20 @@ export default function VerificationPage() {
 
               {/* DOCUMENTS */}
               <div>
-                {documents.map((doc: any) => (
+                {documents.map((doc) => (
                   <div
                     key={doc._id}
-                    className="grid grid-cols-[2fr_1fr_1fr_100px] px-6 py-4 items-center border-b border-slate-100 last:border-none hover:bg-slate-50/50 transition"
+                    className="grid gap-3 border-b border-slate-100 px-4 py-4 transition last:border-none hover:bg-slate-50/50 md:grid-cols-[2fr_1fr_1fr_100px] md:items-center md:px-6"
                   >
-                    <div className="flex items-center gap-3">
+                    <div className="flex min-w-0 items-center gap-3">
                       <div className="w-9 h-9 rounded-lg bg-[#EAF4FF] flex items-center justify-center shrink-0">
                         {docIcon(
                           doc.documentName
                         )}
                       </div>
 
-                      <div>
-                        <p className="font-medium text-[#0F1A2E] text-sm leading-snug">
+                      <div className="min-w-0">
+                        <p className="break-words text-sm font-medium leading-snug text-[#0F1A2E]">
                           {doc.documentName}
                         </p>
 
@@ -321,12 +340,14 @@ export default function VerificationPage() {
                     </div>
 
                     <p className="text-sm text-slate-500">
+                      <span className="font-semibold text-slate-400 md:hidden">Uploaded: </span>
                       {formatDate(
                         doc.uploadDate
                       )}
                     </p>
 
                     <div>
+                      <span className="mr-2 font-semibold text-slate-400 md:hidden">Status:</span>
                       <span
                         className={`px-3 py-1 rounded-full text-xs font-medium capitalize ${statusColor(
                           doc.status
@@ -405,7 +426,7 @@ export default function VerificationPage() {
                       handleFile(file);
                     }
                   }}
-                  className={`border-2 border-dashed p-4 rounded-2xl min-h-[240px] flex flex-col items-center justify-center cursor-pointer transition-all px-6 ${
+                  className={`flex min-h-[220px] cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed p-4 px-4 transition-all sm:min-h-[240px] sm:px-6 ${
                     dragging
                       ? "border-[#0B66C3] bg-[#EAF4FF]"
                       : "border-slate-300 hover:border-[#0B66C3]/50 hover:bg-slate-50"
@@ -428,7 +449,7 @@ export default function VerificationPage() {
                   </p>
 
                   {selectedFile && (
-                    <div className="mt-6 w-full max-w-[420px] rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 flex items-center justify-between">
+                    <div className="mt-6 flex w-full max-w-[420px] items-center justify-between rounded-xl border border-slate-200 bg-slate-50 px-3 py-3 sm:px-4">
                       <div className="flex items-center gap-3 overflow-hidden">
                         <div className="w-10 h-10 rounded-lg bg-[#EAF4FF] flex items-center justify-center shrink-0">
                           <FileText
@@ -489,7 +510,7 @@ export default function VerificationPage() {
           </div>
 
           {/* RIGHT */}
-          <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden sticky top-[76px]">
+          <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm lg:sticky lg:top-[76px]">
             <div className="px-6 py-5 flex items-center gap-2 border-b border-slate-100">
               <Clock3
                 size={16}
@@ -508,7 +529,7 @@ export default function VerificationPage() {
                 <div className="space-y-8">
                   {history.map(
                     (
-                      item: any,
+                      item: VerificationHistoryItem,
                       index: number
                     ) => (
                       <div

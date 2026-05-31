@@ -11,20 +11,20 @@ export default function OngoingInternships({
 }: OngoingInternshipsProps) {
   return (
     <div className="rounded-xl bg-white border border-gray-200 shadow-sm overflow-hidden">
-      <div className="px-6 py-5 border-b border-gray-200">
+      <div className="border-b border-gray-200 px-4 py-5 sm:px-6">
         <h2 className="text-lg font-semibold text-gray-900">
           Ongoing Internships
         </h2>
       </div>
 
       {internships.length === 0 ? (
-        <div className="px-6 py-12 text-center text-gray-500">
+        <div className="px-4 py-12 text-center text-gray-500 sm:px-6">
           No ongoing internships
         </div>
       ) : (
         <>
-          <div className="px-6 py-3 bg-gray-50">
-            <div className="grid grid-cols-[2fr_1.5fr_1fr_0.8fr] gap-4 text-xs font-semibold text-gray-600 uppercase tracking-wide">
+          <div className="hidden bg-gray-50 px-6 py-3 sm:block">
+            <div className="grid grid-cols-[2fr_1.5fr_1fr_0.8fr] gap-4 text-xs font-semibold uppercase tracking-wide text-gray-600">
               <div>Student</div>
               <div>Role</div>
               <div>Status</div>
@@ -38,7 +38,7 @@ export default function OngoingInternships({
             ))}
           </div>
 
-          <div className="px-6 py-4 bg-gray-50 text-center text-xs text-gray-500">
+          <div className="bg-gray-50 px-4 py-4 text-center text-xs text-gray-500 sm:px-6">
             Showing {internships.length} internship{internships.length !== 1 ? "s" : ""}
           </div>
         </>
@@ -83,9 +83,9 @@ function InternshipRow({ internship }: InternshipRowProps) {
   };
 
   return (
-    <div className="px-6 py-4 hover:bg-gray-50 transition-colors">
-      <div className="grid grid-cols-[2fr_1.5fr_1fr_0.8fr] gap-4 items-center">
-        <div className="flex items-center gap-3 min-w-0">
+    <div className="px-4 py-4 transition-colors hover:bg-gray-50 sm:px-6">
+      <div className="grid gap-3 sm:grid-cols-[2fr_1.5fr_1fr_0.8fr] sm:items-center sm:gap-4">
+        <div className="flex min-w-0 items-center gap-3">
           <div
             className={`flex-shrink-0 h-10 w-10 rounded-full font-semibold flex items-center justify-center ${getInitialColor(initials)}`}
           >
@@ -101,7 +101,10 @@ function InternshipRow({ internship }: InternshipRowProps) {
           </div>
         </div>
 
-        <div className="text-sm text-gray-700">{internship.role}</div>
+        <div className="text-sm text-gray-700">
+          <span className="font-semibold text-gray-500 sm:hidden">Role: </span>
+          {internship.role}
+        </div>
 
         <div>
           <span
@@ -111,7 +114,8 @@ function InternshipRow({ internship }: InternshipRowProps) {
           </span>
         </div>
 
-        <div className="text-right text-sm font-semibold text-blue-600">
+        <div className="text-sm font-semibold text-blue-600 sm:text-right">
+          <span className="font-semibold text-gray-500 sm:hidden">Count: </span>
           {internship.studentCount.current}
           {internship.studentCount.capacity != null && `/${internship.studentCount.capacity}`}
         </div>

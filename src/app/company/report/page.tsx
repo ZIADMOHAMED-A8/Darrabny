@@ -18,7 +18,7 @@ export default function CompanyReportPage() {
       <ReportBackground />
 
       {/* Content */}
-      <div className="relative z-10 mx-auto px-10 pb-16 pt-10">
+      <div className="relative z-10 mx-auto px-4 pb-16 pt-8 sm:px-6 md:px-10 md:pt-10">
         {/* Top header */}
         <ReportHeader />
 

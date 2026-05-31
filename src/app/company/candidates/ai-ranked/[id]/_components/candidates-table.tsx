@@ -15,7 +15,8 @@ export default function CandidatesTable({
 }) {
   return (
     <Card className="rounded-2xl border-0 bg-[var(--ic-surface)] shadow-md">
-      <CardContent className="p-0 overflow-hidden">
+      <CardContent className="overflow-x-auto p-0">
+        <div className="min-w-[760px]">
         {/* Header row */}
         <div className="grid grid-cols-[220px_1fr_220px_120px] gap-4 px-6 py-4 text-sm font-semibold text-[#0B2E4F]">
           <div>Title</div>
@@ -85,6 +86,7 @@ export default function CandidatesTable({
             })
           }
 
+        </div>
         </div>
       </CardContent>
     </Card>

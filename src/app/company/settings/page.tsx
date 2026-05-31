@@ -1,6 +1,6 @@
 "use client";
 
-import type { PropsWithChildren, ReactNode } from "react";
+import type { PropsWithChildren } from "react";
 import { useEffect, useMemo, useState } from "react";
 import { useUpdateCollegeNotifications } from "./hooks/use-update-college-notifications";
 import CompanyAccountSidebar from "../_components/company-account-sidebar";
@@ -278,12 +278,12 @@ export default function CompanySettingsPage() {
   return (
     <div className="min-h-screen bg-[#eef4ff] text-slate-950">
       <CompanyAccountSidebar />
-      <div className="ml-[220px] flex min-h-[calc(100vh-68px)]">
-        <main className="relative flex-1 overflow-hidden px-6 py-10 md:px-10">
+      <div className="flex min-h-[calc(100vh-68px)] md:ml-[220px]">
+        <main className="relative flex-1 overflow-hidden px-4 py-8 sm:px-6 md:px-10 md:py-10">
           <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_98%_25%,rgba(255,255,255,0.8),transparent_28%),radial-gradient(circle_at_50%_10%,rgba(255,255,255,0.55),transparent_32%)]" />
 
-          <div className="relative w-full px-16">
-            <h1 className="text-4xl font-extrabold text-slate-950">
+          <div className="relative w-full px-0 lg:px-16">
+            <h1 className="text-3xl font-extrabold text-slate-950 sm:text-4xl">
               Settings
             </h1>
 
@@ -309,8 +309,8 @@ export default function CompanySettingsPage() {
             ) : (
               <>
                 <section className="mt-12">
-                  <div className="mb-5 flex items-center justify-between">
-                    <h2 className="text-2xl font-bold">
+                  <div className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                    <h2 className="text-xl font-bold sm:text-2xl">
                       Company Information
                     </h2>
 
@@ -318,7 +318,7 @@ export default function CompanySettingsPage() {
                       type="button"
                       onClick={saveSettings}
                       disabled={isSaving}
-                      className="rounded-md bg-[#087bd3] px-5 py-2 font-semibold text-white disabled:opacity-60"
+                      className="w-full rounded-md bg-[#087bd3] px-5 py-2 font-semibold text-white disabled:opacity-60 sm:w-auto"
                     >
                       {updateSettings.isPending
                         ? "Saving..."
@@ -326,8 +326,8 @@ export default function CompanySettingsPage() {
                     </button>
                   </div>
 
-                  <div className="rounded-2xl bg-white p-7 shadow-sm">
-                    <div className="grid gap-x-8 gap-y-8 md:grid-cols-2">
+                  <div className="rounded-2xl bg-white p-4 shadow-sm sm:p-7">
+                    <div className="grid gap-6 md:grid-cols-2 md:gap-x-8 md:gap-y-8">
                       <FieldEditor
                         label="Company Name"
                         name="companyName"
@@ -457,11 +457,11 @@ export default function CompanySettingsPage() {
                 </section>
 
                 <section className="mt-8">
-                  <h2 className="text-2xl font-bold">
+                  <h2 className="text-xl font-bold sm:text-2xl">
                     Notification Preferences
                   </h2>
 
-                  <div className="mt-5 rounded-2xl bg-white px-7 py-3 shadow-sm">
+                  <div className="mt-5 rounded-2xl bg-white px-4 py-3 shadow-sm sm:px-7">
                     {[
                       {
                         key: "email" as const,
@@ -480,13 +480,13 @@ export default function CompanySettingsPage() {
                     ].map((item, index) => (
                       <div
                         key={item.key}
-                        className={`flex items-center justify-between gap-5 py-6 ${
+                        className={`flex flex-col gap-4 py-6 sm:flex-row sm:items-center sm:justify-between sm:gap-5 ${
                           index > 0
                             ? "border-t border-blue-100"
                             : ""
                         }`}
                       >
-                        <div>
+                        <div className="min-w-0">
                           <h3 className="text-lg font-semibold text-slate-950">
                             {item.label}
                           </h3>

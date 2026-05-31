@@ -2,6 +2,12 @@
 
 import InternshipCard from "@/components/shared/internship-card";
 import useGetCompanyInternships from "../hooks/useGetCompanyInternships";
+import type { InternshipCardData } from "@/lib/types/internships/internships";
+
+type CompanyInternshipItem = InternshipCardData & {
+  _id?: string;
+  id?: string;
+};
 
 export default function CompanyInternshipsGrid() {
   const { data, isLoading, isError, error } = useGetCompanyInternships();
@@ -39,8 +45,8 @@ export default function CompanyInternshipsGrid() {
   console.log('innnnnn',internships[0])
   return (
     <div className="grid items-stretch gap-4 md:grid-cols-2 md:gap-6">
-      {internships.map((it: any) => (
-        <InternshipCard key={it.id} data={it} id={it._id} href={`./internships/${it._id}`} />
+      {(internships as CompanyInternshipItem[]).map((it) => (
+        <InternshipCard key={it.id ?? it._id} data={it} id={it._id ?? it.id ?? ""} href={`./internships/${it._id ?? it.id}`} />
       ))}
     </div>
   );

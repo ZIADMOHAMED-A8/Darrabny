@@ -22,12 +22,9 @@ export default function UniversitiesTable({
   };
 
   return (
-    <div style={{
-      background: "#fff", borderRadius: 16, padding: "28px 24px",
-      boxShadow: "0 1px 4px rgba(0,0,0,0.06)", border: "1px solid #F3F4F6",
-    }}>
+    <div className="overflow-hidden rounded-2xl border border-[#F3F4F6] bg-white p-4 shadow-[0_1px_4px_rgba(0,0,0,0.06)] sm:p-6">
       {/* Header */}
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 20 }}>
+      <div className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <h2 style={{ fontSize: 18, fontWeight: 700, color: "#111827", margin: 0 }}>
           Available Universities
         </h2>
@@ -50,7 +47,8 @@ export default function UniversitiesTable({
       )}
 
       {/* Table */}
-      <table style={{ width: "100%", borderCollapse: "collapse" }}>
+      <div className="overflow-x-auto">
+      <table style={{ width: "100%", minWidth: 720, borderCollapse: "collapse" }}>
         <thead>
           <tr style={{ borderBottom: "1px solid #F3F4F6" }}>
             {["University Name", "Status", "", "Location", "Action"].map((h) => (
@@ -133,6 +131,7 @@ export default function UniversitiesTable({
           })}
         </tbody>
       </table>
+      </div>
     </div>
   );
 }

@@ -17,7 +17,7 @@ export default async function InternshipStudentsPage({
     <main className="min-h-screen bg-slate-50 px-4 py-8 md:px-8">
       <div className="mx-auto max-w-6xl space-y-6">
         <header className="rounded-2xl bg-gradient-to-r from-[#0f3a5c] to-[#145d93] px-6 py-5 text-white shadow-lg">
-          <div className="flex items-center justify-between gap-4">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <h1 className="text-2xl font-bold md:text-3xl">Students List</h1>
               <p className="mt-2 text-sm text-blue-100">
@@ -33,7 +33,7 @@ export default async function InternshipStudentsPage({
           </div>
         </header>
 
-        <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+        <section className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-6">
           <h2 className="mb-4 text-lg font-semibold text-slate-900">
             Students List View
           </h2>

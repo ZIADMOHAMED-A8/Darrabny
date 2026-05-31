@@ -1,6 +1,6 @@
 "use client";
 
-import { CheckCircle2, ChevronRight, PieChart, Plus } from "lucide-react";
+import { CheckCircle2, PieChart } from "lucide-react";
 import type {
   CompanyVerification,
   AcademicPartner,
@@ -19,7 +19,7 @@ export default function CompanySideWidgets({
   academicPartners,
 }: CompanySideWidgetsProps) {
   return (
-    <aside className="w-full grid gap-6">
+    <aside className="grid w-full gap-4 lg:gap-6">
       <AcceptanceRateCard acceptanceRate={acceptanceRate} />
       <VerificationCard status={verification.status} validUntil={verification.validUntil} />
       <AcademicPartnersCard partners={academicPartners} />
@@ -33,7 +33,7 @@ interface AcceptanceRateCardProps {
 
 function AcceptanceRateCard({ acceptanceRate }: AcceptanceRateCardProps) {
   return (
-    <div className="rounded-xl bg-white border border-gray-200 shadow-sm p-6">
+    <div className="rounded-xl border border-gray-200 bg-white p-4 shadow-sm sm:p-6">
       <div className="flex items-start justify-between mb-4">
         <h3 className="text-lg font-semibold text-gray-900">Acceptance Rate</h3>
         <PieChart className="h-5 w-5 text-blue-600" />
@@ -72,12 +72,12 @@ function VerificationCard({ status, validUntil }: VerificationCardProps) {
   const statusColor = isVerified ? "text-green-600" : "text-amber-600";
 
   return (
-    <div className="rounded-xl bg-white border border-gray-200 shadow-sm p-6">
+    <div className="rounded-xl border border-gray-200 bg-white p-4 shadow-sm sm:p-6">
       <h3 className="text-lg font-semibold text-gray-900 mb-4">
         Verification Status
       </h3>
 
-      <div className="flex gap-4">
+      <div className="flex flex-col gap-4 sm:flex-row">
         <div className="flex-shrink-0">
           <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gray-100">
             <CheckCircle2 className={`h-6 w-6 ${statusColor}`} />
@@ -114,7 +114,7 @@ function AcademicPartnersCard({ partners }: AcademicPartnersCardProps) {
   const router = useRouter();
 
   return (
-    <div className="rounded-xl bg-white border border-gray-200 shadow-sm p-6">
+    <div className="rounded-xl border border-gray-200 bg-white p-4 shadow-sm sm:p-6">
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-lg font-semibold text-gray-900">
           Academic Partners
@@ -157,14 +157,14 @@ function PartnerRow({ universityName, agreementStatus }: PartnerRowProps) {
     .toUpperCase();
 
   return (
-    <div className="flex items-center justify-between rounded-lg px-3 py-3 hover:bg-gray-50 transition-colors">
-      <div className="flex items-center gap-3">
+    <div className="flex items-center justify-between rounded-lg px-2 py-3 transition-colors hover:bg-gray-50 sm:px-3">
+      <div className="flex min-w-0 items-center gap-3">
         <div className="flex h-10 w-12 items-center justify-center rounded-lg bg-gray-200 text-xs font-bold text-gray-700">
           {initials}
         </div>
 
-        <div>
-          <div className="text-sm font-semibold text-gray-900">{universityName}</div>
+        <div className="min-w-0">
+          <div className="truncate text-sm font-semibold text-gray-900">{universityName}</div>
           <div className="text-xs text-gray-500">{agreementStatus}</div>
         </div>
       </div>

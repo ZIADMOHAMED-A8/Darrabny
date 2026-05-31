@@ -145,7 +145,7 @@ export default function StudentsTable({ initialData, internshipId }: StudentsTab
   return (
     <>
       <div className="overflow-x-auto">
-        <table className="min-w-full border-collapse text-sm">
+        <table className="min-w-[720px] border-collapse text-sm">
           <thead>
             <tr className="border-b border-slate-200 text-left text-slate-500">
               <th className="py-3">Student</th>
@@ -396,7 +396,7 @@ export default function StudentsTable({ initialData, internshipId }: StudentsTab
             <h4 className="mb-3 text-sm font-semibold text-blue-100">
               Actions
             </h4>
-            <div className="flex justify-end gap-2">
+            <div className="flex flex-col gap-2 sm:flex-row sm:justify-end">
               <Button type="button" variant="outline" onClick={closeModal}>
                 Cancel
               </Button>

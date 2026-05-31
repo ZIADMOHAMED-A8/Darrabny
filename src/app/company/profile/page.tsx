@@ -74,7 +74,7 @@ function RatingBars() {
 }
 
 /* ─── Mock reviews ──────────────────────────────────────────────────────────── */
-const MOCK_REVIEWS = [
+const UNUSED_MOCK_REVIEWS = [
   {
     name: "Sophia Carter",
     date: "July 15, 2023",
@@ -98,7 +98,7 @@ const MOCK_REVIEWS = [
 ];
 
 /* ─── Mock internships ───────────────────────────────────────────────────────── */
-const MOCK_INTERNSHIPS = [
+const UNUSED_MOCK_INTERNSHIPS = [
   {
     title: "Frontend Developer Intern",
     type: "Remote",
@@ -114,6 +114,9 @@ const MOCK_INTERNSHIPS = [
     skills: ["Python", "SQL", "Tableau"],
   },
 ];
+
+void UNUSED_MOCK_REVIEWS;
+void UNUSED_MOCK_INTERNSHIPS;
 
 /* ─── Social icon ───────────────────────────────────────────────────────────── */
 function SocialDot({ label }: { label: string }) {
@@ -152,7 +155,7 @@ function DetailRow({ label, value, isLink }: { label: string; value?: string; is
 /* ─── Input field ───────────────────────────────────────────────────────────── */
 function Field({ label, value, onChange, span2 = false }: { label: string; value: string; onChange: (v: string) => void; span2?: boolean }) {
   return (
-    <div className={span2 ? "col-span-2" : ""}>
+    <div className={span2 ? "sm:col-span-2" : ""}>
       <label className="block text-xs font-semibold text-slate-600 mb-1.5">{label}</label>
       <input
         value={value}
@@ -163,6 +166,25 @@ function Field({ label, value, onChange, span2 = false }: { label: string; value
   );
 }
 
+type CompanyInternshipSummary = {
+  id: string;
+  internshipTitle?: string;
+  internshipLocation?: string;
+  workingTime?: string;
+  postedAgo?: string;
+  technicalSkills?: string[];
+};
+
+type CompanyReviewSummary = {
+  id: string;
+  rating: number;
+  comment?: string;
+  createdAt: string;
+  user?: {
+    fullName?: string;
+  };
+};
+
 /* ═══════════════════════════════════════════════════════════════════════════════
    MAIN PAGE
 ══════════════════════════════════════════════════════════════════════════════ */
@@ -171,8 +193,6 @@ export default function CompanyProfilePage() {
   const { mutate: updateProfile, isPending } = useUpdateCompanyProfile();
 
   const company = data?.company;
-  const stats = data?.stats;
-
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({
     companyName: "",
@@ -207,18 +227,18 @@ export default function CompanyProfilePage() {
 
   return (
     <main className="min-h-screen bg-[#EEF2FB] py-6 px-4 md:px-8">
-      <div className="max-w-5xl mx-auto space-y-4">
+      <div className="mx-auto max-w-5xl space-y-4">
 
         {/* ── HERO CARD ─────────────────────────────────────────────────── */}
-        <div className="bg-white rounded-2xl px-6 py-5 shadow-sm border border-slate-100 flex items-center justify-between gap-4">
-          <div className="flex items-center gap-5">
+        <div className="flex flex-col gap-4 rounded-2xl border border-slate-100 bg-white px-4 py-5 shadow-sm sm:px-6 md:flex-row md:items-center md:justify-between">
+          <div className="flex min-w-0 flex-col gap-4 sm:flex-row sm:items-center sm:gap-5">
             {/* Logo placeholder */}
             <div className="w-16 h-16 rounded-xl bg-slate-100 border border-slate-200 overflow-hidden shrink-0">
               <div className="w-full h-full bg-gradient-to-br from-slate-300 to-slate-200" />
             </div>
 
-            <div>
-              <h1 className="text-xl font-bold text-slate-900 leading-tight">
+            <div className="min-w-0">
+              <h1 className="break-words text-xl font-bold leading-tight text-slate-900">
                 {company?.companyName || "Company Name"}
               </h1>
               <p className="text-sm text-slate-500 mt-0.5">
@@ -243,7 +263,7 @@ export default function CompanyProfilePage() {
 
           <button
             onClick={() => setIsEditing(true)}
-            className="shrink-0 flex items-center gap-1.5 bg-[#1A6FA8] hover:bg-[#155E92] text-white text-xs font-semibold px-4 py-2 rounded-xl transition active:scale-95"
+            className="flex w-full shrink-0 items-center justify-center gap-1.5 rounded-xl bg-[#1A6FA8] px-4 py-2 text-xs font-semibold text-white transition hover:bg-[#155E92] active:scale-95 md:w-auto"
           >
             <Icon d={ICONS.edit} />
             Edit Profile
@@ -290,18 +310,18 @@ export default function CompanyProfilePage() {
               </div>
 
               <div className="space-y-3">
-                {data?.internships?.map((intern: any) => (
+                {(data?.internships as CompanyInternshipSummary[] | undefined)?.map((intern) => (
                   <div key={intern.id} className="border border-slate-100 rounded-xl p-4">
-                    <div className="flex items-start justify-between gap-3">
-                      <div className="flex items-start gap-3">
+                    <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                      <div className="flex min-w-0 items-start gap-3">
                         <div className="w-9 h-9 rounded-lg bg-slate-100 border border-slate-200 shrink-0" />
 
-                        <div>
+                        <div className="min-w-0">
                           <p className="text-xs font-bold text-slate-800">
                             {intern.internshipTitle}
                           </p>
 
-                          <div className="flex gap-3 mt-1 text-[11px] text-slate-500">
+                          <div className="mt-1 flex flex-wrap gap-3 text-[11px] text-slate-500">
                             <span>{intern.internshipLocation}</span>
                             <span>{intern.workingTime}</span>
                             <span>{intern.postedAgo}</span>
@@ -330,7 +350,7 @@ export default function CompanyProfilePage() {
               <h2 className="text-sm font-bold text-slate-800 mb-5">Intern Reviews</h2>
 
               {/* Rating summary */}
-              <div className="flex items-center gap-6 mb-6">
+              <div className="mb-6 flex flex-col gap-6 sm:flex-row sm:items-center">
                 <div className="shrink-0">
                   <p className="text-4xl font-bold text-slate-900">{company?.rating?.toFixed(1) || "4.5"}</p>
                   <Stars rating={company?.rating || 4.5} />
@@ -341,13 +361,13 @@ export default function CompanyProfilePage() {
 
               {/* Individual reviews */}
               <div className="space-y-4">
-                {data?.reviews?.map((r: any) => (
+                {(data?.reviews as CompanyReviewSummary[] | undefined)?.map((r) => (
                   <div
                     key={r.id}
                     className="border border-slate-100 rounded-xl p-4"
                   >
-                    <div className="flex items-start justify-between mb-3">
-                      <div className="flex items-center gap-3">
+                    <div className="mb-3 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                      <div className="flex min-w-0 items-center gap-3">
 
                         <div
                           className="w-9 h-9 rounded-full flex items-center justify-center text-xs font-bold shrink-0 bg-slate-200 text-slate-700"
@@ -359,7 +379,7 @@ export default function CompanyProfilePage() {
                             ?.slice(0, 2)}
                         </div>
 
-                        <div>
+                        <div className="min-w-0">
                           <p className="text-xs font-bold text-slate-800">
                             {r.user?.fullName}
                           </p>
@@ -441,7 +461,7 @@ export default function CompanyProfilePage() {
       {/* ── EDIT MODAL ────────────────────────────────────────────────────── */}
       {isEditing && (
         <div className="fixed inset-0 bg-black/40 flex text-black items-center justify-center z-50 p-4">
-          <div className="bg-white w-full max-w-xl rounded-2xl p-6 shadow-xl">
+          <div className="max-h-[92vh] w-full max-w-xl overflow-y-auto rounded-2xl bg-white p-4 shadow-xl sm:p-6">
             <div className="flex items-center justify-between mb-5">
               <h2 className="text-base font-bold text-slate-800">Edit Company Profile</h2>
               <button
@@ -452,7 +472,7 @@ export default function CompanyProfilePage() {
               </button>
             </div>
 
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid gap-3 sm:grid-cols-2">
               <Field
                 label="Company Name"
                 value={formData.companyName}
@@ -463,7 +483,7 @@ export default function CompanyProfilePage() {
                 value={formData.industry}
                 onChange={v => setFormData({ ...formData, industry: v })}
               />
-              <div className="col-span-2">
+              <div className="sm:col-span-2">
                 <label className="block text-xs font-semibold text-slate-600 mb-1.5">Description</label>
                 <textarea
                   rows={4}
@@ -484,7 +504,7 @@ export default function CompanyProfilePage() {
               />
             </div>
 
-            <div className="flex justify-end gap-2 mt-5">
+            <div className="mt-5 flex flex-col gap-2 sm:flex-row sm:justify-end">
               <button
                 onClick={() => setIsEditing(false)}
                 className="border border-slate-200 text-slate-600 text-xs font-semibold px-4 py-2.5 rounded-xl hover:bg-slate-50 transition"

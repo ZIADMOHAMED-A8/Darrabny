@@ -7,22 +7,36 @@ import { useApplicationDetails } from "./hooks/use-application-details";
 import { useApplicationStatus } from "./hooks/use-application-status";
 import { useParams } from "next/navigation";
 
+type ApplicationItem = {
+  id: string;
+  currentStatus: string;
+  snapshot?: {
+    studentName?: string;
+    email?: string;
+    skills?: string[];
+  };
+  aiAnalysis?: {
+    score?: number;
+    keyStrengths?: string[];
+    areasForReview?: string[];
+  };
+};
+
 export default function AiRankedApplicantsPage() {
   const { id } = useParams();
-
-  if (Array.isArray(id)) return null;
+  const internshipId = Array.isArray(id) ? "" : id ?? "";
 
   const [activeId, setActiveId] = useState<string | null>(null);
 
-  const { data, isLoading } = useApplicationDetails(id);
+  const { data, isLoading } = useApplicationDetails(internshipId);
   const { mutate: updateStatus, isPending } = useApplicationStatus();
 
   // ✅ applications array
-  const applications = data?.Applications || [];
+  const applications = useMemo(() => data?.Applications || [], [data?.Applications]);
 
   // ✅ table data
   const items = useMemo(() => {
-    return applications.map((app: any) => ({
+    return (applications as ApplicationItem[]).map((app) => ({
       id: app.id,
       name: app.snapshot?.studentName,
       email: app.snapshot?.email,
@@ -34,12 +48,12 @@ export default function AiRankedApplicantsPage() {
 
   // ✅ default selected candidate
   const selectedId =
-    activeId || applications?.[0]?.id;
+    activeId || applications?.[0]?.id || "";
 
   // ✅ active application
   const activeApplication = useMemo(() => {
-    return applications.find(
-      (app: any) => app.id === selectedId
+    return (applications as ApplicationItem[]).find(
+      (app) => app.id === selectedId
     );
   }, [applications, selectedId]);
 
@@ -94,14 +108,14 @@ export default function AiRankedApplicantsPage() {
     // }
   return (
     <main className="min-h-screen bg-[#F5F7FB] text-slate-800">
-      <div className="max-w-[1400px] mx-auto px-8 py-10">
+      <div className="mx-auto max-w-[1400px] px-4 py-8 sm:px-6 md:px-8 md:py-10">
         {/* HEADER */}
         <RankedHeader />
 
         {/* LAYOUT */}
-        <div className="mt-10 flex gap-8 items-start">
+        <div className="mt-8 grid gap-6 xl:grid-cols-[minmax(0,1fr)_360px] xl:items-start xl:gap-8">
           {/* LEFT - TABLE */}
-          <div className="flex-1">
+          <div className="min-w-0">
             <CandidatesTable
               items={items}
               activeId={selectedId}
@@ -110,7 +124,7 @@ export default function AiRankedApplicantsPage() {
           </div>
 
           {/* RIGHT - PREVIEW */}
-          <div className="w-[360px] shrink-0">
+          <div className="w-full xl:w-[360px] xl:shrink-0">
             {active && (
               <div className="bg-white rounded-2xl shadow-sm border p-6">
                 {/* HEADER */}

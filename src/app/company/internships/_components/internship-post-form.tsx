@@ -15,13 +15,6 @@ import {
 } from "@/components/ui/form";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 
 import { internshipSchema } from "@/lib/schemas/internship/internship.schema";
@@ -34,12 +27,6 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useUpdateInternship } from "../_hooks/use-update-internship";
 import { useToast } from "@/hooks/use-toast";
-
-const DEFAULT_CITIES = [
-  { value: "cairo", label: "Cairo" },
-  { value: "alex", label: "Alexandria" },
-  { value: "giza", label: "Giza" },
-];
 
 const DEFAULT_VALUES: InternshipPostFormValues = {
   internshipTitle: "Frontend Developer Intern",
@@ -136,7 +123,6 @@ function ChipsInput({
 export default function InternshipPostForm({
   title = "New Internship Post",
   defaultValues,
-  cities = DEFAULT_CITIES,
   publishLabel = "Publish Post",
   onCancel,
   mode = "create",
@@ -150,11 +136,10 @@ export default function InternshipPostForm({
     },
   });
 
-  const { addInternship, isPending, error } = useAddInternship();
+  const { addInternship, isPending } = useAddInternship();
   const {
     updateInternship,
     isPending: isUpdating,
-    error: updateError,
   } = useUpdateInternship();
   const { toast } = useToast();
   function submit(values: InternshipPostFormValues) {
@@ -258,7 +243,7 @@ export default function InternshipPostForm({
 
       <Separator />
 
-      <CardContent className="p-8">
+      <CardContent className="p-4 sm:p-6 md:p-8">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(submit)} className="space-y-6">
             {/* INTERNSHIP INFO */}
@@ -317,14 +302,14 @@ export default function InternshipPostForm({
                           type="single"
                           value={field.value}
                           onValueChange={field.onChange}
-                          className="flex gap-3"
+                          className="flex flex-wrap justify-start gap-3"
                         >
                           {(["onsite", "remote", "hybrid"] as const).map(
                             (v) => (
                               <ToggleGroupItem
                                 key={v}
                                 value={v}
-                                className="h-11 rounded-xl border border-[#0B2A4A]/50 bg-white px-6 text-sm font-semibold text-[#0B2A4A] data-[state=on]:bg-[#1E90FF] data-[state=on]:text-white data-[state=on]:font-bold hover:bg-[#e6f0ff]"
+                                className="h-11 flex-1 rounded-xl border border-[#0B2A4A]/50 bg-white px-4 text-sm font-semibold text-[#0B2A4A] hover:bg-[#e6f0ff] data-[state=on]:bg-[#1E90FF] data-[state=on]:font-bold data-[state=on]:text-white sm:flex-none sm:px-6"
                               >
                                 {v === "onsite"
                                   ? "Onsite"
@@ -409,7 +394,7 @@ export default function InternshipPostForm({
                           type="single"
                           value={field.value}
                           onValueChange={field.onChange}
-                          className="flex gap-6 pt-2"
+                          className="flex flex-wrap justify-start gap-3 pt-2 sm:gap-6"
                         >
                           <ToggleGroupItem
                             value="full-time"
@@ -515,7 +500,7 @@ export default function InternshipPostForm({
                     <Label className={smallCaps}>Thumbnail</Label>
 
                     <FormControl>
-                      <div className="flex items-center gap-4">
+                      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
                         <label className="cursor-pointer rounded-xl border border-[#0B2A4A]/40 bg-white px-4 py-2 text-sm font-semibold text-[#0B2A4A] hover:bg-[#E3F0FA] transition">
                           Choose Image
                           <input
@@ -676,7 +661,7 @@ export default function InternshipPostForm({
             {/* </div> */}
 
 
-            <div className="flex items-center justify-between pt-6">
+            <div className="flex flex-col gap-3 pt-6 sm:flex-row sm:items-center sm:justify-between">
               <Button
                 type="button"
                 variant="outline"
@@ -685,7 +670,7 @@ export default function InternshipPostForm({
               >
                 Cancel
               </Button>
-              <div className="flex gap-3">
+              <div className="flex flex-col gap-3 sm:flex-row">
                 <Button
                   type="button"
                   variant="outline"

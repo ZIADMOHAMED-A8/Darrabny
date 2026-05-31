@@ -26,7 +26,8 @@ export default function HubTable() {
 
   return (
     <Card className="rounded-2xl border-0 bg-[#C1D2EE] shadow-[0_14px_22px_rgba(0,0,0,0.18)]">
-      <CardContent className="p-0">
+      <CardContent className="overflow-x-auto p-0">
+        <div className="min-w-[960px]">
         {/* Header row */}
         <div className="grid grid-cols-12 gap-4 border-b border-black/10 px-6 py-4 text-xs font-semibold text-slate-800">
           <div className="col-span-3">Intern Details</div>
@@ -129,6 +130,7 @@ export default function HubTable() {
               </div>
             )
           })}
+        </div>
         </div>
       </CardContent>
     </Card>
