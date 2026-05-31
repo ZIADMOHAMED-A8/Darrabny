@@ -22,7 +22,7 @@ export default function InternshipCard({
 }: Props) {
   const {
     companyId,
-    internshipTittle,
+    internshipTitle,
     internshipLocation,
     workingTime,
     durationInMonths,
@@ -35,7 +35,7 @@ export default function InternshipCard({
     <Link
       href={href}
       className="group block h-full"
-      aria-label={`Open internship ${internshipTittle}`}
+      aria-label={`Open internship ${internshipTitle}`}
     >
       <article
         className={cn(
@@ -49,7 +49,7 @@ export default function InternshipCard({
           <div className="relative h-40 w-full overflow-hidden rounded-[14px] bg-[#EEF3F8] sm:h-full">
             <Image
               src={thumbnail || ''}
-              alt={`${internshipTittle} - ${companyId.companyName}`}
+              alt={`${internshipTitle} - ${companyId.companyName}`}
               fill
               sizes="140px"
               className="object-cover transition-transform duration-300 group-hover:scale-[1.03]"
@@ -67,7 +67,7 @@ export default function InternshipCard({
               )}
 
               <h3 className="mt-1 line-clamp-2 text-[20px] font-extrabold leading-[1.25] text-[#0B1B35] md:text-[22px]">
-                {internshipTittle}
+                {internshipTitle}
               </h3>
             </div>
 

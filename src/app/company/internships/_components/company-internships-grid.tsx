@@ -35,7 +35,7 @@ export default function CompanyInternshipsGrid() {
 
   if (internships.length === 0) {
     return (
-      <p className="rounded-lg bg-white/10 p-4 text-sm text-white/80">
+      <p className="rounded-lg bg-white/10 p-4 text-sm text-black">
         No internships found.
       </p>
     );
