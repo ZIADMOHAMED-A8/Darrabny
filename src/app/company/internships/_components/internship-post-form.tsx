@@ -81,7 +81,6 @@ function ChipsInput({
   function removeChip(chip: string) {
     onChange(value.filter((x) => x !== chip));
   }
-
   return (
     <div
       className={`min-h-12 ${inputLike} flex flex-wrap items-center gap-2 py-2`}
@@ -135,6 +134,7 @@ export default function InternshipPostForm({
       ...defaultValues,
     },
   });
+  console.log("DATA JSON",defaultValues)
 
   const { addInternship, isPending } = useAddInternship();
   const {

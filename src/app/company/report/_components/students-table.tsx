@@ -145,7 +145,7 @@ export default function StudentsTable({ initialData, internshipId }: StudentsTab
   return (
     <>
       <div className="overflow-x-auto">
-        <table className="min-w-[720px] border-collapse text-sm">
+        <table className="min-w-[720px] w-full border-collapse text-sm">
           <thead>
             <tr className="border-b border-slate-200 text-left text-slate-500">
               <th className="py-3">Student</th>

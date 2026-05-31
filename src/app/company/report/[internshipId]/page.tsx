@@ -25,7 +25,7 @@ export default async function InternshipStudentsPage({
               </p>
             </div>
             <Link
-              href="/company/report"
+              href="/company/internships"
               className="rounded-md border border-white/30 px-3 py-2 text-sm font-semibold hover:bg-white/10"
             >
               Back to Internships

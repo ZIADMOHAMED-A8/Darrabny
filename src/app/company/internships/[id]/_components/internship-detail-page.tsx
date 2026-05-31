@@ -222,7 +222,7 @@ export default function InternshipDetailPage({
               <InternshipPostForm
                 mode={mode}
                 internshipId={_id}
-                defaultValues={data.json}
+                defaultValues={data.data}
                 onCancel={() => setOpenForm(false)}
               />
             </div>
