@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { X, CheckCircle2 } from "lucide-react";
+import { X, CheckCircle2, Bookmark } from "lucide-react";
 import { useRouter } from "next/navigation";
 import InternshipPostForm from "../../_components/internship-post-form";
 import { useDeleteInternship } from "../../_hooks/use-delete-internship";
@@ -19,7 +19,7 @@ type ReviewSummary = {
 
 type InternshipData = {
   data: {
-    _id: string
+    _id: string;
     internshipTitle: string;
     internshipLocation: string;
     workingTime: string;
@@ -37,7 +37,7 @@ type InternshipData = {
     createdAt: string;
     updatedAt: string;
     reviewSummary: ReviewSummary;
-  }
+  };
 };
 
 type InternshipApi = {
@@ -93,7 +93,8 @@ export default function InternshipDetailPage({
       endDate,
       status,
       companyId,
-    }
+      thumbnail,
+    },
   } = data;
 
   const formattedStart = new Date(startDate).toLocaleDateString("en-US", {
@@ -105,13 +106,69 @@ export default function InternshipDetailPage({
     year: "numeric",
   });
 
-  return (
-    <div className="min-h-screen bg-white">
-      <div className="px-4 sm:px-6 lg:px-16">
+  const workMode =
+    internshipLocation === "onsite"
+      ? "On-site"
+      : internshipLocation === "hybrid"
+        ? "Hybrid"
+        : "Remote";
 
+  return (
+    <div className=" mx-auto px-4 py-2">
+
+      {/* ── Job Card ── */}
+    <div className="flex  justify-center">
+    <div className="mt-7 flex items-center px-12 pl-2 py-4 h-fit pb-8 gap-4 mb-8  border border-[#E5E7EB] rounded-2xl  bg-white shadow-sm">
+        <div className="w-[72px] h-[72px] rounded-xl overflow-hidden bg-[#F3F4F6] shrink-0">
+          {thumbnail ? (
+            <img src={thumbnail} alt={companyId.companyName} className="w-full h-full object-cover" />
+          ) : (
+            <div className="w-full h-full flex items-center justify-center text-[#9CA3AF]">
+              <svg width="32" height="32" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 21V7l9-4 9 4v14M9 21V11h6v10" />
+              </svg>
+            </div>
+          )}
+        </div>
+
+        <div className="flex-1 min-w-0">
+          <p className="text-sm text-[#6B7280]">{companyId.companyName}</p>
+          <h2 className="text-[17px] font-bold text-[#0B1B35] mt-0.5 truncate">{internshipTitle}</h2>
+          <div className="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-[#6B7280]">
+            <span className="flex items-center gap-1">
+              <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M17.657 16.657L13.414 20.9a2 2 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                <path strokeLinecap="round" strokeLinejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
+              {workMode}
+            </span>
+            <span className="text-[#D1D5DB]">·</span>
+            <span className="flex items-center gap-1">
+              <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <rect x="2" y="7" width="20" height="14" rx="2" />
+                <path strokeLinecap="round" d="M16 3v4M8 3v4M2 11h20" />
+              </svg>
+              {workingTime}
+            </span>
+            <span className="text-[#D1D5DB]">·</span>
+            <span className="flex items-center gap-1">
+              <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              {durationInMonths} months
+            </span>
+          </div>
+        </div>
+
+
+      </div>
+    </div>
+
+      {/* ── Detail Panel ── */}
+      <div className="h-fit px-8 py-4 P mb-10 bg-white">
 
         {/* Header */}
-        <div className="mt-7 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+        <div className="flex p-4 flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
           <div className="min-w-0">
             <h1 className="break-words text-2xl font-bold text-[#0B1B35] sm:text-[28px]">
               {internshipTitle}
@@ -183,18 +240,11 @@ export default function InternshipDetailPage({
               if (!confirm("Are you sure you want to delete this internship?")) return;
               deleteInternship(_id, {
                 onSuccess: () => {
-                  toast({
-                    title: "Internship deleted",
-                    description: "The internship has been deleted successfully.",
-                  });
+                  toast({ title: "Internship deleted", description: "The internship has been deleted successfully." });
                   router.push("/company/internships");
                 },
                 onError: (error) => {
-                  toast({
-                    title: "Delete failed",
-                    description: error.message,
-                    variant: "destructive",
-                  });
+                  toast({ title: "Delete failed", description: error.message, variant: "destructive" });
                 },
               });
             }}
@@ -212,27 +262,9 @@ export default function InternshipDetailPage({
 
         {/* Modal */}
         {openForm && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center  bg-black/50 px-4">
-            <div
-              className="
-              relative
-              z-50
-              max-h-[92vh]
-              w-[920px]
-              max-w-[95vw]
-              overflow-y-auto
-              rounded-[20px]
-              shadow-2xl
-              sm:rounded-[28px]
-              [scrollbar-width:none]
-              [-ms-overflow-style:none]
-              [&::-webkit-scrollbar]:hidden
-            "
-            >
-              <button
-                onClick={() => setOpenForm(false)}
-                className="absolute top-3 right-3"
-              >
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4">
+            <div className="relative z-50 max-h-[92vh] w-[920px] max-w-[95vw] overflow-y-auto rounded-[20px] shadow-2xl sm:rounded-[28px] [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+              <button onClick={() => setOpenForm(false)} className="absolute top-3 right-3">
                 <X />
               </button>
               <InternshipPostForm
@@ -245,6 +277,7 @@ export default function InternshipDetailPage({
           </div>
         )}
       </div>
+
     </div>
   );
 }
