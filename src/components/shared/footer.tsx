@@ -16,7 +16,7 @@ type FooterProps = {
 
 export default function Footer({ className }: FooterProps) {
   return (
-    <footer className={cn("bg-white px-6 py-8 text-[#07182c] md:px-20", className)}>
+    <footer className={cn("bg-white px-6 mt-8 py-8 text-[#07182c] md:px-20", className)}>
       <div className="w-full">
         <Link href="/" className="inline-flex items-center gap-2">
           <span className="grid h-6 w-6 place-items-center rounded-[5px] bg-[#2396ec] text-white">

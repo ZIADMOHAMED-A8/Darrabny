@@ -409,7 +409,7 @@ export default function CompanyDetailsPage({
               </article>
             </section>
 
-            <aside className="rounded-xl border border-[#0b1f33]/10 p-4">
+            <aside className="rounded-xl border h-fit border-[#0b1f33]/10 p-4">
               <h2 className="text-xl font-semibold text-[#0b1f33] sm:text-2xl">
                 COMPANY DETAILS
               </h2>
