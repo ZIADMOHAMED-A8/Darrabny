@@ -276,7 +276,7 @@ export default function CompanySettingsPage() {
     updateNotifications.isPending;
 
   return (
-    <div className="min-h-screen bg-[#eef4ff] text-slate-950">
+    <div className="min-h-screen bg-[#F3F4F6] text-slate-950">
       <CompanyAccountSidebar />
       <div className="flex min-h-[calc(100vh-68px)] md:ml-[220px]">
         <main className="relative flex-1 overflow-hidden px-4 py-8 sm:px-6 md:px-10 md:py-10">

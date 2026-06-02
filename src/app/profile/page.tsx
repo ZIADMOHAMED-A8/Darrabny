@@ -35,6 +35,7 @@ export default function ProfilePage() {
     );
   }
   data.badges= ["Rising Star", "Pro","expert"]
+
   return (
     
     <div className="min-h-screen bg-[#e8eefc]">

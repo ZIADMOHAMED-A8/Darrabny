@@ -1,8 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { useCompanyProfile } from "./hooks/use-company-profile";
 import { useUpdateCompanyProfile } from "./hooks/use-update-company-profile";
+import { useUploadCompanyLogo } from "./hooks/use-upload-company-logo";
+import { useToast } from "@/hooks/use-toast";
 
 /* ─── Icon helpers ─────────────────────────────────────────────────────────── */
 function Icon({ d, size = 14 }: { d: string; size?: number }) {
@@ -23,6 +25,7 @@ const ICONS = {
   check: "M20 6L9 17l-5-5",
   x: "M18 6L6 18M6 6l12 12",
   edit: "M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z",
+  camera: "M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2zM12 17a4 4 0 1 0 0-8 4 4 0 0 0 0 8z",
   thumb_up: "M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3H14zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3",
   thumb_down: "M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3H10zM17 2h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17",
   arrow_right: "M5 12h14M12 5l7 7-7 7",
@@ -185,14 +188,54 @@ type CompanyReviewSummary = {
   };
 };
 
+function extractLogoUrl(payload: unknown): string | null {
+  if (!payload || typeof payload !== "object") return null;
+
+  const root = payload as Record<string, unknown>;
+  const candidates = [
+    root.logo,
+    root.companyLogo,
+    root.profilePic,
+    (root.company as Record<string, unknown> | undefined)?.logo,
+    (root.company as Record<string, unknown> | undefined)?.companyLogo,
+    (root.data as Record<string, unknown> | undefined)?.logo,
+    (root.data as Record<string, unknown> | undefined)?.companyLogo,
+  ];
+
+  for (const candidate of candidates) {
+    if (typeof candidate === "string" && candidate.trim()) {
+      return candidate;
+    }
+
+    if (candidate && typeof candidate === "object") {
+      const secureUrl = (candidate as Record<string, unknown>).secure_url;
+      const url = (candidate as Record<string, unknown>).url;
+
+      if (typeof secureUrl === "string" && secureUrl.trim()) {
+        return secureUrl;
+      }
+
+      if (typeof url === "string" && url.trim()) {
+        return url;
+      }
+    }
+  }
+
+  return null;
+}
+
 /* ═══════════════════════════════════════════════════════════════════════════════
    MAIN PAGE
 ══════════════════════════════════════════════════════════════════════════════ */
 export default function CompanyProfilePage() {
   const { data, isLoading } = useCompanyProfile();
   const { mutate: updateProfile, isPending } = useUpdateCompanyProfile();
+  const { mutateAsync: uploadLogo, isPending: isUploadingLogo } = useUploadCompanyLogo();
+  const { toast } = useToast();
+  const logoInputRef = useRef<HTMLInputElement | null>(null);
 
   const company = data?.company;
+  const [logoPreview, setLogoPreview] = useState<string | null>(null);
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({
     companyName: "",
@@ -213,6 +256,40 @@ export default function CompanyProfilePage() {
     });
   }, [company]);
 
+  const companyId = company?._id || company?.id;
+  const logoUrl = logoPreview || extractLogoUrl(company);
+
+  async function handleLogoChange(event: ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0];
+    event.currentTarget.value = "";
+
+    if (!file || !companyId) return;
+
+    try {
+      const formData = new FormData();
+      formData.append("attachment", file);
+
+      const result = await uploadLogo({
+        companyId,
+        formData,
+      });
+
+      setLogoPreview(extractLogoUrl(result) || URL.createObjectURL(file));
+
+      toast({
+        title: "Logo updated",
+        description: "Your company logo was uploaded successfully.",
+      });
+    } catch (error) {
+      toast({
+        title: "Upload failed",
+        description:
+          error instanceof Error ? error.message : "Failed to upload company logo.",
+        variant: "destructive",
+      });
+    }
+  }
+
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center text-sm text-slate-400">
@@ -226,15 +303,49 @@ export default function CompanyProfilePage() {
     : null;
 
   return (
-    <main className="min-h-screen bg-[#EEF2FB] py-6 px-4 md:px-8">
+    <main className="min-h-screen bg-[#F3F4F6] py-6 px-4 md:px-8">
       <div className="mx-auto max-w-5xl space-y-4">
 
         {/* ── HERO CARD ─────────────────────────────────────────────────── */}
         <div className="flex flex-col gap-4 rounded-2xl border border-slate-100 bg-white px-4 py-5 shadow-sm sm:px-6 md:flex-row md:items-center md:justify-between">
           <div className="flex min-w-0 flex-col gap-4 sm:flex-row sm:items-center sm:gap-5">
-            {/* Logo placeholder */}
-            <div className="w-16 h-16 rounded-xl bg-slate-100 border border-slate-200 overflow-hidden shrink-0">
-              <div className="w-full h-full bg-gradient-to-br from-slate-300 to-slate-200" />
+            <div className="relative h-16 w-16 shrink-0">
+              <div className="h-16 w-16 overflow-hidden rounded-xl border border-slate-200 bg-slate-100">
+                {logoUrl ? (
+                  <div
+                    role="img"
+                    aria-label={`${company?.companyName || "Company"} logo`}
+                    className="h-full w-full bg-cover bg-center"
+                    style={{ backgroundImage: `url("${logoUrl}")` }}
+                  />
+                ) : (
+                  <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-slate-300 to-slate-200 text-lg font-bold text-slate-600">
+                    {company?.companyName?.[0]?.toUpperCase() || "C"}
+                  </div>
+                )}
+              </div>
+
+              <button
+                type="button"
+                onClick={() => logoInputRef.current?.click()}
+                disabled={isUploadingLogo || !companyId}
+                className="absolute -bottom-1 -right-1 inline-flex h-7 w-7 items-center justify-center rounded-full border-2 border-white bg-[#1A6FA8] text-white shadow-sm transition hover:bg-[#155E92] disabled:cursor-not-allowed disabled:opacity-60"
+                aria-label="Upload company logo"
+              >
+                {isUploadingLogo ? (
+                  <span className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-white/40 border-t-white" />
+                ) : (
+                  <Icon d={ICONS.camera} size={13} />
+                )}
+              </button>
+
+              <input
+                ref={logoInputRef}
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={handleLogoChange}
+              />
             </div>
 
             <div className="min-w-0">

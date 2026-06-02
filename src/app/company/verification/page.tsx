@@ -168,7 +168,7 @@ export default function VerificationPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#EEF2F8]">
+    <div className="min-h-screen bg-[#F3F4F6] ">
       <main className="mx-auto max-w-[1200px] px-4 py-8 sm:px-6 md:py-10">
         {/* HEADER */}
         <div className="mb-8">
