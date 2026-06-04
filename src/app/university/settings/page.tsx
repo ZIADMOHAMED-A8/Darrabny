@@ -106,7 +106,7 @@ function normalizeSettings(data: unknown): {
         asString(root.name) ||
         asString(root.fullName) ||
         "Faculty of Science",
-      email: asString(root.email) || "sophia.chen@example.com",
+      email: asString(root.collegeEmail) || "sophia.chen@example.com",
       phoneNumber:
         asString(root.phoneNumber) ||
         asString(root.mobileNumber) ||
