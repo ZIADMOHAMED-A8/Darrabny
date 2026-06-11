@@ -107,6 +107,7 @@
 import type { NextAuthOptions } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
+import { cookies } from "next/headers";
 
 export const authOptions: NextAuthOptions = {
   pages: {
@@ -129,7 +130,7 @@ export const authOptions: NextAuthOptions = {
      authorize: async (credentials) => {
   const apiUrl =
     process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:5000";
-
+    const cookieStore = await cookies()
   console.log("=== LOGIN ATTEMPT ===");
   console.log("Incoming credentials:", credentials);
   console.log("Incoming role:", credentials?.role);
@@ -179,7 +180,7 @@ export const authOptions: NextAuthOptions = {
       : payload?.company
       ? "company"
       : "college";
-
+  cookieStore.set("role",role)
   console.log("Detected role from backend:", role);
 
   return {

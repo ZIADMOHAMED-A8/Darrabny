@@ -2,6 +2,7 @@ import { getToken } from "next-auth/jwt";
 import { NextRequest, NextResponse } from "next/server";
 // import { getToken } from "./lib/utils/get-token.util";
 import { signOut } from "next-auth/react";
+import { cookies } from "next/headers";
 
 
 const authRoutes = [
@@ -11,6 +12,14 @@ const authRoutes = [
   "/otp",
   "/create-pass",
 ];
+const universityRoutes = [
+
+  /^\/university\/dashboard(?:\/[^/]+)?$/,
+  /^\/university\/internships(?:\/[^/]+)?$/,
+  /^\/university\/profile(?:\/[^/]+)?$/,
+  /^\/university\/settings$/,
+  /^\/university\/student_profile(?:\/[^/]+)?$/,
+];
 
 // Add static asset extensions to ignore
 const PUBLIC_FILE = /\.(.*)$/; // matches any path with a file extension
@@ -18,6 +27,7 @@ const PUBLIC_FILE = /\.(.*)$/; // matches any path with a file extension
 const secret = process.env.NEXTAUTH_SECRET;
 
 export default async function middleware(req: NextRequest) {
+
   const { pathname, search } = req.nextUrl;
 
   // ✅ Skip middleware for static files (images, fonts, etc.)
@@ -29,13 +39,15 @@ export default async function middleware(req: NextRequest) {
   ) {
     return NextResponse.next();
   }
-
+  const cookieStore = await cookies()
   const token = await getToken({ req, secret });
+  const role = cookieStore.get('role')?.value ?? null
+
 
   const isAuthRoute = authRoutes.some(route => pathname.startsWith(route));
   const isHome = pathname === "/";
 
-  console.log("TOKEN FROM MIDDLEWARE:", token , pathname);
+  console.log("TOKEN FROM MIDDLEWARE:", token, pathname);
 
   if (isAuthRoute && token) {
     return NextResponse.redirect(new URL("/", req.url));
@@ -49,6 +61,10 @@ export default async function middleware(req: NextRequest) {
     const loginUrl = new URL("/login", req.url);
     loginUrl.searchParams.set("callbackUrl", pathname + search);
     return NextResponse.redirect(loginUrl);
+  }
+  if (role === 'college' && !universityRoutes.some((route) => route.test(pathname))) {
+    return NextResponse.redirect(new URL("/university/dashboard", req.url));
+
   }
 
   return NextResponse.next();
