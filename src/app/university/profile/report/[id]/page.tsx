@@ -407,15 +407,7 @@ export default function UniversityReportPage() {
                         {report.internalNote}
                       </p>
                     </div>
-                    <div className="mt-8 flex items-center gap-4 border-t border-slate-500 pt-6 text-slate-400">
-                      <span className="grid h-10 w-10 place-items-center rounded-full bg-rose-300 font-bold text-white">
-                        {initials(student.fullName)}
-                      </span>
-                      <span className="flex-1">
-                        Add your feedback or request changes...
-                      </span>
-                      <Send size={20} />
-                    </div>
+
                   </div>
                 </article>
               ) : null}

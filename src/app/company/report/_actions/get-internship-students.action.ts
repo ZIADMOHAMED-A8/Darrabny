@@ -25,6 +25,7 @@ type RawPlacement = {
   name?: unknown;
   email?: unknown;
   currentPerformance?: unknown;
+  reportLabel: string
 };
 
 export async function getInternshipStudents(internshipId: string) {
@@ -78,20 +79,23 @@ export async function getInternshipStudents(internshipId: string) {
         placement?.name ||
         "Unknown Student";
 
+      const reportLabel = placement?.reportLabel ?? "";
+
       return {
         placementId: String(
           placement?.placementId || placement?._id || placement?.id || "",
         ),
         studentId: String(
           student?._id ||
-            student?.id ||
-            placement?.student ||
-            placement?.studentId ||
-            "",
+          student?.id ||
+          placement?.student ||
+          placement?.studentId ||
+          "",
         ),
         studentName: String(fullName),
         studentEmail: String(student?.email || placement?.email || "N/A"),
         currentPerformance: Number(placement?.currentPerformance ?? 0),
+        reportLabel,
       };
     })
     .filter((item: StudentPlacement) => Boolean(item.placementId));

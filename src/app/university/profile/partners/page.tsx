@@ -39,12 +39,7 @@ export default function UniversityPartnersPage() {
               and cultural fit metrics.
             </p>
           </div>
-          <div className="flex shrink-0 items-center gap-2 rounded-full bg-emerald-50 px-3 py-1.5">
-            <CheckCircle2 size={16} className="text-emerald-500" />
-            <span className="text-xs font-semibold text-emerald-700">
-              InternSpark Certified
-            </span>
-          </div>
+ 
         </div>
 
         {/* Content */}

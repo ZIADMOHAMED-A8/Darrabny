@@ -1,6 +1,7 @@
 import Footer from "@/components/shared/footer"
 import { Button } from "@/components/ui/button"
-
+import Link from "next/link"
+Link
 export default function ReadyToStart() {
   return (
     <section className="mx-auto pb-10 md:pb-12">
@@ -14,14 +15,9 @@ export default function ReadyToStart() {
 
           <div className="mt-7 flex flex-col items-center justify-center gap-3 sm:flex-row">
             <Button className="h-10 rounded-md bg-[var(--ic-header)] px-7 text-white hover:bg-[var(--ic-header)]/90">
-              Browse All Internships
+              <Link href={'/student/internships'} >Browse All Internships</Link>
             </Button>
-            <Button
-              variant="outline"
-              className="h-10 rounded-md border-[#0b1f33]/15 bg-white px-7 text-[#0b1f33] hover:bg-[#0b1f33]/5"
-            >
-              View Company Profiles
-            </Button>
+         
           </div>
         </div>
       </div>

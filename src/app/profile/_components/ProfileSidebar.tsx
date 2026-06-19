@@ -16,7 +16,8 @@ import { useToast } from "@/hooks/use-toast";
 import Modal from "@/components/ui/Modal";
 import useUpdateFullName from "@/app/student/settings/hooks/useUpdateFullName";
 import useGetLoginStudent from "@/app/student/settings/hooks/useGetLoginStudent";
-
+import Image from "next/image";
+import UseGetUserProfilePicture from "@/app/student/hooks/useGetUserProfilePic";
 type LinkFormValues = {
   linkedin: string;
   github: string;
@@ -90,7 +91,8 @@ export default function ProfileSidebar() {
     if (isPending) return;
     inputRef.current?.click();
   };
-
+  const { data: userProfile, isLoading: picLoading } = UseGetUserProfilePicture();
+  const profilePic = userProfile?.data?.profilePic;
   const handleFileChange = async (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     event.currentTarget.value = "";
@@ -153,21 +155,22 @@ export default function ProfileSidebar() {
       });
     }
   };
-
-  if(isLoading){
+  const currentProfilePic =
+    avatarPreview || userProfile?.data?.profilePic;
+  if (isLoading) {
     return (
-    <aside className="w-full flex justify-center items-center border-b border-slate-200 bg-[#f7f8fb] px-6 py-8 lg:w-[420px] lg:border-b-0 lg:border-r lg:px-10">
-      <Loader2 className="h-4 w-4 animate-spin"></Loader2>
-</aside>
-)
+      <aside className="w-full flex justify-center items-center border-b border-slate-200 bg-[#f7f8fb] px-6 py-8 lg:w-[420px] lg:border-b-0 lg:border-r lg:px-10">
+        <Loader2 className="h-4 w-4 animate-spin"></Loader2>
+      </aside>
+    )
   }
   return (
     <aside className="w-full border-b border-slate-200 bg-[#f7f8fb] px-6 py-8 lg:w-[420px] lg:border-b-0 lg:border-r lg:px-10">
       <div className="flex flex-col items-center text-center">
         <div className="relative">
-          {avatarPreview ? (
+          {currentProfilePic ? (
             <img
-              src={avatarPreview}
+              src={currentProfilePic}
               alt="Profile"
               className="h-28 w-28 rounded-full object-cover shadow-sm sm:h-32 sm:w-32"
             />

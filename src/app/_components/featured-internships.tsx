@@ -1,28 +1,15 @@
+
+"use client"
 import Image from "next/image";
 import Link from "next/link";
 import { Card, CardContent } from "@/components/ui/card";
+import useGetRecommendedInternships from "../student/internships/hooks/useGetRecommendedInternships";
 
 export default function FeaturedInternships() {
 
-  // Featured Internships section (static data for now)
-  const featuredInternships = [
-    {
-      title: "Software Engineering Intern",
-      description: "Develop cutting-edge software solutions.",
-      imageSrc: "/home/featured-internships/img-1.png",
-    },
-    {
-      title: "Marketing Intern",
-      description: "Drive marketing campaigns and strategies.",
-      imageSrc: "/home/featured-internships/img-2.png",
-    },
-    {
-      title: "Product Management Intern",
-      description: "Shape the future of our products.",
-      imageSrc: "/home/featured-internships/img-3.png",
-    },
-  ];
 
+  const { data: featuredInternships, isLoading } = useGetRecommendedInternships()
+  if (isLoading) return
   return (
     <section className="mx-auto py-14 md:py-16">
       <div className="mx-auto max-w-6xl">
@@ -32,15 +19,15 @@ export default function FeaturedInternships() {
           </h2>
 
           <div className="mt-8 grid gap-5 md:grid-cols-3">
-            {featuredInternships.map((item) => (
+            {featuredInternships?.slice(0, 3).map((item) => (
               <Card
-                key={item.title}
+                key={item._id}
                 className="overflow-hidden rounded-2xl border border-[var(--ds-border)] bg-white text-slate-900 shadow-[0_14px_34px_rgba(16,24,40,0.12)]"
               >
                 <div className="relative h-44 w-full">
                   <Image
-                    src={item.imageSrc}
-                    alt={item.title}
+                    src={item.thumbnail || "/placeholder.png"}
+                    alt={item.internshipTitle}
                     fill
                     className="object-cover"
                   />
@@ -48,14 +35,19 @@ export default function FeaturedInternships() {
 
                 <CardContent className="p-6">
                   <h3 className="text-base font-semibold text-[#0b1f33] md:text-lg">
-                    {item.title}
+                    {item.internshipTitle}
                   </h3>
-                  <p className="mt-2 text-sm leading-6 text-[var(--ds-muted)]">
-                    {item.description}
+
+                  <p className="mt-1 text-sm font-medium text-[var(--ds-primary)]">
+                    {item.companyId?.companyName}
+                  </p>
+
+                  <p className="mt-2 line-clamp-3 text-sm leading-6 text-[var(--ds-muted)]">
+                    {item.internshipDescription}
                   </p>
 
                   <Link
-                    href="#"
+                    href={`/student/internships/${item._id}`}
                     className="mt-4 inline-block text-sm font-medium text-[var(--ds-primary)] hover:text-[var(--ds-primary-dark)]"
                   >
                     Learn More

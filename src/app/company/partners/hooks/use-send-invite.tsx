@@ -5,6 +5,6 @@ import sendInviteAction from "../actions/send-invite.action";
 
 export function useSendInvite() {
   return useMutation({
-    mutationFn: ()=>sendInviteAction,
+    mutationFn: (data)=>sendInviteAction(data),
   });
 }

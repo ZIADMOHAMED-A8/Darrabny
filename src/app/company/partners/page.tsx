@@ -30,6 +30,7 @@ export default function UniversityPartnersPage() {
 
         {selectedUni && (
           <InviteModal
+          partnerUniversityIds={data.partnerUniversityIds}
             universityId={selectedUni}
             onClose={() => setSelectedUni(null)}
           />

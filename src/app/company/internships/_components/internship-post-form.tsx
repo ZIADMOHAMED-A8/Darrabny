@@ -37,7 +37,7 @@ const DEFAULT_VALUES: InternshipPostFormValues = {
   workingTime: "full-time",
   technicalSkills: ["HTML", "CSS", "JavaScript", "React", "Next.js"],
   softSkills: ["Teamwork", "Problem-solving", "Communication"],
-  startDate: "2026-04-01",
+  startDate: new Date().toISOString(),
   closed: false,
   thumbnail: null,
 };
@@ -227,13 +227,7 @@ export default function InternshipPostForm({
       });
     }
   }
-  function saveDraft() {
-    const values = form.getValues();
-    submit({
-      ...values,
-      isActive: false,
-    });
-  }
+
 
   return (
     <Card className="w-full rounded-2xl border border-black/10 shadow-2xl scrollbar-none bg-white backdrop-blur">
@@ -649,7 +643,7 @@ export default function InternshipPostForm({
                           placeholder="mm/dd/yyyy"
                         />
                         <span className="absolute right-4 top-1/2 -translate-y-1/2 text-[#0B2A4A]/55">
-                          📅
+                          
                         </span>
                       </div>
                     </FormControl>
@@ -671,15 +665,7 @@ export default function InternshipPostForm({
                 Cancel
               </Button>
               <div className="flex flex-col gap-3 sm:flex-row">
-                <Button
-                  type="button"
-                  variant="outline"
-                  className="rounded-xl border-[#0B2A4A]/50 text-[#0B2A4A]"
-                  onClick={saveDraft}
-                  disabled={isPending}
-                >
-                  Save as Draft
-                </Button>
+
                 <Button
                   type="submit"
                   className="rounded-xl bg-[#1E90FF] hover:bg-[#187bcd]"

@@ -3,6 +3,8 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
+import Image from "next/image";
+
 import {
   Home,
   Briefcase,
@@ -13,6 +15,7 @@ import {
 } from "lucide-react";
 import useGetUser from "../student/hooks/useGetLoginUser";
 import { signOut } from "next-auth/react"
+import UseGetUserProfilePicture from "../student/hooks/useGetUserProfilePic";
 const menu = [
   { label: "Dashboard", href: "/student/dashboard", icon: Home },
   { label: "Internships", href: "/student/Inprogressinternships", icon: Briefcase },
@@ -24,6 +27,8 @@ const menu = [
 ];
 
 export default function Sidebar() {
+  const {data:userProfile,isLoading:picLoading} = UseGetUserProfilePicture();
+  const profilePic = userProfile?.data?.profilePic;
   const pathname = usePathname();
   const {
     data: userData,
@@ -58,6 +63,7 @@ export default function Sidebar() {
       document.body.style.overflow = "";
     };
   }, [mobileOpen]);
+  console.log(userProfile,'BDAN');
 
   const user = userData?.data ?? userData?.user ?? userData;
   const fullNameFromParts = [user?.firstName, user?.lastName]
@@ -88,7 +94,19 @@ export default function Sidebar() {
         )}
 
         <div className="mb-8 flex items-center gap-3">
-          <div className="h-11 w-11 rounded-full bg-gray-300" />
+          <div className="relative h-11 w-11 overflow-hidden rounded-full bg-gray-300">
+            {profilePic ? (
+              <Image
+                src={profilePic}
+                alt={displayName}
+                fill
+                className="object-cover"
+                sizes="44px"
+              />
+            ) : (
+              <div className="h-full w-full bg-gray-300" />
+            )}
+          </div>
           <div className="min-w-0">
             <p className="truncate font-medium text-gray-900">{displayName}</p>
             <p className="text-xs text-gray-400">Student</p>
@@ -104,11 +122,10 @@ export default function Sidebar() {
                 key={item.href}
                 href={item.href}
                 className={`flex items-center gap-3  px-4 py-3 rounded-xl transition
-                ${
-                  active
+                ${active
                     ? "bg-sky-100 text-sky-900"
                     : "text-gray-700 hover:bg-sky-50"
-                }
+                  }
               `}
               >
                 <Icon className="h-4 w-4 shrink-0" />
@@ -120,7 +137,7 @@ export default function Sidebar() {
         </nav>
       </div>
 
-      <button onClick={()=>{
+      <button onClick={() => {
         signOut({ callbackUrl: '/login' })
       }} className="mt-6 w-full rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-blue-500">
         Logout

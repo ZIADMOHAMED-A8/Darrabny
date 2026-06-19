@@ -4,9 +4,12 @@ import { useCompanyDashboard } from "./hooks/use-company-dashboard";
 import OngoingInternships from "./_components/ongoing-internships";
 import CompanySideWidgets from "./_components/company-side-widgets";
 import DashboardTopRow from "./_components/company-stats";
+import UseGetProfilePicture from "../hooks/useGetProfilePicture";
 
 export default function CompanyDashboardPage() {
   const { data, isLoading, error } = useCompanyDashboard();
+  const { data:profilePic} = UseGetProfilePicture();
+
 
   if (isLoading) {
     return (

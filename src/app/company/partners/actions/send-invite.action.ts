@@ -3,11 +3,11 @@
 import { getToken } from "@/lib/utils/get-token.util";
 
 export default async function sendInviteAction(payload: {
-    universityId: string;
-    internshipId: string;
+  universityId: string;
+  internshipId: string;
 }) {
   const token = await getToken();
-    console.log(token?.token)
+
   const res = await fetch(
     "http://localhost:5000/company/endorsement-request",
     {
@@ -15,14 +15,17 @@ export default async function sendInviteAction(payload: {
       headers: {
         "Content-Type": "application/json",
         Authorization: `company ${token?.token}`,
+        
       },
       body: JSON.stringify(payload),
     }
   );
-  console.log(res)
-  const ress=await res.json()
 
-  if (!res.ok) throw new Error(ress.message ||' Failed to send invite `');
+  const data = await res.json();
 
-  return res.json();
+  if (!res.ok) {
+    throw new Error(data.message || "Failed to send invite");
+  }
+  console.log(data,"data alo")
+  return data;
 }

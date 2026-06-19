@@ -1,9 +1,7 @@
 "use client";
-
 import { PropsWithChildren } from "react";
 import { signOut } from "next-auth/react";
 import { usePathname, useRouter } from "next/navigation";
-
 export default function Layout({ children }: PropsWithChildren) {
     const pathname = usePathname();
     const router = useRouter();
@@ -31,26 +29,9 @@ export default function Layout({ children }: PropsWithChildren) {
         <div className="bg-[#F5F7FB] font-sans text-sm">
             
             {/* Fixed Sidebar */}
-            <aside className="fixed left-0 top-16 flex h-[calc(100vh-64px)] w-[220px] flex-col border-r border-gray-200 bg-white">
+            <aside className="fixed left-0 top-16 flex h-[calc(100vh-64px)] w-[220px] pt-0 flex-col border-r border-gray-200 bg-white">
 
-                {/* Logo */}
-                <div className="flex items-center gap-2 border-b border-gray-200 px-5 py-5">
-                    <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#1565C0]">
-                        <svg viewBox="0 0 24 24" fill="white" width={18} height={18}>
-                            <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 0 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14H7v-2h5v2zm5-4H7v-2h10v2zm0-4H7V7h10v2z" />
-                        </svg>
-                    </div>
-
-                    <div>
-                        <h2 className="text-[15px] font-bold text-[#1565C0]">
-                            Darrabny
-                        </h2>
-
-                        <p className="text-[9px] uppercase tracking-[0.5px] text-gray-400">
-                            Internship Hub
-                        </p>
-                    </div>
-                </div>
+  
 
                 {/* Menu */}
                 <div className="flex-1 overflow-y-auto py-4">
@@ -58,10 +39,12 @@ export default function Layout({ children }: PropsWithChildren) {
                     {sidebarItems.map(
                         ({ label, icon, path, navigateTo }) => {
                             const active =
-                                path === "/profile"
-                                    ? pathname.includes("profile") &&
-                                      !pathname.includes("partners")
-                                    : pathname.includes(path);
+                            label === "Company Partners"
+                              ? pathname.includes("/partners") ||
+                                pathname.includes("/company_profile")
+                              : pathname.includes("/profile") &&
+                                !pathname.includes("/partners") &&
+                                !pathname.includes("/company_profile");
 
                             return (
                                 <button

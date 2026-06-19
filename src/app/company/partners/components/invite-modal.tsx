@@ -67,9 +67,11 @@ const ICONS: Record<number, JSX.Element> = {
 export default function InviteModal({
   universityId,
   onClose,
+  partnerUniversityIds
 }: {
   universityId: string;
   onClose: () => void;
+  partnerUniversityIds:string[]
 }) {
   const {
     data,
@@ -384,130 +386,114 @@ export default function InviteModal({
                   "#000000",
               }}
             >
-              {data?.length === 0 ? (
-                <div
-                  style={{
-                    padding: "16px 14px",
-                    fontSize: 13,
-                    color: "#000000",
-                    WebkitTextFillColor:
-                      "#000000",
-                    textAlign: "center",
-                    background: "#ffffff",
-                  }}
-                >
-                  No internships available.
-                </div>
-              ) : (
-                data?.map(
-                  (
-                    i: any,
-                    idx: number
-                  ) => (
-                    <div
-                      key={i._id}
-                      onClick={() => {
-                        setSelected(i._id);
+            {data?.length === 0 ? (
+  <div
+    style={{
+      padding: "16px 14px",
+      fontSize: 13,
+      color: "#000000",
+      WebkitTextFillColor: "#000000",
+      textAlign: "center",
+      background: "#ffffff",
+    }}
+  >
+    No internships available.
+  </div>
+) : (
+  data?.map((i: any, idx: number) => {
+    const status = i.universityStatuses?.[universityId];
 
-                        setIsOpen(false);
+    return (
+      <div
+        key={i._id}
+        onClick={() => {
+          if (status==='approved' || status==='pending')return
+          setSelected(i._id);
+          setIsOpen(false);
+          setValidationError("");
+        }}
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          gap: 10,
+          padding: "12px 14px",
+          cursor: "pointer",
+          fontSize: 14,
+          color: "#000000",
+          WebkitTextFillColor: "#000000",
+          background: selected === i._id ? "#EFF6FF" : "#ffffff",
+        }}
+        onMouseEnter={(e) => {
+          if (selected !== i._id) {
+            (e.currentTarget as HTMLElement).style.background = "#F9FAFB";
+          }
+        }}
+        onMouseLeave={(e) => {
+          (e.currentTarget as HTMLElement).style.background =
+            selected === i._id ? "#EFF6FF" : "#ffffff";
+        }}
+      >
+        <span style={{ display: "flex", alignItems: "center", gap: 10 }}>
+          <span
+            style={{
+              color: "#000000",
+              WebkitTextFillColor: "#000000",
+              flexShrink: 0,
+            }}
+          >
+            {ICONS[idx % 4]}
+          </span>
 
-                        setValidationError(
-                          ""
-                        );
-                      }}
-                      style={{
-                        display: "flex",
-                        alignItems:
-                          "center",
+          <span
+            style={{
+              color: "#000000",
+              WebkitTextFillColor: "#000000",
+              fontWeight: 500,
+            }}
+          >
+            {i.internshipTitle}
+          </span>
+        </span>
 
-                        gap: 10,
+        {status === "approved" && (
+          <span
+            style={{
+              fontSize: 11,
+              fontWeight: 600,
+              padding: "3px 8px",
+              borderRadius: 999,
+              background: "#DCFCE7",
+              color: "#16A34A",
+              flexShrink: 0,
+            }}
+          >
+            Approved
+          </span>
+        )}
 
-                        padding:
-                          "12px 14px",
-
-                        cursor: "pointer",
-
-                        fontSize: 14,
-
-                        color: "#000000",
-                        WebkitTextFillColor:
-                          "#000000",
-
-                        background:
-                          selected ===
-                          i._id
-                            ? "#EFF6FF"
-                            : "#ffffff",
-
-                        borderBottom:
-                          idx <
-                          (data?.length ??
-                            0) -
-                            1
-                            ? "1px solid #F3F4F6"
-                            : "none",
-                      }}
-                      onMouseEnter={(
-                        e
-                      ) => {
-                        if (
-                          selected !==
-                          i._id
-                        ) {
-                          (
-                            e.currentTarget as HTMLElement
-                          ).style.background =
-                            "#F9FAFB";
-                        }
-                      }}
-                      onMouseLeave={(
-                        e
-                      ) => {
-                        (
-                          e.currentTarget as HTMLElement
-                        ).style.background =
-                          selected ===
-                          i._id
-                            ? "#EFF6FF"
-                            : "#ffffff";
-                      }}
-                    >
-                      <span
-                        style={{
-                          color:
-                            "#000000",
-                          WebkitTextFillColor:
-                            "#000000",
-                          flexShrink: 0,
-                        }}
-                      >
-                        {
-                          ICONS[idx % 4]
-                        }
-                      </span>
-
-                      <span
-                        style={{
-                          color:
-                            "#000000",
-                          WebkitTextFillColor:
-                            "#000000",
-                          opacity: 1,
-                          fontWeight: 500,
-                        }}
-                      >
-                        {
-                          i.internshipTitle
-                        }
-                      </span>
-                    </div>
-                  )
-                )
-              )}
-            </div>
+        {status === "pending" && (
+          <span
+            style={{
+              fontSize: 11,
+              fontWeight: 600,
+              padding: "3px 8px",
+              borderRadius: 999,
+              background: "#FEF9C3",
+              color: "#CA8A04",
+              flexShrink: 0,
+            }}
+          >
+            Pending
+          </span>
+        )}
+      </div>
+    );
+  })
+)}
+      </div>
           )}
         </div>
-
         {/* VALIDATION ERROR */}
         {validationError && (
           <div

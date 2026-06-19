@@ -156,6 +156,7 @@ export default function StudentsTable({ initialData, internshipId }: StudentsTab
           </thead>
           <tbody>
             {students.map((placement) => (
+              
               <tr
                 key={placement.placementId}
                 className="border-b border-slate-100"
@@ -176,9 +177,11 @@ export default function StudentsTable({ initialData, internshipId }: StudentsTab
                     variant="default"
                     onClick={() => openAddReportModal(placement)}
                     className="whitespace-nowrap bg-blue-500"
+                    disabled={placement.reportLabel==='Has Report'}
                   >
                     Add Report
                   </Button>
+                  {console.log(placement)}
                 </td>
               </tr>
             ))}

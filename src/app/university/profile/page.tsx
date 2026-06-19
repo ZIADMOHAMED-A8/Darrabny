@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useCollegeReports } from "./hooks/use-college-reports";
+import { usePartners } from "./partners/hooks/use-partners";
 
 type CollegeIntern = {
     applicationId: string;
@@ -28,7 +29,7 @@ type CollegeInternshipReport = {
 export default function UniversityDashboardPage() {
     const router = useRouter();
     const { data, isLoading } = useCollegeReports();
-
+    const {data:partnersData,isLoading:partnersLoading}=usePartners()
     if (isLoading) return <p className="p-10">Loading...</p>;
 
     const internships = (data || []) as CollegeInternshipReport[];
@@ -83,9 +84,9 @@ export default function UniversityDashboardPage() {
                     {/* Stats */}
                     <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 16, marginBottom: 20 }}>
                         {[
-                            { label: "Total Interns", value: totalInterns.toLocaleString(), sub: "↑ +12% from last month", subColor: "#2e7d32", iconColor: "#1565C0", iconBg: "#EEF3FF", icon: <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5z" /> },
-                            { label: "Active Programs", value: activePrograms, sub: "✓ All systems operational", subColor: "#1565C0", iconColor: "#0F6E56", iconBg: "#E1F5EE", icon: <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z" /> },
-                            { label: "University Partners", value: 18, sub: "⊙ Across 4 global regions", subColor: "#888", iconColor: "#3B6D11", iconBg: "#EAF3DE", icon: <path d="M12 3L1 9l11 6 9-4.91V17h2V9L12 3zM5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82z" /> },
+                            { label: "Total Interns", value: totalInterns.toLocaleString(), sub: "", subColor: "#2e7d32", iconColor: "#1565C0", iconBg: "#EEF3FF", icon: <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5z" /> },
+                            { label: "Active Programs", value: activePrograms, sub: "", subColor: "#1565C0", iconColor: "#0F6E56", iconBg: "#E1F5EE", icon: <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z" /> },
+                            { label: "University Partners", value: partnersData?.companies.length, sub: "", subColor: "#888", iconColor: "#3B6D11", iconBg: "#EAF3DE", icon: <path d="M12 3L1 9l11 6 9-4.91V17h2V9L12 3zM5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82z" /> },
                         ].map(({ label, value, sub, subColor, iconColor, iconBg, icon }) => (
                             <div key={label} style={{ background: "#fff", border: "0.5px solid #e5e7eb", borderRadius: 12, padding: "18px 20px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
                                 <div>
@@ -117,7 +118,7 @@ export default function UniversityDashboardPage() {
                                     const badge = getPerformanceBadge(globalIndex);
                                     const tag = getProgramTag(item.internship?.title);
                                     return (
-                                        <tr key={intern.applicationId} style={{ borderTop: "0.5px solid #F0F2F5", cursor: "pointer" }} onClick={() => router.push(`/university/dashboard/${intern.applicationId}`)}>
+                                        <tr key={intern.applicationId} style={{ borderTop: "0.5px solid #F0F2F5", cursor: "pointer" }} >
                                             <td style={{ padding: "12px 10px" }}>
                                                 <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
 

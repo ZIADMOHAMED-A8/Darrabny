@@ -11,4 +11,5 @@ export type StudentPlacement = {
   studentName: string;
   studentEmail: string;
   currentPerformance: number;
+  reportLabel:string
 };

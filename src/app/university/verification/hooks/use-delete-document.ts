@@ -1,17 +1,16 @@
 "use client";
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import updateCompanyProfileAction from "../actions/update-company-profile.action";
-
-export function useUpdateCompanyProfile() {
+import deleteCompanyDoc from "../actions/delete-company-document-action";
+export default function useDeleteDoc() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (data)=>updateCompanyProfileAction(data),
+    mutationFn: (id: string) => deleteCompanyDoc(id),
 
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ["company-profile"],
+        queryKey: ["company-verification"],
       });
     },
   });

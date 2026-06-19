@@ -34,7 +34,7 @@ interface TotalApplicantsCardProps {
 
 function TotalApplicantsCard({ count, growth }: TotalApplicantsCardProps) {
   return (
-    <div className="rounded-xl border border-blue-100 bg-blue-50 p-4 shadow-sm sm:p-6">
+    <div className="rounded-xl border  bg-white p-4 shadow-sm sm:p-6">
       <div className="flex items-start justify-between mb-4">
         <h3 className="text-sm font-semibold text-gray-700">Total Applicants</h3>
         <Users className="h-5 w-5 text-blue-600" />
@@ -64,7 +64,7 @@ interface TotalCompletedCardProps {
 
 function TotalCompletedCard({ count, growth }: TotalCompletedCardProps) {
   return (
-    <div className="rounded-xl border border-blue-100 bg-blue-50 p-4 shadow-sm sm:p-6">
+    <div className="rounded-xl border  bg-white p-4 shadow-sm sm:p-6">
       <div className="flex items-start justify-between mb-4">
         <h3 className="text-sm font-semibold text-gray-700">
           Total Completed Trainees
@@ -97,7 +97,7 @@ interface ActivePostingsCardProps {
 
 function ActivePostingsCard({ total, internships, jobs }: ActivePostingsCardProps) {
   return (
-    <div className="rounded-xl border border-blue-100 bg-blue-50 p-4 shadow-sm sm:p-6">
+    <div className="rounded-xl border  bg-white p-4 shadow-sm sm:p-6">
       <div className="flex items-start justify-between mb-4">
         <h3 className="text-sm font-semibold text-gray-700">Active Postings</h3>
         <Briefcase className="h-5 w-5 text-blue-600" />
@@ -106,9 +106,6 @@ function ActivePostingsCard({ total, internships, jobs }: ActivePostingsCardProp
       <div className="mt-3 flex flex-wrap gap-2">
         <span className="inline-flex px-2 py-1 text-xs font-semibold bg-blue-100 text-blue-700 rounded">
           {internships} Internships
-        </span>
-        <span className="inline-flex px-2 py-1 text-xs font-semibold bg-blue-100 text-blue-700 rounded">
-          {jobs} Jobs
         </span>
       </div>
     </div>

@@ -52,7 +52,36 @@ export default async function middleware(req: NextRequest) {
   if (isAuthRoute && token) {
     return NextResponse.redirect(new URL("/", req.url));
   }
-
+  if (
+    role === "college" &&
+    !pathname.startsWith("/university") &&
+    !pathname.startsWith("/college") &&
+    !authRoutes.includes(pathname)
+  ) {
+    return NextResponse.redirect(
+      new URL("/university/dashboard", req.url)
+    );
+  }
+  if (
+    role === "user" &&
+    !pathname==='/'  &&
+    !pathname.startsWith("/student") &&
+    !pathname.startsWith("/profile") &&
+    !authRoutes.includes(pathname)
+  ) {
+    return NextResponse.redirect(
+      new URL("/student/internships", req.url)
+    );
+  }
+  if (
+    role === "company" &&
+    !pathname.startsWith("/company") &&
+    !authRoutes.includes(pathname)
+  ) {
+    return NextResponse.redirect(
+      new URL("/company/dashboard", req.url)
+    );
+  }
   if (isHome && !token) {
     return NextResponse.redirect(new URL("/login", req.url));
   }
@@ -62,10 +91,10 @@ export default async function middleware(req: NextRequest) {
     loginUrl.searchParams.set("callbackUrl", pathname + search);
     return NextResponse.redirect(loginUrl);
   }
-  if (role === 'college' && !universityRoutes.some((route) => route.test(pathname))) {
-    return NextResponse.redirect(new URL("/university/dashboard", req.url));
+  // if (role === 'college' && (!universityRoutes.some((route) => route.test(pathname) || !authRoutes.some((route) =>route===pathname)))) {
+  //   return NextResponse.redirect(new URL("/university/dashboard", req.url));
 
-  }
+  // }
 
   return NextResponse.next();
 }

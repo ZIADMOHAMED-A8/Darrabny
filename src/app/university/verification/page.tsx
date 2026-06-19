@@ -177,7 +177,7 @@ export default function VerificationPage() {
           </h1>
 
           <p className="text-slate-500 mt-1.5 text-sm">
-            Keep your company credentials up to
+            Keep your College credentials up to
             date to maintain partnership status.
           </p>
         </div>

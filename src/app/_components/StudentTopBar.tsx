@@ -4,6 +4,9 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { BriefcaseBusiness } from "lucide-react";
 import { useSession } from "next-auth/react";
+import UseGetProfilePicture from "../company/hooks/useGetProfilePicture";
+import UseGetCollegeProfilePicture from "../university/hooks/useGetProfilePicture";
+import UseGetUserProfilePicture from "../student/hooks/useGetUserProfilePic";
 
 const openSidebar = () => {
   window.dispatchEvent(new Event("student-sidebar:open"));
@@ -14,7 +17,11 @@ type TopbarLink = {
   label: string;
 };
 
-function getTopbarConfig(role?: string) {
+function getTopbarConfig(role?: string): {
+  homeHref: string;
+  links: TopbarLink[];
+  profileHref: string;
+} {
   switch (role) {
     case "company":
       return {
@@ -60,11 +67,41 @@ function getTopbarConfig(role?: string) {
 
 export default function StudentTopBar() {
   const pathname = usePathname();
-  const { data } = useSession();
+  const { data: session } = useSession();
 
-  const role = (data?.user as { role?: string } | undefined)?.role;
+  const role = (session?.user as { role?: string } | undefined)?.role;
+
+  
+  const companyProfile = UseGetProfilePicture();
+  const collegeProfile = UseGetCollegeProfilePicture();
+  const userProfile = UseGetUserProfilePicture();
+
+
+  const profileData =
+    role === "company"
+      ? companyProfile.data
+      : role === "college"
+      ? collegeProfile.data
+      : role==='user' 
+      ? userProfile.data 
+      :null;
+    console.log(profileData,"user profile data")
+  const isLoading =
+    role === "company"
+      ? companyProfile.isLoading
+      : role === "college"
+      ? collegeProfile.isLoading
+      : role==='user' 
+      ? userProfile.isLoading 
+      :null;
+
+  const logo =role==="user" ?  profileData?.data?.profilePic :  profileData?.data?.logo;
 
   const { homeHref, links, profileHref } = getTopbarConfig(role);
+
+  if (isLoading) {
+    return null;
+  }
 
   return (
     <header className="sticky top-0 z-50 border-b border-[#0b1f33]/10 bg-white/85 backdrop-blur">
@@ -128,7 +165,15 @@ export default function StudentTopBar() {
             </button>
 
             <Link href={profileHref}>
-              <div className="h-10 w-10 rounded-full border border-[#0b1f33]/10 bg-[linear-gradient(145deg,#f6c8a2,#9b6d4a)] shadow-sm" />
+              {logo ? (
+                <img
+                  src={logo}
+                  alt="Profile"
+                  className="h-10 w-10 rounded-full object-cover border border-[#0b1f33]/10"
+                />
+              ) : (
+                <div className="h-10 w-10 rounded-full border border-[#0b1f33]/10 bg-[linear-gradient(145deg,#f6c8a2,#9b6d4a)] shadow-sm" />
+              )}
             </Link>
           </div>
         </div>
