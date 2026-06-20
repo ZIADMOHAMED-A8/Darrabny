@@ -6,7 +6,7 @@ export const companySignupSchema = z.object({
 
   industry: z.string().min(2, "Industry is required"),
 
-  companyEmail: z.string().email("Invalid email"),
+  email: z.string().email("Invalid email"),
 
   companyPhone: z.string().min(6, "Phone number is required"),
 

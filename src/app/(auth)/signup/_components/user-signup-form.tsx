@@ -41,6 +41,7 @@ export default function UserSignupForm() {
     resolver: zodResolver(signupSchema),
     mode: "onSubmit",
     defaultValues: {
+      role: "student",
       firstName: "",
       lastName: "",
       email: "",
@@ -215,9 +216,7 @@ export default function UserSignupForm() {
               <FormControl>
                 <Select
                   value={field.value}
-                  onValueChange={(v: "Male" | "Female" | "Other") =>
-                    field.onChange(v)
-                  }
+                  onValueChange={(v) => field.onChange(v)}
                 >
                   <SelectTrigger className="h-12 rounded-[12px] border-black/10 bg-white">
                     <SelectValue placeholder="Select Gender" />

@@ -1,13 +1,18 @@
 import { z } from "zod";
 
 export const GENDER = {
-  MALE: "Male",
-  FEMALE: "Female",
-  OTHER: "Other",
+  MALE: "male",
+  FEMALE: "female",
 } as const;
 
 export const signupSchema = z
   .object({
+    role: z.enum([
+      "student",
+      "academic_supervisor",
+      "company_supervisor",
+      "college",
+    ]),
     firstName: z.string().trim().min(2, "First name is required"),
     lastName: z.string().trim().min(2, "Last name is required"),
     email: z.string().trim().email("Enter a valid email"),
@@ -24,7 +29,7 @@ export const signupSchema = z
       .regex(/[a-z]/, "Password must include a lowercase letter")
       .regex(/\d/, "Password must include a number"),
     confirmPassword: z.string().min(8, "Confirm your password"),
-    gender: z.enum(["Male", "Female", "Other"]),
+    gender: z.enum([GENDER.MALE, GENDER.FEMALE]),
     DOB: z.string().min(10, "Date of Birth is required"),
     // role: z.string().min(3, "Role is required"),
   })

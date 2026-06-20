@@ -32,7 +32,7 @@ export default function CompanySignupForm() {
     resolver: zodResolver(companySignupSchema),
     defaultValues: {
       companyName: "",
-      companyEmail: "",
+      email: "",
       password: "",
       confirmPassword: "",
       companyPhone: "",
@@ -107,7 +107,7 @@ export default function CompanySignupForm() {
 
         {/* Company Email */}
         <FormField
-          name="companyEmail"
+          name="email"
           render={({ field }) => (
             <FormItem>
               <FormLabel className={LABEL}>Company Email</FormLabel>
