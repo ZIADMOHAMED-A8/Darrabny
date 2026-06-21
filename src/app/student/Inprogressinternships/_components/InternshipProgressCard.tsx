@@ -7,6 +7,7 @@ type Props = {
   progress: number;
   week: string;
   status: "in-progress" | "completed";
+  thumbnail:string
 };
 
 export default function InternshipProgressCard({
@@ -16,6 +17,7 @@ export default function InternshipProgressCard({
   progress,
   week,
   status,
+  thumbnail
 }: Props) {
   const isCompleted = status === "completed";
 
@@ -24,7 +26,9 @@ export default function InternshipProgressCard({
       <div className="flex flex-col gap-4 sm:flex-row sm:gap-6">
         {/* Image */}
         <Image
-  src={us}
+        width={400}
+        height={399}
+  src={thumbnail}
   alt="internship"
   className="h-44 w-full object-cover sm:h-auto sm:w-48 md:w-64"
 />

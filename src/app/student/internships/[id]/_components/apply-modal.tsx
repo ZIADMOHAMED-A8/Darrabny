@@ -2,20 +2,23 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import {
   AlertCircle,
   CheckCircle2,
-  Eye,
+  Download,
   FileText,
+  Loader2,
   Mail,
   Trash2,
+  UploadCloud,
   User,
   X,
 } from "lucide-react";
 import useGetApplyProfile from "../../hooks/useGetApplyProfile";
 import { useToast } from "@/hooks/use-toast";
 import useApplyToInternship from "../hooks/use-apply-to-internship";
+import useUploadResume from "@/app/profile/_hooks/useUploadResume";
 
 type Props = {
   open: boolean;
@@ -110,6 +113,12 @@ const extractResumeUrl = (payload: unknown): string | null => {
   return null;
 };
 
+const ACCEPTED_RESUME_TYPES = [
+  "application/pdf",
+  "application/msword",
+  "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+];
+
 export default function ApplyModal({
   open,
   onClose,
@@ -119,9 +128,12 @@ export default function ApplyModal({
   const { toast } = useToast();
   const [coverLetter, setCoverLetter] = useState("");
   const [submitError, setSubmitError] = useState("");
-  const { mutate, isPending, reset,isError:isApplyError,error:applyError } = useApplyToInternship();
+  const [resumeUploadError, setResumeUploadError] = useState("");
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const { mutate, isPending, reset, isError: isApplyError, error: applyError } = useApplyToInternship();
+  const { isPending: isUploadingResume, uploadResume } = useUploadResume();
 
-  const { data, isLoading, isError, error, isFetching } = useGetApplyProfile(open);
+  const { data, isLoading, isError, error, isFetching, refetch } = useGetApplyProfile(open);
 
   const { fullName, email } = useMemo(() => extractUser(data?.user), [data?.user]);
   const skills = useMemo(() => extractSkills(data?.skills), [data?.skills]);
@@ -130,6 +142,7 @@ export default function ApplyModal({
   function handleClose() {
     reset();
     setSubmitError("");
+    setResumeUploadError("");
     onClose();
   }
 
@@ -137,6 +150,51 @@ export default function ApplyModal({
     setCoverLetter(value);
     setSubmitError("");
     reset();
+  }
+
+  function handleUploadClick() {
+    fileInputRef.current?.click();
+  }
+
+  async function handleResumeFileChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    e.target.value = "";
+    if (!file) return;
+
+    setResumeUploadError("");
+
+    if (!ACCEPTED_RESUME_TYPES.includes(file.type)) {
+      setResumeUploadError("Please upload a PDF or Word document.");
+      return;
+    }
+
+    const maxSizeBytes = 5 * 1024 * 1024;
+    if (file.size > maxSizeBytes) {
+      setResumeUploadError("File is too large. Max size is 5MB.");
+      return;
+    }
+
+    const localUrl = URL.createObjectURL(file);
+
+    try {
+      await uploadResume({ file, localUrl });
+      toast({
+        title: "Resume uploaded",
+        description: "Your resume was uploaded successfully.",
+      });
+      refetch();
+    } catch (uploadErr) {
+      const message =
+        uploadErr instanceof Error ? uploadErr.message : "Failed to upload resume.";
+      setResumeUploadError(message);
+      toast({
+        title: "Failed to upload resume",
+        description: message,
+        variant: "destructive",
+      });
+    } finally {
+      URL.revokeObjectURL(localUrl);
+    }
   }
 
   function handleSubmit() {
@@ -282,6 +340,14 @@ export default function ApplyModal({
           <div className="mt-10">
             <h3 className="text-lg font-bold text-[#0b1f33]">Resume / CV</h3>
 
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+              className="hidden"
+              onChange={handleResumeFileChange}
+            />
+
             <div className="mt-4 rounded-2xl border border-[#0b1f33]/10 bg-white p-4 shadow-sm">
               {resumeUrl ? (
                 <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
@@ -294,7 +360,9 @@ export default function ApplyModal({
                         {fullName} Resume.pdf
                       </div>
                       <div className="text-xs text-[#0b1f33]/55">
-                        PDF • Resume file is ready to view
+                        {isUploadingResume
+                          ? "Uploading new resume..."
+                          : "PDF • Resume file is ready to view"}
                       </div>
                     </div>
                   </div>
@@ -303,32 +371,59 @@ export default function ApplyModal({
                     <a
                       href={resumeUrl}
                       target="_blank"
-                      rel="noreferrer"
-                      aria-label="View resume"
+                      rel="noopener noreferrer"
+                      download
+                      aria-label="Download resume"
                       className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-[#0b1f33]/12 text-[#0b1f33]/60 hover:bg-[#0b1f33]/5"
                     >
-                      <Eye className="h-5 w-5" />
+                      <Download className="h-5 w-5" />
                     </a>
+
                     <button
                       type="button"
-                      aria-label="Remove resume"
-                      disabled
-                      className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-[#0b1f33]/12 text-[#0b1f33]/35"
+                      aria-label="Replace resume"
+                      onClick={handleUploadClick}
+                      disabled={isUploadingResume}
+                      className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-[#0b1f33]/12 text-[#0b1f33]/60 hover:bg-[#0b1f33]/5 disabled:opacity-50"
                     >
+                      {isUploadingResume ? (
+                        <Loader2 className="h-5 w-5 animate-spin" />
+                      ) : (
+                        <UploadCloud className="h-5 w-5" />
+                      )}
                     </button>
                   </div>
                 </div>
               ) : (
                 <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                   <div className="text-sm text-[#0b1f33]/60">
-                    No resume found. Upload one from your profile to apply.
+                    No resume found.
                   </div>
-                  <Link
-                    href="/profile"
-                    className="inline-flex items-center justify-center rounded-xl bg-[var(--ds-primary)] px-5 py-2 text-sm font-semibold text-white hover:bg-[var(--ds-primary-dark)]"
+                  <button
+                    type="button"
+                    onClick={handleUploadClick}
+                    disabled={isUploadingResume}
+                    className="inline-flex items-center justify-center gap-2 rounded-xl bg-[var(--ds-primary)] px-5 py-2 text-sm font-semibold text-white hover:bg-[var(--ds-primary-dark)] disabled:cursor-not-allowed disabled:opacity-60"
                   >
-                    Upload Resume
-                  </Link>
+                    {isUploadingResume ? (
+                      <>
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                        Uploading...
+                      </>
+                    ) : (
+                      <>
+                        <UploadCloud className="h-4 w-4" />
+                        Upload Resume
+                      </>
+                    )}
+                  </button>
+                </div>
+              )}
+
+              {resumeUploadError && (
+                <div className="mt-3 flex items-start gap-2 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-xs text-red-700">
+                  <AlertCircle className="mt-0.5 h-3.5 w-3.5 shrink-0" />
+                  <span>{resumeUploadError}</span>
                 </div>
               )}
             </div>

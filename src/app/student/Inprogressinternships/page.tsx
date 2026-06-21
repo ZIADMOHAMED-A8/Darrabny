@@ -16,6 +16,7 @@ type MyInternshipItem = {
   };
   currentWeek?: number;
   totalWeeks?: number;
+  thumbnail:string
 };
 
 export default function InternshipsPage() {
@@ -47,6 +48,7 @@ export default function InternshipsPage() {
     company: item.company?.name ?? "Unknown Company",
     mode: item.location ?? "N/A",
     progress: Number(item.progress ?? 0),
+    thumbnail:item.thumbnail,
     week:
       item.currentWeek && item.totalWeeks
         ? `Week ${item.currentWeek} / ${item.totalWeeks}`
@@ -115,8 +117,7 @@ export default function InternshipsPage() {
         {filteredInternships.map((item) => (
           <InternshipProgressCard
             key={item.id}
-            {...item}
-          />
+            {...item}          />
         ))}
 
         {filteredInternships.length === 0 && (

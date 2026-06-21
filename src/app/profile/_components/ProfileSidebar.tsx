@@ -18,6 +18,7 @@ import useUpdateFullName from "@/app/student/settings/hooks/useUpdateFullName";
 import useGetLoginStudent from "@/app/student/settings/hooks/useGetLoginStudent";
 import Image from "next/image";
 import UseGetUserProfilePicture from "@/app/student/hooks/useGetUserProfilePic";
+import useGetUser from "@/app/student/hooks/useGetLoginUser";
 type LinkFormValues = {
   linkedin: string;
   github: string;
@@ -52,6 +53,7 @@ const extractProfilePicUrl = (payload: unknown): string | null => {
 };
 
 export default function ProfileSidebar() {
+  const {data:userData,isLoading:userLoading}=useGetLoginStudent()
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
   const [linksModalOpen, setLinksModalOpen] = useState(false);
@@ -157,7 +159,7 @@ export default function ProfileSidebar() {
   };
   const currentProfilePic =
     avatarPreview || userProfile?.data?.profilePic;
-  if (isLoading) {
+  if (isLoading || userLoading) {
     return (
       <aside className="w-full flex justify-center items-center border-b border-slate-200 bg-[#f7f8fb] px-6 py-8 lg:w-[420px] lg:border-b-0 lg:border-r lg:px-10">
         <Loader2 className="h-4 w-4 animate-spin"></Loader2>
@@ -196,10 +198,9 @@ export default function ProfileSidebar() {
             onChange={handleFileChange}
           />
         </div>
-
+          {console.log(userData,"college")}
         <h2 className="mt-5 text-3xl font-bold text-[#111f37] sm:text-3xl"> {fullName}</h2>
-        <p className="text-lg text-slate-600">Student at State University</p>
-        <p className="mt-1 text-sm text-slate-500">Joined in 2022</p>
+        {userData.college && <p className="text-lg text-slate-600">Student at {userData.college.collegeName}</p>}
       </div>
 
       <div className="mt-12">
