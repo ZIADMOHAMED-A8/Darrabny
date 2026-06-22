@@ -9,7 +9,7 @@ export default async function getLoginStudentAction() {
     throw new Error("Unauthorized");
   }
 
-  const res = await fetch("http://localhost:5000/student/getLoginStudent", {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/student/getLoginStudent`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",

@@ -4,7 +4,7 @@ import { getToken } from "@/lib/utils/get-token.util";
 export async function getInternship(id: string) {
     const token = await getToken();
   try {
-    const res = await fetch(`http://localhost:5000/internship/${id}`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/internship/${id}`, {
       headers: {
         Authorization: `company ${token?.token}`,
         },

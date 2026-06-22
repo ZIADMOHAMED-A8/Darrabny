@@ -27,7 +27,7 @@ export default async function getMyApplicationsAction({
     status,
   });
 
-  const res = await fetch(`http://localhost:5000/user/myapplications?${query.toString()}`, {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/user/myapplications?${query.toString()}`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",

@@ -32,7 +32,7 @@ export default async function getPartnersAction(
   const token = await getToken();
 
   const res = await fetch(
-    `http://localhost:5000/college//partners?page=${page}`,
+    `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/college//partners?page=${page}`,
     {
       method: "GET",
       headers: {

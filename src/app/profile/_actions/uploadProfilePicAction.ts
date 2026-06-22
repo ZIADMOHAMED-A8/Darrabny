@@ -9,7 +9,7 @@ export default async function uploadProfilePicAction(formData: FormData) {
     throw new Error("Unauthorized");
   }
 
-  const endpoint = "http://localhost:5000/user/uploadProfilePic";
+  const endpoint = `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/user/uploadProfilePic`;
   const authHeader = { Authorization: `user ${token.token.accessToken}` };
 
   const sendRequest = () =>

@@ -13,7 +13,7 @@ export default async function addSkillAction(values: SkillPayload) {
     throw new Error("Unauthorized");
   }
 
-  const res = await fetch("http://localhost:5000/student/skills", {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/student/skills`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

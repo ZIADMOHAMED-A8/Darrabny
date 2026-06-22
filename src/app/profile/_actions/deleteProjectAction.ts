@@ -13,7 +13,7 @@ export default async function deleteProjectAction(values: DeleteProjectPayload) 
     throw new Error("Unauthorized");
   }
 
-  const res = await fetch(`http://localhost:5000/student/projects/${values.id}`, {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/student/projects/${values.id}`, {
     method: "DELETE",
     headers: {
       Authorization: `user ${token.token.accessToken}`,

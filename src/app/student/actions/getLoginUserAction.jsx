@@ -9,7 +9,7 @@ export default async function getLoginUserAction() {
       if (!token) {
       throw new Error("Unauthorized");
     }
-      const res = await fetch('http://localhost:5000/user/getLoginUser', {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/user/getLoginUser`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",

@@ -22,7 +22,9 @@ export default async function getMyInternshipsAction({
     limit: String(limit),
   });
 
-  const res = await fetch(`http://localhost:5000/internship/my?${query.toString()}`, {
+  const baseUrl =
+    process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+  const res = await fetch(`${baseUrl}/internship/my?${query.toString()}`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",

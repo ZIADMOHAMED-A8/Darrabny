@@ -33,7 +33,7 @@ export default async function getAllCompaniesAction({
   limit = 3,
 }: GetAllCompaniesParams = {}): Promise<GetAllCompaniesResponse> {
   const baseUrl =
-    process.env.NEXT_PUBLIC_API_BASE_URL ||
+    process.env.NEXT_PUBLIC_API_URL ||
     process.env.NEXT_PUBLIC_API_URL ||
     "http://localhost:5000";
 

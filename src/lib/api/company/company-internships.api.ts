@@ -5,7 +5,7 @@ export async function getInternships() {
   console.log(token);
   
   const res = await fetch(
-    "http://localhost:5000/Internship/companyInternships",
+    `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/Internship/companyInternships`,
     {
       headers: {
         authorization: `company ${token?.token}`,
