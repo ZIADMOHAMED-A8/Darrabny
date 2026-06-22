@@ -2,18 +2,14 @@
 
 import { getToken } from "@/lib/utils/get-token.util";
 
-export type InternshipQueryStatus = "in-progress" | "completed";
-
 type GetMyInternshipsParams = {
   page?: number;
   limit?: number;
-  status?: InternshipQueryStatus;
 };
 
 export default async function getMyInternshipsAction({
   page = 1,
   limit = 10,
-  status,
 }: GetMyInternshipsParams = {}) {
   const token = await getToken();
 
@@ -25,10 +21,6 @@ export default async function getMyInternshipsAction({
     page: String(page),
     limit: String(limit),
   });
-
-  if (status) {
-    query.set("status", status);
-  }
 
   const res = await fetch(`http://localhost:5000/internship/my?${query.toString()}`, {
     method: "GET",
