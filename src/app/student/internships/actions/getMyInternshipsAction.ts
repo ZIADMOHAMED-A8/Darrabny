@@ -24,7 +24,7 @@ export default async function getMyInternshipsAction({
 
   const baseUrl =
     process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
-  const res = await fetch(`/internship/my?${query.toString()}`, {
+  const res = await fetch(`${baseUrl}/internship/my?${query.toString()}`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
