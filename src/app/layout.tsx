@@ -4,7 +4,7 @@ import Providers from "@/components/providers";
 import ChatbotWidget from "@/components/shared/ChatbotWidget";
 import ConditionalStudentTopBar from "./_components/ConditionalStudentTopBar";
 import StudentTopBar from "./_components/StudentTopBar";
-
+export const dynamic = 'force-dynamic';
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
