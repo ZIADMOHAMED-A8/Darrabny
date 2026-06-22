@@ -1,156 +1,128 @@
 "use client";
 
-import { useState } from "react";
-import InternshipProgressCard from "./_components/InternshipProgressCard";
+import { useMemo, useState, type ReactNode } from "react";
 import useGetMyInternships from "@/app/student/internships/hooks/useGetMyInternships";
+import InternshipProgressCard from "./_components/InternshipProgressCard";
+
 type Tab = "in-progress" | "completed";
 
 type MyInternshipItem = {
   id: string;
   title?: string;
-  location?: string;
-  progress?: number;
   status?: string;
-  company?: {
-    name?: string;
+  thumbnail?: string;
+  company?: { name?: string };
+  report?: {
+    id?: string;
+    title?: string;
+    status?: string;
+    overallRating?: number;
+    createdAt?: string;
   };
-  currentWeek?: number;
-  totalWeeks?: number;
+  certificate?: { url?: string };
 };
 
 export default function InternshipsPage() {
   const [activeTab, setActiveTab] = useState<Tab>("in-progress");
-  const [page, setPage] = useState(1);
-  const limit = 10;
-
   const { data, isLoading, isError, error, isFetching } = useGetMyInternships({
-    page,
-    limit,
-    status: activeTab,
-  });
-  const { data: inProgressData } = useGetMyInternships({
     page: 1,
-    limit: 1,
-    status: "in-progress",
-  });
-  const { data: completedData } = useGetMyInternships({
-    page: 1,
-    limit: 1,
-    status: "completed",
+    limit: 100,
   });
 
-  const rawItems = (data?.data as MyInternshipItem[]) ?? [];
+  const internships = useMemo(() => {
+    const items = (data?.data as MyInternshipItem[] | undefined) ?? [];
 
-  const filteredInternships = rawItems.map((item) => ({
-    id: item.id,
-    title: item.title ?? "Untitled Internship",
-    company: item.company?.name ?? "Unknown Company",
-    mode: item.location ?? "N/A",
-    progress: Number(item.progress ?? 0),
-    week:
-      item.currentWeek && item.totalWeeks
-        ? `Week ${item.currentWeek} / ${item.totalWeeks}`
-        : "No timeline",
-    status:
-      normalizeStatus(item.status) === "completed" ? "completed" : "in-progress",
-  }));
+    return items.map((item) => ({
+      id: item.id,
+      title: item.title ?? "Untitled Internship",
+      company: item.company?.name ?? "Unknown Company",
+      thumbnail: item.thumbnail || "/home/featured-internships/Img-1.png",
+      status: normalizeStatus(item.status),
+      report: item.report,
+      certificateUrl: item.certificate?.url,
+    }));
+  }, [data]);
 
-  const total = Number(data?.meta?.total ?? 0);
-  const totalPages = Math.max(1, Math.ceil(total / limit));
-
-  const inProgressCount = Number(inProgressData?.meta?.total ?? 0);
-  const completedCount = Number(completedData?.meta?.total ?? 0);
+  const filteredInternships = internships.filter(
+    (internship) => internship.status === activeTab,
+  );
+  const inProgressCount = internships.filter(
+    (internship) => internship.status === "in-progress",
+  ).length;
+  const completedCount = internships.filter(
+    (internship) => internship.status === "completed",
+  ).length;
 
   return (
     <section className="space-y-8">
-      {/* Header */}
       <div>
         <h1 className="text-2xl font-bold sm:text-3xl">My Internships</h1>
-        <p className="text-gray-600 mt-1">
+        <p className="mt-1 text-gray-600">
           Track your active progress and view your professional history.
         </p>
       </div>
 
-      {/* Tabs */}
       <div className="flex gap-4 overflow-x-auto border-b pb-2 sm:gap-6">
-        <button
-          onClick={() => {
-            setActiveTab("in-progress");
-            setPage(1);
-          }}
-          className={`shrink-0 pb-2 ${
-            activeTab === "in-progress"
-              ? "text-blue-600 border-b-2 border-blue-600 font-medium"
-              : "text-gray-400"
-          }`}
+        <TabButton
+          active={activeTab === "in-progress"}
+          onClick={() => setActiveTab("in-progress")}
         >
           In Progress ({inProgressCount})
-        </button>
-
-        <button
-          onClick={() => {
-            setActiveTab("completed");
-            setPage(1);
-          }}
-          className={`shrink-0 pb-2 ${
-            activeTab === "completed"
-              ? "text-blue-600 border-b-2 border-blue-600 font-medium"
-              : "text-gray-400"
-          }`}
+        </TabButton>
+        <TabButton
+          active={activeTab === "completed"}
+          onClick={() => setActiveTab("completed")}
         >
           Completed ({completedCount})
-        </button>
+        </TabButton>
       </div>
 
-      {/* Cards */}
       <div className="space-y-6">
-        {isLoading && <p className="text-gray-500 text-sm">Loading internships...</p>}
-
+        {isLoading && <p className="text-sm text-gray-500">Loading internships...</p>}
         {isError && (
-          <p className="text-red-600 text-sm">
+          <p className="text-sm text-red-600">
             {(error as Error)?.message || "Failed to load internships."}
           </p>
         )}
-
-        {filteredInternships.map((item) => (
-          <InternshipProgressCard
-            key={item.id}
-            {...item}
-          />
+        {filteredInternships.map((internship) => (
+          <InternshipProgressCard key={internship.id} {...internship} />
         ))}
-
-        {filteredInternships.length === 0 && (
-          <p className="text-gray-500 text-sm">
-            No internships found.
-          </p>
+        {!isLoading && !isError && filteredInternships.length === 0 && (
+          <p className="text-sm text-gray-500">No internships found.</p>
         )}
-      </div>
-
-      <div className="flex flex-col gap-3 text-sm text-gray-600 sm:flex-row sm:items-center sm:justify-between">
-        <p>{isFetching ? "Refreshing..." : `Page ${page} of ${totalPages}`}</p>
-        <div className="flex items-center gap-2">
-          <button
-            onClick={() => setPage((p) => Math.max(1, p - 1))}
-            disabled={page === 1 || isLoading}
-            className="rounded-md border px-3 py-1.5 disabled:cursor-not-allowed disabled:opacity-50"
-          >
-            Previous
-          </button>
-          <button
-            onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-            disabled={page >= totalPages || isLoading}
-            className="rounded-md border px-3 py-1.5 disabled:cursor-not-allowed disabled:opacity-50"
-          >
-            Next
-          </button>
-        </div>
+        {isFetching && !isLoading && (
+          <p className="text-sm text-gray-500">Refreshing...</p>
+        )}
       </div>
     </section>
   );
 }
 
-function normalizeStatus(status?: string) {
-  if (!status) return "in-progress";
-  if (status === "inProgress" || status === "in_progress") return "in-progress";
-  return status;
+function TabButton({
+  active,
+  onClick,
+  children,
+}: {
+  active: boolean;
+  onClick: () => void;
+  children: ReactNode;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={`shrink-0 pb-2 ${
+        active
+          ? "border-b-2 border-blue-600 font-medium text-blue-600"
+          : "text-gray-400"
+      }`}
+    >
+      {children}
+    </button>
+  );
+}
+
+function normalizeStatus(status?: string): Tab {
+  const normalized = status?.toLowerCase().replace(/[_\s]/g, "-");
+  return normalized === "completed" ? "completed" : "in-progress";
 }

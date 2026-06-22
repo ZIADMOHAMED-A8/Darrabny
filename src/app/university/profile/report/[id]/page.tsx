@@ -16,6 +16,7 @@ import {
   User,
 } from "lucide-react";
 import { useCollegeReports } from "../../hooks/use-college-reports";
+import Link from "next/link";
 
 
 type Student = {
@@ -70,6 +71,12 @@ type Internship = {
 type CollegeReportItem = {
   internship: Internship;
   interns: Intern[];
+  certificate: {
+    internshipId: string,
+    url: string,
+    date: Date,
+    _id: string
+  }
 };
 
 function formatDate(value: string) {
@@ -158,6 +165,7 @@ export default function UniversityReportPage() {
           intern,
           student: intern.student,
           report,
+          certificate: report.certificate
         }))
       )
     )
@@ -190,14 +198,14 @@ export default function UniversityReportPage() {
     );
   }
 
-  const { internship, intern, student, report } = reportContext;
+  const { internship, intern, student, report, certificate } = reportContext;
   const averageScore =
     (report.technicalSkillScore +
       report.problemSolvingScore +
       report.communicationScore +
       report.initiativeScore) /
     4;
-      const router=useRouter()
+  const router = useRouter()
   return (
     <div className="min-h-screen w-full bg-[#eef4ff] text-slate-950">
 
@@ -271,10 +279,26 @@ export default function UniversityReportPage() {
                         label="Skills"
                         value={(student.skills || []).join(", ") || "No skills"}
                       />
-                    <button className="h-12 px-8 mt-2 rounded-xl border border-[#294D6B] text-[#294D6B] font-semibold text-lg bg-white hover:bg-[#F5F9FF] transition" onClick={()=>{
-                      router.push(`/university/student_profile/${intern.student.id}`)
-                    }}>View Profile</button>
+                      <div className="mt-4 flex gap-3">
+                        <button
+                          className="flex-1  h-12 rounded-xl border border-[#294D6B] text-[#294D6B] font-semibold bg-white hover:bg-[#F5F9FF] transition"
+                          onClick={() => {
+                            router.push(`/university/student_profile/${intern.student.id}`);
+                          }}
+                        >
+                          View Profile
+                        </button>
 
+                        {certificate?.url && (
+                          <Link
+                            target="_blank"
+                            href={certificate.url}
+                            className="flex-1 inline-flex items-center text-nowrap p-4 justify-center h-12 rounded-xl bg-[#294D6B] text-white font-semibold hover:bg-[#1f3b54] transition"
+                          >
+                            Show Certificate
+                          </Link>
+                        )}
+                      </div>
                     </div>
                   </div>
                 </div>

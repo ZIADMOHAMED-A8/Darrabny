@@ -9,6 +9,7 @@ import StudentTopBar from "../_components/StudentTopBar";
 import { useState } from "react";
 import { Loader2 } from "lucide-react";
 import useGetUser from "../student/hooks/useGetLoginUser";
+import UniversitySection from "./_components/universitySection";
 
 export default function ProfilePage() {
   const [isEditing,setIsEditing]=useState(false)
@@ -35,7 +36,6 @@ export default function ProfilePage() {
     );
   }
   data.badges= ["Rising Star", "Pro","expert"]
-
   return (
     
     <div className="min-h-screen bg-[#e8eefc]">
@@ -72,6 +72,7 @@ export default function ProfilePage() {
           <ProjectsSection isEditing={isEditing}  />
           <ResumeSection isEditing={isEditing} />
           <AchievementsSection profileData={data} />
+          <UniversitySection isEditing={isEditing}></UniversitySection>
         </div>
       </div>
     </div>

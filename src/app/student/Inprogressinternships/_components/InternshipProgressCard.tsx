@@ -1,84 +1,80 @@
-import us from '../_components/User Dashboard Overview-after_edit.png'
 import Image from "next/image";
+import Link from "next/link";
+import { Download, FileText } from "lucide-react";
+
+type ReportSummary = {
+  id?: string;
+  title?: string;
+  status?: string;
+  overallRating?: number;
+  createdAt?: string;
+};
+
 type Props = {
   title: string;
   company: string;
-  mode: string;
-  progress: number;
-  week: string;
   status: "in-progress" | "completed";
+  thumbnail: string;
+  report?: ReportSummary;
+  certificateUrl?: string;
 };
 
 export default function InternshipProgressCard({
   title,
   company,
-  mode,
-  progress,
-  week,
   status,
+  thumbnail,
+  report,
+  certificateUrl,
 }: Props) {
   const isCompleted = status === "completed";
-
   return (
     <div className="relative overflow-hidden rounded-2xl bg-white/60 shadow-sm backdrop-blur">
       <div className="flex flex-col gap-4 sm:flex-row sm:gap-6">
-        {/* Image */}
         <Image
-  src={us}
-  alt="internship"
-  className="h-44 w-full object-cover sm:h-auto sm:w-48 md:w-64"
-/>
+          width={400}
+          height={399}
+          src={thumbnail}
+          alt={`${title} thumbnail`}
+          className="h-44 w-full object-cover sm:h-auto sm:w-48 md:w-64"
+        />
+
+        {isCompleted && (
+          <span className="absolute left-2 top-2 rounded-full bg-green-500 px-3 py-1 text-xs text-white">
+            Completed
+          </span>
+        )}
+
+        <div className="flex min-w-0 flex-1 flex-col justify-center p-4">
+          <h3 className="text-lg font-semibold sm:text-xl">{title}</h3>
+          <p className="text-sm text-gray-500">{company}</p>
+
           {isCompleted && (
-            <span className="absolute top-2 left-2 bg-green-500 text-white text-xs px-3 py-1 rounded-full">
-              Completed
-            </span>
+            <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+              {report?.id && (
+                <Link
+                  href={`/student/report/${report.id}`}
+                  className="flex items-center justify-center gap-2 rounded-lg border border-blue-600 px-4 py-2 text-blue-600 sm:px-6"
+                >
+                  <FileText className="h-4 w-4" />
+                  View Report
+                </Link>
+              )}
+              {certificateUrl && (
+                <a
+                  href={certificateUrl}
+                  download
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-white sm:px-6"
+                >
+                  <Download className="h-4 w-4" />
+                  Show Certificate
+                </a>
+              )}
+            </div>
           )}
 
-        {/* Content */}
-        <div className="min-w-0 flex-1 p-4">
-          <span className="text-sm text-blue-600 font-medium">
-            {week}
-          </span>
-
-          <h3 className="mt-1 text-lg font-semibold sm:text-xl">{title}</h3>
-          <p className="text-gray-500 text-sm">
-            {company} | {mode}
-          </p>
-
-          {/* Progress */}
-          <div className="mt-4">
-            <div className="flex justify-between text-sm mb-1">
-              <span>Progress</span>
-              <span>{progress}%</span>
-            </div>
-            <div className="h-2 rounded-full bg-gray-200">
-              <div
-                className="h-2 rounded-full bg-blue-500"
-                style={{ width: `${progress}%` }}
-              />
-            </div>
-          </div>
-
-          {/* Actions */}
-          <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-            {isCompleted ? (
-              <button className="flex items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-white sm:px-6">
-                ⬇ Download Certificate
-              </button>
-            ) : (
-              <>
-                <button className="rounded-lg bg-blue-600 px-4 py-2 text-white sm:px-6">
-                  Manage Tasks
-                </button>
-                <button
-                  disabled
-                  className="cursor-not-allowed rounded-lg bg-gray-200 px-4 py-2 text-gray-400 sm:px-6"
-                >
-                  Logbook
-                </button>
-              </>
-            )}
-          </div>
         </div>
       </div>
     </div>
