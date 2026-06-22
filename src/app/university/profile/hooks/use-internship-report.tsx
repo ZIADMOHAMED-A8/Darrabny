@@ -11,3 +11,4 @@ export function useInternshipReport(reportId: string) {
     enabled: !!reportId,
   });
 }
+  

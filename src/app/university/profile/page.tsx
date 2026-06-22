@@ -29,7 +29,7 @@ type CollegeInternshipReport = {
 export default function UniversityDashboardPage() {
     const router = useRouter();
     const { data, isLoading } = useCollegeReports();
-    const {data:partnersData,isLoading:partnersLoading}=usePartners()
+    const { data: partnersData, isLoading: partnersLoading } = usePartners()
     if (isLoading) return <p className="p-10">Loading...</p>;
 
     const internships = (data || []) as CollegeInternshipReport[];
@@ -104,88 +104,100 @@ export default function UniversityDashboardPage() {
                     {/* Intern Progress Tracker */}
                     <div style={{ background: "#fff", border: "0.5px solid #e5e7eb", borderRadius: 12, padding: 20, marginBottom: 20 }}>
 
+                        <div
+                            style={{
+                                width: "100%",
+                                overflowX: "auto",
+                            }}
+                        >
+                            <table
+                                style={{
+                                    width: "100%",
+                                    minWidth: 900,
+                                    borderCollapse: "collapse",
+                                }}
+                            >
+                                <thead>
+                                    <tr>
+                                        {["Intern Name", "University", "Faculty", "Training Program", "Performance", "Actions"].map((h) => (
+                                            <th key={h} style={{ fontSize: 11, color: "#999", fontWeight: 500, textAlign: "left", padding: "8px 10px", letterSpacing: "0.5px", textTransform: "uppercase" }}>{h}</th>
+                                        ))}
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {allInterns.slice(0, 4).map(({ intern, item, globalIndex }) => {
+                                        const badge = getPerformanceBadge(globalIndex);
+                                        const tag = getProgramTag(item.internship?.title);
+                                        return (
+                                            <tr key={intern.applicationId} style={{ borderTop: "0.5px solid #F0F2F5", cursor: "pointer" }} >
+                                                <td style={{ padding: "12px 10px" }}>
+                                                    <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
 
-                        <table style={{ width: "100%", borderCollapse: "collapse" }}>
-                            <thead>
-                                <tr>
-                                    {["Intern Name", "University", "Faculty", "Training Program", "Performance", "Actions"].map((h) => (
-                                        <th key={h} style={{ fontSize: 11, color: "#999", fontWeight: 500, textAlign: "left", padding: "8px 10px", letterSpacing: "0.5px", textTransform: "uppercase" }}>{h}</th>
-                                    ))}
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {allInterns.slice(0, 4).map(({ intern, item, globalIndex }) => {
-                                    const badge = getPerformanceBadge(globalIndex);
-                                    const tag = getProgramTag(item.internship?.title);
-                                    return (
-                                        <tr key={intern.applicationId} style={{ borderTop: "0.5px solid #F0F2F5", cursor: "pointer" }} >
-                                            <td style={{ padding: "12px 10px" }}>
-                                                <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-
-                                                    <Image
-                                                        alt="intern profile picture"
-                                                        width={34}
-                                                        height={34}
-                                                        src={intern?.student?.profilePic?.secure_url}
-                                                        style={{
-                                                            width: 34,
-                                                            height: 34,
-                                                            borderRadius: "50%",
-                                                            objectFit: "cover",
-                                                            flexShrink: 0,
-                                                        }}
-                                                    />
-                                                    <div>
-                                                        <div style={{ fontWeight: 500, fontSize: 13, color: "#1a1a2e" }}>{intern.student?.fullName}</div>
-                                                        <div style={{ fontSize: 11, color: "#aaa" }}>ID: #{intern.applicationId}</div>
+                                                        <Image
+                                                            alt="intern profile picture"
+                                                            width={34}
+                                                            height={34}
+                                                            src={intern?.student?.profilePic?.secure_url}
+                                                            style={{
+                                                                width: 34,
+                                                                height: 34,
+                                                                borderRadius: "50%",
+                                                                objectFit: "cover",
+                                                                flexShrink: 0,
+                                                            }}
+                                                        />
+                                                        <div>
+                                                            <div style={{ fontWeight: 500, fontSize: 13, color: "#1a1a2e" }}>{intern.student?.fullName}</div>
+                                                            <div style={{ fontSize: 11, color: "#aaa" }}>ID: #{intern.applicationId}</div>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            </td>
-                                            <td style={{ padding: "12px 10px", fontSize: 13, color: "#333" }}>{intern.student?.university || "—"}</td>
-                                            <td style={{ padding: "12px 10px", fontSize: 13, color: "#333" }}>{intern.student?.faculty || "—"}</td>
-                                            <td style={{ padding: "12px 10px" }}>
-                                                <span style={{ display: "inline-flex", alignItems: "center", background: tag.bg, color: tag.color, fontSize: 11, padding: "3px 10px", borderRadius: 20, fontWeight: 500 }}>{item.internship?.title}</span>
-                                            </td>
-                                            <td style={{ padding: "12px 10px" }}>
-                                                <span style={{ display: "inline-flex", alignItems: "center", background: badge.bg, color: badge.color, fontSize: 11, fontWeight: 600, padding: "3px 10px", borderRadius: 20 }}>{badge.label}</span>
-                                            </td>
-                                            <td style={{ padding: "12px 10px" }}>
-                                                <div style={{ display: "flex", alignItems: "center", gap: 8, color: "#aaa" }}>
-                                                    <button
-                                                        type="button"
-                                                        disabled={!intern.reportId && !intern.reports?.[0]?._id}
-                                                        onClick={(event) => {
-                                                            event.stopPropagation();
-                                                            const reportId = intern.reportId || intern.reports?.[0]?._id;
-                                                            if (reportId) router.push(`/university/profile/report/${reportId}`);
-                                                        }}
-                                                        title="View report"
-                                                        style={{ border: "none", background: "transparent", padding: 0, color: "inherit", cursor: intern.reportId || intern.reports?.[0]?._id ? "pointer" : "not-allowed", opacity: intern.reportId || intern.reports?.[0]?._id ? 1 : 0.4 }}
-                                                    >
-                                                        <svg viewBox="0 0 24 24" fill="currentColor" width={14} height={14}><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z" /></svg>
-                                                    </button>
-                                                    <svg viewBox="0 0 24 24" fill="currentColor" width={14} height={14}><path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z" /></svg>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    );
-                                })}
-                            </tbody>
-                        </table>
+                                                </td>
+                                                <td style={{ padding: "12px 10px", fontSize: 13, color: "#333" }}>{intern.student?.university || "—"}</td>
+                                                <td style={{ padding: "12px 10px", fontSize: 13, color: "#333" }}>{intern.student?.faculty || "—"}</td>
+                                                <td style={{ padding: "12px 10px" }}>
+                                                    <span style={{ display: "inline-flex", alignItems: "center", background: tag.bg, color: tag.color, fontSize: 11, padding: "3px 10px", borderRadius: 20, fontWeight: 500 }}>{item.internship?.title}</span>
+                                                </td>
+                                                <td style={{ padding: "12px 10px" }}>
+                                                    <span style={{ display: "inline-flex", alignItems: "center", background: badge.bg, color: badge.color, fontSize: 11, fontWeight: 600, padding: "3px 10px", borderRadius: 20 }}>{badge.label}</span>
+                                                </td>
+                                                <td style={{ padding: "12px 10px" }}>
+                                                    <div style={{ display: "flex", alignItems: "center", gap: 8, color: "#aaa" }}>
+                                                        <button
+                                                            type="button"
+                                                            disabled={!intern.reportId && !intern.reports?.[0]?._id}
+                                                            onClick={(event) => {
+                                                                event.stopPropagation();
+                                                                const reportId = intern.reportId || intern.reports?.[0]?._id;
+                                                                if (reportId) router.push(`/university/profile/report/${reportId}`);
+                                                            }}
+                                                            title="View report"
+                                                            style={{ border: "none", background: "transparent", padding: 0, color: "inherit", cursor: intern.reportId || intern.reports?.[0]?._id ? "pointer" : "not-allowed", opacity: intern.reportId || intern.reports?.[0]?._id ? 1 : 0.4 }}
+                                                        >
+                                                            <svg viewBox="0 0 24 24" fill="currentColor" width={14} height={14}><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z" /></svg>
+                                                        </button>
+                                                        <svg viewBox="0 0 24 24" fill="currentColor" width={14} height={14}><path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z" /></svg>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        );
+                                    })}
+                                </tbody>
+                            </table>
+                            </div>
 
-                        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: 16 }}>
-                            <span style={{ fontSize: 12, color: "#aaa" }}>Showing {Math.min(4, allInterns.length)} of {totalInterns.toLocaleString()} interns</span>
-                            <div style={{ display: "flex", gap: 4 }}>
-                                {["‹", "1", "2", "3", "›"].map((p) => (
-                                    <div key={p} style={{ width: 28, height: 28, borderRadius: 6, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 12, cursor: "pointer", background: p === "1" ? "#1565C0" : "transparent", color: p === "1" ? "#fff" : "#555" }}>{p}</div>
-                                ))}
+                            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: 16 }}>
+                                <span style={{ fontSize: 12, color: "#aaa" }}>Showing {Math.min(4, allInterns.length)} of {totalInterns.toLocaleString()} interns</span>
+                                <div style={{ display: "flex", gap: 4 }}>
+                                    {["‹", "1", "2", "3", "›"].map((p) => (
+                                        <div key={p} style={{ width: 28, height: 28, borderRadius: 6, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 12, cursor: "pointer", background: p === "1" ? "#1565C0" : "transparent", color: p === "1" ? "#fff" : "#555" }}>{p}</div>
+                                    ))}
+                                </div>
                             </div>
                         </div>
-                    </div>
 
+                    </div>
                 </div>
-            </div>
             </>
 
-    );
+            );
 }

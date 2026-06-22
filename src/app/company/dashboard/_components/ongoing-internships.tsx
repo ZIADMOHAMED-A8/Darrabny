@@ -13,7 +13,7 @@ export default function OngoingInternships({
     <div className="rounded-xl bg-white border border-gray-200 shadow-sm overflow-hidden">
       <div className="border-b border-gray-200 px-4 py-5 sm:px-6">
         <h2 className="text-lg font-semibold text-gray-900">
-          Ongoing Internships
+          Ongoing Interns
         </h2>
       </div>
 
@@ -28,7 +28,7 @@ export default function OngoingInternships({
               <div>Student</div>
               <div>Role</div>
               <div>Status</div>
-              <div className="text-right">Count</div>
+              <div className="text-right">Total Students</div>
             </div>
           </div>
 

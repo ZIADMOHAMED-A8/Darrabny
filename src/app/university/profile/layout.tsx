@@ -1,10 +1,20 @@
 "use client";
-import { PropsWithChildren } from "react";
+import { PropsWithChildren, useEffect, useState } from "react";
 import { signOut } from "next-auth/react";
 import { usePathname, useRouter } from "next/navigation";
+import { X } from "lucide-react";
 export default function Layout({ children }: PropsWithChildren) {
     const pathname = usePathname();
     const router = useRouter();
+    const [mobileOpen, setMobileOpen] = useState(false);
+
+    useEffect(() => setMobileOpen(false), [pathname]);
+
+    useEffect(() => {
+        const handleOpen = () => setMobileOpen(true);
+        window.addEventListener("university-sidebar:open", handleOpen);
+        return () => window.removeEventListener("university-sidebar:open", handleOpen);
+    }, []);
 
     const sidebarItems = [
         {
@@ -27,9 +37,30 @@ export default function Layout({ children }: PropsWithChildren) {
 
     return (
         <div className="bg-[#F5F7FB] font-sans text-sm">
+            {mobileOpen && (
+                <button
+                    type="button"
+                    aria-label="Close university sidebar overlay"
+                    onClick={() => setMobileOpen(false)}
+                    className="fixed inset-0 z-[55] bg-black/40 md:hidden"
+                />
+            )}
             
             {/* Fixed Sidebar */}
-            <aside className="fixed left-0 top-16 flex h-[calc(100vh-64px)] w-[220px] pt-0 flex-col border-r border-gray-200 bg-white">
+            <aside className={`fixed left-0 top-0 z-[60] flex h-screen w-[280px] flex-col border-r border-gray-200 bg-white shadow-xl transition-transform duration-200 md:top-16 md:z-40 md:h-[calc(100vh-64px)] md:w-[220px] md:translate-x-0 md:shadow-none ${
+                mobileOpen ? "translate-x-0" : "-translate-x-full"
+            }`}>
+
+                <div className="flex justify-end border-b border-gray-200 p-3 md:hidden">
+                    <button
+                        type="button"
+                        aria-label="Close university sidebar"
+                        onClick={() => setMobileOpen(false)}
+                        className="inline-flex h-8 w-8 items-center justify-center rounded-lg text-gray-500 hover:bg-gray-100"
+                    >
+                        <X className="h-4 w-4" />
+                    </button>
+                </div>
 
   
 
@@ -37,7 +68,7 @@ export default function Layout({ children }: PropsWithChildren) {
                 <div className="flex-1 overflow-y-auto py-4">
 
                     {sidebarItems.map(
-                        ({ label, icon, path, navigateTo }) => {
+                        ({ label, icon, navigateTo }) => {
                             const active =
                             label === "Company Partners"
                               ? pathname.includes("/partners") ||
@@ -96,7 +127,7 @@ export default function Layout({ children }: PropsWithChildren) {
             </aside>
 
             {/* Main Content */}
-            <main className="ml-[220px] h-screen overflow-y-auto">
+            <main className="min-h-screen md:ml-[220px] md:h-screen md:overflow-y-auto">
                 {children}
             </main>
         </div>

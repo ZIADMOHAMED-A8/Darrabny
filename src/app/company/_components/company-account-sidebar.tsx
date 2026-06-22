@@ -9,7 +9,9 @@ import {
   Settings,
   ShieldCheck,
   UserRound,
+  X,
 } from "lucide-react";
+import { useEffect, useState } from "react";
 
 const navItems = [
   {
@@ -38,29 +40,40 @@ const navItems = [
 
 export default function CompanyAccountSidebar() {
   const pathname = usePathname();
+  const [mobileOpen, setMobileOpen] = useState(false);
+
+  useEffect(() => setMobileOpen(false), [pathname]);
+
+  useEffect(() => {
+    const handleOpen = () => setMobileOpen(true);
+    window.addEventListener("company-sidebar:open", handleOpen);
+    return () => window.removeEventListener("company-sidebar:open", handleOpen);
+  }, []);
 
   return (
-    <aside className="z-40 flex w-full flex-col border-b border-slate-200 bg-white md:fixed md:left-0 md:top-[72px] md:h-[calc(100vh-4.5rem)] md:w-[220px] md:border-b-0 md:border-r">
-      <div className="flex items-center gap-2 border-b border-slate-200 px-4 py-4 md:px-5 md:py-5">
-        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#1A6FA8] text-white">
-          <BriefcaseBusiness className="h-4 w-4" />
-        </div>
-        <div>
-          <h2 className="text-[15px] font-bold text-[#1A6FA8]">Darrabny</h2>
-          <p className="text-[9px] uppercase tracking-[0.5px] text-slate-400">
-            Company Account
-          </p>
-        </div>
-      </div>
+    <>
+      {mobileOpen && (
+        <button
+          type="button"
+          aria-label="Close company sidebar overlay"
+          onClick={() => setMobileOpen(false)}
+          className="fixed inset-0 z-[55] bg-black/40 md:hidden"
+        />
+      )}
 
-      <nav className="flex gap-1 overflow-x-auto px-2 py-3 md:block md:flex-1 md:overflow-y-auto md:px-0 md:py-4">
+      <aside className={`fixed left-0 top-0 z-[60] flex h-screen w-[280px] flex-col border-r border-slate-200 bg-white shadow-xl transition-transform duration-200 md:top-[72px] md:z-40 md:h-[calc(100vh-4.5rem)] md:w-[220px] md:translate-x-0 md:shadow-none ${
+        mobileOpen ? "translate-x-0" : "-translate-x-full"
+      }`}>
+  
+
+      <nav className="block flex-1 overflow-y-auto py-4">
         {navItems.map(({ label, href, icon: Icon, isActive }) => {
           const active = isActive(pathname);
           return (
             <Link
               key={href}
               href={href}
-              className={`flex shrink-0 items-center gap-2 rounded-lg px-3 py-2 text-left text-[13px] transition-all duration-200 md:w-full md:gap-3 md:rounded-none md:px-5 md:py-3 ${
+              className={`flex w-full items-center gap-3 px-5 py-3 text-left text-[13px] transition-all duration-200 ${
                 active
                   ? "bg-[#EEF2FB] font-medium text-[#1A6FA8] md:border-r-2 md:border-[#1A6FA8]"
                   : "text-slate-600 hover:bg-slate-50"
@@ -83,6 +96,7 @@ export default function CompanyAccountSidebar() {
           Logout
         </button>
       </div>
-    </aside>
+      </aside>
+    </>
   );
 }

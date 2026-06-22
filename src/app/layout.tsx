@@ -4,11 +4,13 @@ import Providers from "@/components/providers";
 import ChatbotWidget from "@/components/shared/ChatbotWidget";
 import ConditionalStudentTopBar from "./_components/ConditionalStudentTopBar";
 import StudentTopBar from "./_components/StudentTopBar";
-
+import { Toaster } from "react-hot-toast";
+Toaster
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
       <body className="min-h-screen">
+      <Toaster position="bottom-right" />
         <Providers>
         <ConditionalStudentTopBar></ConditionalStudentTopBar>
           {children}
