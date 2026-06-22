@@ -15,7 +15,7 @@ export default async function updateProjectAction(values: UpdateProjectPayload) 
     throw new Error("Unauthorized");
   }
 
-  const res = await fetch(`http://localhost:5000/student/projects/${values.id}`, {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/student/projects/${values.id}`, {
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",

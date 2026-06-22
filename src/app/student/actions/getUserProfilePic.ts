@@ -9,7 +9,7 @@ export default async function getUserPorfilePicture(){
         throw new Error("Unauthorized: No token found");
       }
       console.log('token zzz',token)
-    let res=await fetch('http://localhost:5000/user/profilePic',{
+    let res=await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/user/profilePic`,{
         method:'GET',
         headers:{
             Authorization: `user ${token.token.accessToken}`,

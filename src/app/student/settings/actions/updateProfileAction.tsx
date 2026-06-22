@@ -36,7 +36,7 @@ export default async function updateProfileAction(
     // },
   };
 
-  const res = await fetch("http://localhost:5000/user/UpdateAccount", {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/user/UpdateAccount`, {
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",

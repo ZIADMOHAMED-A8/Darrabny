@@ -6,7 +6,7 @@ export default async function getCompanyInternshipsAction() {
   const token = await getToken();
 
   const res = await fetch(
-    "http://localhost:5000/internship/companyInternships",
+    `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/internship/companyInternships`,
     {
       headers: {
         Authorization: `company ${token?.token}`,

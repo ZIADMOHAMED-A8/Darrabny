@@ -1,9 +1,9 @@
 import { NextResponse } from "next/server";
 import { getToken } from "@/lib/utils/get-token.util";
 
-const USER_ENDPOINT = "http://localhost:5000/user/getLoginUser";
-const SKILLS_ENDPOINT = "http://localhost:5000/student/skills";
-const RESUME_ENDPOINT = "http://localhost:5000/student/resume";
+const USER_ENDPOINT = "/user/getLoginUser";
+const SKILLS_ENDPOINT = "/student/skills";
+const RESUME_ENDPOINT = "/student/resume";
 
 export async function GET() {
   const token = await getToken();
@@ -21,10 +21,13 @@ export async function GET() {
     Authorization: `user ${accessToken}`,
   };
 
+  const baseUrl =
+    process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+
   const [userRes, skillsRes, resumeRes] = await Promise.all([
-    fetch(USER_ENDPOINT, { method: "GET", headers, cache: "no-store" }),
-    fetch(SKILLS_ENDPOINT, { method: "GET", headers, cache: "no-store" }),
-    fetch(RESUME_ENDPOINT, { method: "GET", headers, cache: "no-store" }),
+    fetch(`${baseUrl}${USER_ENDPOINT}`, { method: "GET", headers, cache: "no-store" }),
+    fetch(`${baseUrl}${SKILLS_ENDPOINT}`, { method: "GET", headers, cache: "no-store" }),
+    fetch(`${baseUrl}${RESUME_ENDPOINT}`, { method: "GET", headers, cache: "no-store" }),
   ]);
 
   if (!userRes.ok) {

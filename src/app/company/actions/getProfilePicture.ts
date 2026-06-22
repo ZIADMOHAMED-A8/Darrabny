@@ -8,7 +8,7 @@ export default async function getPorfilePicture(){
         throw new Error("Unauthorized: No token found");
       }
       console.log('token zzz',token)
-    let res=await fetch('http://localhost:5000/company/logo',{
+    let res=await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/company/logo`,{
         method:'GET',
         headers:{
             Authorization: `company ${token.token}`,

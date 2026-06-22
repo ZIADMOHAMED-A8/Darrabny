@@ -12,7 +12,7 @@ export default async function updateNotifAction(values: UpdateNotifPayload) {
   if (!token) {
     throw new Error("Unauthorized");
   }
-  const res = await fetch("http://localhost:5000/user/myNotifications", {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/user/myNotifications`, {
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",

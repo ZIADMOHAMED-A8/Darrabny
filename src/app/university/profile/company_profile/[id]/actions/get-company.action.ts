@@ -6,7 +6,7 @@ export default async function getCompanyAction(companyId: string) {
   const token = await getToken();
 
   const res = await fetch(
-    `http://localhost:5000/company//getCompany/${companyId}`,
+    `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/company//getCompany/${companyId}`,
     {
       method: "GET",
       headers: {

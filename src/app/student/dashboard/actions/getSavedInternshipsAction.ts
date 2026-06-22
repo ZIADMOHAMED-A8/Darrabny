@@ -9,7 +9,7 @@ export default async function getSavedInternshipsAction() {
     throw new Error("Unauthorized");
   }
 
-  const res = await fetch("http://localhost:5000/internship/saved", {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/internship/saved`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",

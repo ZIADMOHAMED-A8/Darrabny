@@ -3,7 +3,7 @@ import { getToken } from "@/lib/utils/get-token.util"
 
 export default async function addUniversity(id: string) {
     const token=await getToken()
-    let res = await fetch('http://localhost:5000/student/college', {
+    let res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/student/college`, {
         method:'PATCH',
         headers: {
             Authorization: `user ${token?.token.accessToken}`,

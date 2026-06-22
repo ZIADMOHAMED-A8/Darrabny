@@ -18,7 +18,7 @@ export default async function updateFullNameAction(
     throw new Error("Unauthorized");
   }
 
-  const res = await fetch("http://localhost:5000/student/UpdateStudentAccount", {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/student/UpdateStudentAccount`, {
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",

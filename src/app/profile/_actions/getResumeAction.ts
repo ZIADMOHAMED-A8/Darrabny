@@ -9,7 +9,7 @@ export default async function getResumeAction() {
     throw new Error("Unauthorized");
   }
 
-  const res = await fetch("http://localhost:5000/student/resume", {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/student/resume`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
