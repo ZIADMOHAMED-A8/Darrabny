@@ -10,7 +10,7 @@ export default async function uploadCompanyLogoAction({
   formData: FormData;
 }) {
   const baseUrl =
-    process.env.NEXT_PUBLIC_API_URL ||
+    process.env.NEXT_PUBLIC_API_BASE_URL ||
     "http://localhost:5000";
 
   const token = await getToken();
@@ -29,6 +29,8 @@ export default async function uploadCompanyLogoAction({
       body: formData,
     }
   );
+  console.log("response :", response);
+  
   console.log(companyId)
   const data = await response.json().catch(() => null);
   if (!response.ok) {
