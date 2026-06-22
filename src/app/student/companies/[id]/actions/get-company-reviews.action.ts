@@ -30,7 +30,7 @@ export default async function getCompanyReviewsAction(
   id: string
 ): Promise<GetCompanyReviewsResponse> {
   const baseUrl =
-    process.env.NEXT_PUBLIC_API_BASE_URL ||
+    process.env.NEXT_PUBLIC_API_URL ||
     process.env.NEXT_PUBLIC_API_URL ||
     "http://localhost:5000";
 

@@ -25,7 +25,7 @@ export default async function searchCompaniesAction({
   limit = 10,
 }: SearchCompaniesParams = {}): Promise<SearchCompaniesResponse> {
   const baseUrl =
-    process.env.NEXT_PUBLIC_API_BASE_URL ||
+    process.env.NEXT_PUBLIC_API_URL ||
     process.env.NEXT_PUBLIC_API_URL ||
     "http://localhost:5000";
 

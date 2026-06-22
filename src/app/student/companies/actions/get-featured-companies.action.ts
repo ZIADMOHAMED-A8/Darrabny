@@ -19,7 +19,7 @@ export type GetFeaturedCompaniesResponse = {
 
 export default async function getFeaturedCompaniesAction(): Promise<GetFeaturedCompaniesResponse> {
   const baseUrl =
-    process.env.NEXT_PUBLIC_API_BASE_URL ||
+    process.env.NEXT_PUBLIC_API_URL ||
     process.env.NEXT_PUBLIC_API_URL ||
     "http://localhost:5000";
 

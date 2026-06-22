@@ -3,7 +3,7 @@ import { getToken } from "@/lib/utils/get-token.util";
 
 export async function updateInternshipAction(id: string, formData: FormData) {
   const baseUrl =
-    process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:5000";
+    process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
 
   const token = await getToken();
 

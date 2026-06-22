@@ -50,7 +50,7 @@ export default async function getCompanyDetailsAction(
   id: string
 ): Promise<GetCompanyDetailsResponse> {
   const baseUrl =
-    process.env.NEXT_PUBLIC_API_BASE_URL ||
+    process.env.NEXT_PUBLIC_API_URL ||
     process.env.NEXT_PUBLIC_API_URL ||
     "http://localhost:5000";
 

@@ -5,7 +5,7 @@ export type CollegeSettingsResponse = unknown;
 
 export async function getCollegeSettingsAction(): Promise<CollegeSettingsResponse> {
   const baseUrl =
-    process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:5000";
+    process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
   const token=await getToken()
   const res = await fetch(`${baseUrl}/company/settings`, {
     method: "GET",

@@ -37,7 +37,7 @@ export type UniversityDashboardData = {
 
 export default async function getUniversityDashboardAction(): Promise<UniversityDashboardData> {
   const baseUrl =
-    process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:5000";
+    process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
 
   const token = await getToken();
 
