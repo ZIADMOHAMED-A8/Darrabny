@@ -11,7 +11,10 @@ export default async function getRecommendedInternshipsAction() {
     throw new Error("Unauthorized");
   }
 
-  const res = await fetch("http://localhost:5000/internship/recommended", {
+  const baseUrl =
+    process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+
+  const res = await fetch(`${baseUrl}/internship/recommended`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
