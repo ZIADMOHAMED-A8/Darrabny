@@ -220,10 +220,13 @@ export default function ApplyModal({
         setCoverLetter("");
       },
       onError: (submitError) => {
+        console.log(submitError,'sub error')
+        let temp=(skills.length===0 && !resumeUrl) ? ',skills and resume are missing,please update from profile' : skills.length===0 ? ',skills cannot be empty,please upload from profile' : !resumeUrl ? ',please upload your resume' : ''
+        if(skills.length===0){}
         const message =
           submitError instanceof Error
-            ? submitError.message
-            : "Please try again.";
+            ? submitError.message+temp
+            : "Please try again";
 
         setSubmitError(message);
         toast({
@@ -314,9 +317,7 @@ export default function ApplyModal({
 
           <div className="mt-8 flex items-center justify-between gap-3">
             <h3 className="text-lg font-bold text-[#0b1f33]">Current Skills</h3>
-            <Link href="/profile" className="inline-flex items-center gap-2 text-sm font-semibold text-[var(--ds-primary)] hover:underline">
-              Update
-            </Link>
+         
           </div>
 
           <div className="mt-4 flex flex-wrap gap-3">

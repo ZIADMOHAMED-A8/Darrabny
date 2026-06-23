@@ -3,15 +3,18 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Bot, Search } from "lucide-react";
+import useGetUser from "../student/hooks/useGetLoginUser";
 
 export default function HeroSection() {
   // Hero banner + search UI (no logic yet)
-
+  const {data,isLoading}=useGetUser()
+  console.log(data,"u data")
+  if(isLoading)return
   return (
     <section className="mx-auto pt-10 md:pt-14">
       <div className="mx-auto max-w-6xl">
         <h1 className="text-2xl font-semibold text-[#063058] md:text-3xl">
-          Hi Adham, Welcome To Darrabny
+          Hi {data.fullName.split(' ')[0] ?? "Student"}, Welcome To Darrabny
         </h1>
 
         <div className="relative mt-10 overflow-hidden rounded-3xl border border-white/60 bg-white/50 px-6 py-16 shadow-[var(--ds-shadow)] backdrop-blur-sm md:px-12 md:py-24">

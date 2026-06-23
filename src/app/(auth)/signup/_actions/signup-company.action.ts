@@ -4,7 +4,7 @@ import { CompanySignupValues } from "@/lib/schemas/auth/company-signup.schema";
 
 export async function signupCompanyAction(values: CompanySignupValues) {
   const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/company/signup`,
+    `${process.env.NEXT_PUBLIC_API_URL || "localhost:3000"}/company/signup`,
     {
       method: "POST",
       headers: { "Content-Type": "application/json" },

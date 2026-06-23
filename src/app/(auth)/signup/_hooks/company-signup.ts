@@ -7,6 +7,9 @@ import { signupCompanyAction } from "../_actions/signup-company.action";
 export default function useCompanySignup() {
   const { mutate, isPending, error, reset } = useMutation({
     mutationFn: (values: CompanySignupValues) => signupCompanyAction(values),
+    onSuccess:()=>{
+      window.location.href='/login'
+    }
   });
 
   return {

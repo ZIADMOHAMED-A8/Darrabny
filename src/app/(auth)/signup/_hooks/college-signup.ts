@@ -6,6 +6,9 @@ import { signupCollegeAction } from "../_actions/signup-college.action";
 export default function useCollegeSignup() {
   const { mutate, isPending, error, reset, data, isError, isSuccess } = useMutation({
     mutationFn: (data)=>signupCollegeAction(data),
+    onSuccess:()=>{
+      window.location.href='/login'
+    }
   });
 
   return {
