@@ -18,6 +18,9 @@
   --ds-soft: #eaf2ff; /* soft icon bg */
   --ds-ring: rgba(10, 121, 201, 0.25);
 
+  --destructive: 0 72.2% 50.6%;
+  --destructive-foreground: 0 0% 100%;
+
   --ds-card: #ffffff;
   --ds-border: rgba(12, 24, 44, 0.1);
 
