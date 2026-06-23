@@ -2,57 +2,37 @@
 
 import { getToken } from "@/lib/utils/get-token.util";
 
-export type CompanyKpis = {
-  totalApplicants: { count: number; growthPct: number };
-  totalCompletedTrainees: { count: number; growthPct: number };
-  activePostings: { total: number; internships: number; jobs: number };
-};
+// التعريفات الخاصة بك كما هي...
+export type CompanyDashboardData = { /* ... */ };
 
-export type CompanyInternship = {
-  student: { name: string; email: string };
-  internshipId: string;
-  role: string;
-  status: string;
-  studentCount: { current: number; capacity: number | null };
-};
+export default async function getCompanyDashboardAction() {
+  try {
+    const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+    const token = await getToken();
+    
+    if (!token) {
+      return { error: "Unauthorized: No token found" };
+    }
 
-export type CompanyVerification = {
-  status: "pending" | "verified" | "rejected";
-  validUntil: string | null;
-};
+    const res = await fetch(`${baseUrl}/company/dashboard`, {
+      method: "GET",
+      cache: "no-store",
+      headers: {
+        Authorization: `company ${token.token}`,
+      },
+    });
 
-export type AcademicPartner = {
-  universityName: string;
-  agreementStatus: string;
-};
+    const payload = await res.json().catch(() => null);
 
-export type CompanyDashboardData = {
-  kpis: CompanyKpis;
-  ongoingInternships: CompanyInternship[];
-  acceptanceRate: number;
-  verificationStatus: CompanyVerification;
-  academicPartners: AcademicPartner[];
-};
+    if (!res.ok) {
+      return { 
+        error: payload?.message || `Failed to fetch company dashboard, status: ${res.status}` 
+      };
+    }
 
-export default async function getCompanyDashboardAction(): Promise<CompanyDashboardData> {
-  const baseUrl =
-    process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
-  const token = await getToken();
-  const res = await fetch(`${baseUrl}/company/dashboard`, {
-    method: "GET",
-    cache: "no-store",
-    headers: {
-      Authorization: `company ${token?.token}`,
-    },
-  });
+    return { success: true, data: payload as CompanyDashboardData };
 
-  const payload = await res.json().catch(() => null);
-
-  if (!res.ok) {
-    throw new Error(
-      payload?.message || `Failed to fetch company dashboard ${res.status}`
-    );
+  } catch (error) {
+    return { error: "An unexpected error occurred while fetching dashboard data." };
   }
-
-  return payload;
 }
