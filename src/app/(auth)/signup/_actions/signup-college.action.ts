@@ -4,7 +4,7 @@ import type { CollegeSignupRequestValues } from "@/lib/schemas/auth/college-sign
 
 export async function signupCollegeAction(values: CollegeSignupRequestValues) {
   const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/college/signup`,
+    `${process.env.NEXT_PUBLIC_API_URL || 'localhost:3000'} /college/signup`,
     {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -14,13 +14,15 @@ export async function signupCollegeAction(values: CollegeSignupRequestValues) {
 
   const data = await response.json().catch(() => null);
   console.log(data);
-  
+
   if (!response.ok) {
-    throw {
-      message: data?.msg || "College signup failed",
-      fieldErrors: data?.fieldErrors,
-      status: response.status,
-    };
+    const fieldErrors = data?.fieldErrors || data?.errors;
+
+    throw new Error(
+      fieldErrors?.map((e: any) => e.message).join("\n") ||
+      data?.message ||
+      "Signup failed"
+    );
   }
 
   return data;

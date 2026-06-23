@@ -128,7 +128,6 @@ export default function DashboardPage() {
         <div className="space-y-4">
           <div className="flex justify-between items-center">
             <h2 className="text-lg font-semibold">Saved</h2>
-            <button className="text-blue-600 text-sm">See all</button>
           </div>
 
           <div className="rounded-xl bg-white/60 backdrop-blur p-4 space-y-4 shadow-sm">

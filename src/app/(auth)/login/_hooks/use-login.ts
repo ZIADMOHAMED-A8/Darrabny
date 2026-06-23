@@ -28,7 +28,7 @@ export function useLogin() {
         values.role === "company"
           ? "/company/dashboard"
           : values.role === "college"
-            ? "/college/dashboard"
+            ? "/university/dashboard"
             : "/";
 
       window.location.href = callbackUrl || redirectTo;

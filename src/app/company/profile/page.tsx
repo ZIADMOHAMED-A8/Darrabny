@@ -5,6 +5,7 @@ import { useCompanyProfile } from "./hooks/use-company-profile";
 import { useUpdateCompanyProfile } from "./hooks/use-update-company-profile";
 import { useUploadCompanyLogo } from "./hooks/use-upload-company-logo";
 import { useToast } from "@/hooks/use-toast";
+import Image from "next/image";
 
 /* ─── Icon helpers ─────────────────────────────────────────────────────────── */
 function Icon({ d, size = 14 }: { d: string; size?: number }) {
@@ -528,46 +529,54 @@ export default function CompanyProfilePage() {
                 <h2 className="text-sm font-bold text-slate-800">
                   Active Internships
                 </h2>
-                <button className="flex items-center gap-1 text-[11px] text-[#1A6FA8] font-semibold hover:underline">
-                  View all <Icon d={ICONS.arrow_right} size={12} />
-                </button>
+
               </div>
 
               <div className="space-y-3">
                 {(data?.internships as CompanyInternshipSummary[] | undefined)?.map(
                   (intern) => (
                     <div
-                      key={intern.id}
-                      className="border border-slate-100 rounded-xl p-4"
-                    >
-                      <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-                        <div className="flex min-w-0 items-start gap-3">
-                          <div className="w-9 h-9 rounded-lg bg-slate-100 border border-slate-200 shrink-0" />
-                          <div className="min-w-0">
-                            <p className="text-xs font-bold text-slate-800">
-                              {intern.internshipTitle}
-                            </p>
-                            <div className="mt-1 flex flex-wrap gap-3 text-[11px] text-slate-500">
-                              <span>{intern.internshipLocation}</span>
-                              <span>{intern.workingTime}</span>
-                              <span>{intern.postedAgo}</span>
-                            </div>
-                            <div className="flex flex-wrap gap-1.5 mt-2">
-                              {intern.technicalSkills?.map(
-                                (s: string, i: number) => (
-                                  <span
-                                    key={i}
-                                    className="border border-slate-200 text-[10px] text-slate-600 px-2 py-0.5 rounded-full"
-                                  >
-                                    {s.replace(/[\[\]\"]/g, "")}
-                                  </span>
-                                )
-                              )}
-                            </div>
+                    key={intern.id}
+                    className="border border-slate-100 rounded-xl p-4"
+                  >
+                    <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                      <div className="flex min-w-0 items-start gap-3">
+                        <div
+                          className="w-9 h-9 rounded-lg bg-slate-100 border border-slate-200 shrink-0 overflow-hidden"
+                          role="img"
+                          aria-label={intern.internshipTitle ?? "Company thumbnail"}
+                        >
+                          {intern.thumbnail ? (
+                            <img
+                              src={intern.thumbnail}
+                              alt={intern.internshipTitle ?? "Company thumbnail"}
+                              className="w-full h-full object-cover"
+                            />
+                          ) : null}
+                        </div>
+                        <div className="min-w-0">
+                          <p className="text-xs font-bold text-slate-800">
+                            {intern.internshipTitle}
+                          </p>
+                          <div className="mt-1 flex flex-wrap gap-3 text-[11px] text-slate-500">
+                            <span>{intern.internshipLocation}</span>
+                            <span>{intern.workingTime}</span>
+                            <span>{intern.postedAgo}</span>
+                          </div>
+                          <div className="flex flex-wrap gap-1.5 mt-2">
+                            {intern.technicalSkills?.map((s: string, i: number) => (
+                              <span
+                                key={i}
+                                className="border border-slate-200 text-[10px] text-slate-600 px-2 py-0.5 rounded-full"
+                              >
+                                {s.replace(/[\[\]\"]/g, "")}
+                              </span>
+                            ))}
                           </div>
                         </div>
                       </div>
                     </div>
+                  </div>
                   )
                 )}
               </div>

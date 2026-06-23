@@ -12,13 +12,15 @@ export async function signupAction(values: SignupValues) {
   });
 
   const data = await response.json().catch(() => null);
-
+  console.log(data, "sign up data")
   if (!response.ok) {
-    throw {
-      message: data?.message || "Signup failed",
-      fieldErrors: data?.fieldErrors || data?.errors,
-      status: response.status,
-    };
+    const fieldErrors = data?.fieldErrors || data?.errors;
+
+    throw new Error(
+      fieldErrors?.map((e: any) => e.message).join("\n") ||
+      data?.message ||
+      "Signup failed"
+    );
   }
 
   return data;

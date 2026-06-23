@@ -57,7 +57,7 @@ export default async function middleware(req: NextRequest) {
     !pathname.startsWith("/university") &&
     !pathname.startsWith("/college") &&
     !pathname.startsWith('/api') &&
-
+    !pathname.startsWith('/policies') &&
     !authRoutes.includes(pathname)
   ) {
     return NextResponse.redirect(
@@ -70,6 +70,7 @@ export default async function middleware(req: NextRequest) {
     !pathname.startsWith('/api') &&
     !pathname.startsWith("/student") &&
     !pathname.startsWith("/profile") &&
+    !pathname.startsWith('/policies') &&
     !authRoutes.includes(pathname)
   ) {
     return NextResponse.redirect(
@@ -80,7 +81,7 @@ export default async function middleware(req: NextRequest) {
     role === "company" &&
     !pathname.startsWith("/company") &&
     !pathname.startsWith('/api') &&
-
+    !pathname.startsWith('/policies') &&
     !authRoutes.includes(pathname)
   ) {
     return NextResponse.redirect(

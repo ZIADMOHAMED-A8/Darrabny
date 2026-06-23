@@ -5,7 +5,7 @@ import { signupCollegeAction } from "../_actions/signup-college.action";
 
 export default function useCollegeSignup() {
   const { mutate, isPending, error, reset, data, isError, isSuccess } = useMutation({
-    mutationFn: signupCollegeAction,
+    mutationFn: (data)=>signupCollegeAction(data),
   });
 
   return {

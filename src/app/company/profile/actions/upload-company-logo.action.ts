@@ -34,6 +34,7 @@ export default async function uploadCompanyLogoAction({
   console.log(companyId)
   const data = await response.json().catch(() => null);
   if (!response.ok) {
+    console.log('status',response.status)
     throw new Error(
       data?.message || data?.error || "Failed to upload company logo"
     );
