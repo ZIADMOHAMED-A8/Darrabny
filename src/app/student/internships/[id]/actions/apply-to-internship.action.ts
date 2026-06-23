@@ -16,36 +16,46 @@ export default async function applyToInternshipAction(
 
   const token = await getToken();
 
+  // 1. تبديل الـ throw بـ return
   if (!token) {
-    throw new Error("Unauthorized: No token found");
+    return { error: "Unauthorized: No token found" };
   }
 
-  const response = await fetch(
-    `${baseUrl}/internship/ApplyToInternship/${internshipId}`,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `user ${token.token.accessToken}`,
-      },
-      body: JSON.stringify({
-        coverLetter: payload.coverLetter || "",
-        skills: payload.skills || [],
-      }),
-      cache: "no-store",
-    }
-  );
-
-  const data = await response.json().catch(() => null);
-
-  if (!response.ok) {
-    throw new Error(
-      data?.message ||
-        data?.error ||
-        data?.msg ||
-        `Request failed with status ${response.status}`
+  try {
+    const response = await fetch(
+      `${baseUrl}/internship/ApplyToInternship/${internshipId}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `user ${token.token.accessToken}`,
+        },
+        body: JSON.stringify({
+          coverLetter: payload.coverLetter || "",
+          skills: payload.skills || [],
+        }),
+        cache: "no-store",
+      }
     );
-  }
 
-  return data;
+    const data = await response.json().catch(() => null);
+
+    // 2. تبديل الـ throw بـ return
+    if (!response.ok) {
+      return {
+        error:
+          data?.message ||
+          data?.error ||
+          data?.msg ||
+          `Request failed with status ${response.status}`,
+      };
+    }
+
+    // 3. ترجيع حالة النجاح عشان الكلاينت يفهم إن مفيش إيرور
+    return { success: true, data: data };
+
+  } catch (error) {
+    // 4. أمان إضافي: لو السيرفر الأساسي (Backend) واقع أو في مشكلة في النتوورك
+    return { error: "حدث خطأ في الاتصال بالخادم، يرجى المحاولة لاحقاً." };
+  }
 }

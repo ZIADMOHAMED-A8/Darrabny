@@ -185,13 +185,15 @@ export default function LoginFormCard({
                 <Link href="/signup">Create an account</Link>
                 
               </Button>
-              <Button
-                type="button"
-                onClick={onForgotPassword}
-                className="text-sm text-[#0A79C9] hover:underline bg-transparent shadow-none p-0 h-auto"
-              >
-                Forgot password?
-              </Button>
+            <Button
+  asChild
+  type="button"
+  className="text-sm text-[#0A79C9] hover:underline bg-transparent shadow-none p-0 h-auto"
+>
+  <Link href="/forget-password">
+    Forgot password?
+  </Link>
+</Button>
             </div>
 
             {error ? (
