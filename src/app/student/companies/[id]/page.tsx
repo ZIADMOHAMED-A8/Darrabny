@@ -84,8 +84,9 @@ export default function CompanyDetailsPage({
       </main>
     );
   }
-
   const company = detailsData.company;
+  const imgUrl=company?.logo?.secure_url
+
   const internships = internshipsData?.internships ?? detailsData.internships;
   const reviews = reviewsData?.reviews ?? [];
   const averageRating = Number(
@@ -157,7 +158,7 @@ export default function CompanyDetailsPage({
           <div className="flex flex-col items-start justify-between gap-4 border-b border-[#0b1f33]/10 pb-5 md:flex-row md:items-center">
             <div className="flex w-full flex-col gap-4 sm:flex-row sm:items-center">
               <div className="grid h-16 w-16 shrink-0 place-items-center overflow-hidden rounded-xl bg-[#e9f0ff] sm:h-20 sm:w-20">
-                <Building2 className="h-9 w-9 text-[#0a79c9]" />
+                {imgUrl ? <img src={imgUrl}></img> : <Building2></Building2>}
               </div>
               <div className="min-w-0">
                 <h1 className="break-words text-2xl font-semibold text-[#0b1f33] sm:text-3xl md:text-4xl">
