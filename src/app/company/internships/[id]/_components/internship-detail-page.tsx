@@ -1,11 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { X, CheckCircle2, Bookmark } from "lucide-react";
+import { X, CheckCircle2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import InternshipPostForm from "../../_components/internship-post-form";
 import { useDeleteInternship } from "../../_hooks/use-delete-internship";
 import { useToast } from "@/hooks/use-toast";
+import { showSuccessToast } from "@/lib/show-success-toast";
 
 type CompanyId = {
   _id: string;
@@ -240,7 +241,7 @@ export default function InternshipDetailPage({
               if (!confirm("Are you sure you want to delete this internship?")) return;
               deleteInternship(_id, {
                 onSuccess: () => {
-                  toast({ title: "Internship deleted", description: "The internship has been deleted successfully." });
+                  showSuccessToast("Internship deleted successfully");
                   router.push("/company/internships");
                 },
                 onError: (error) => {

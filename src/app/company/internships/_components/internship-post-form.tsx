@@ -27,6 +27,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useUpdateInternship } from "../_hooks/use-update-internship";
 import { useToast } from "@/hooks/use-toast";
+import { showSuccessToast } from "@/lib/show-success-toast";
 
 const DEFAULT_VALUES: InternshipPostFormValues = {
   internshipTitle: "Frontend Developer Intern",
@@ -208,10 +209,7 @@ export default function InternshipPostForm({
         { id: internshipId, data: formData },
         {
           onSuccess: () => {
-            toast({
-              title: "Internship updated",
-              description: "Your internship has been updated successfully.",
-            });
+            showSuccessToast("Internship updated successfully");
             onCancel?.();
           },
           onError: (error) => {
