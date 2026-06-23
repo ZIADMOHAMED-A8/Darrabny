@@ -10,7 +10,7 @@ const authRoutes = [
   "/signup",
   "/forget-password",
   "/otp",
-  "/create-pass",
+  "/create-pass",'/policies'
 ];
 const universityRoutes = [
 
@@ -19,6 +19,7 @@ const universityRoutes = [
   /^\/university\/profile(?:\/[^/]+)?$/,
   /^\/university\/settings$/,
   /^\/university\/student_profile(?:\/[^/]+)?$/,
+  
 ];
 
 // Add static asset extensions to ignore
@@ -42,7 +43,7 @@ export default async function middleware(req: NextRequest) {
   const cookieStore = await cookies()
   const token = await getToken({ req, secret });
   const role = cookieStore.get('role')?.value ?? null
-
+  
 
   const isAuthRoute = authRoutes.some(route => pathname.startsWith(route));
   const isHome = pathname === "/";

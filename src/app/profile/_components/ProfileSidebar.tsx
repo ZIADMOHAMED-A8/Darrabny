@@ -71,8 +71,8 @@ export default function ProfileSidebar() {
     user?.fullName ||
     [user?.firstName, user?.lastName].filter(Boolean).join(" ").trim() ||
     "";
-  const linkedin = links?.linkedin || "linkedin.com/in/sophia-clark";
-  const github = links?.github || "github.com/sophia-clark";
+  const linkedin = links?.linkedin || "Not Avaialble";
+  const github = links?.github || "Not Avaialble";
 
   useEffect(() => {
     setLinksForm({
@@ -222,7 +222,7 @@ export default function ProfileSidebar() {
             <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-[#e5f1ff]">
               <MapPin className="h-5 w-5 text-[#2280cc]" />
             </span>
-            <span>{user?.address?.city}, {user?.address?.country}</span>
+            <span>{user?.address?.city && user?.address?.country ? user?.address?.city+','+user?.address?.country : 'Not Avaialble'}</span>
           </li>
         </ul>
       </div>

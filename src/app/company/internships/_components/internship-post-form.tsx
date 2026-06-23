@@ -37,10 +37,24 @@ const DEFAULT_VALUES: InternshipPostFormValues = {
   workingTime: "full-time",
   technicalSkills: ["HTML", "CSS", "JavaScript", "React", "Next.js"],
   softSkills: ["Teamwork", "Problem-solving", "Communication"],
-  startDate: new Date().toISOString(),
+  startDate: new Date().toISOString().slice(0, 10),
   closed: false,
   thumbnail: null,
 };
+
+function toDateInputValue(value: unknown): string {
+  const rawValue =
+    value && typeof value === "object" && "$date" in value
+      ? (value as { $date: unknown }).$date
+      : value;
+
+  if (typeof rawValue !== "string" && !(rawValue instanceof Date)) {
+    return "";
+  }
+
+  const date = new Date(rawValue);
+  return Number.isNaN(date.getTime()) ? "" : date.toISOString().slice(0, 10);
+}
 
 type Props = InternshipPostFormProps & {
   onCancel?: () => void;
@@ -132,15 +146,19 @@ export default function InternshipPostForm({
     defaultValues: {
       ...DEFAULT_VALUES,
       ...defaultValues,
+      startDate: toDateInputValue(
+        defaultValues?.startDate ?? DEFAULT_VALUES.startDate,
+      ),
     },
   });
-  console.log("DATA JSON",defaultValues)
 
-  const { addInternship, isPending } = useAddInternship();
+  const { addInternship, isPending, error: addError } = useAddInternship();
   const {
     updateInternship,
     isPending: isUpdating,
+    error: updateError,
   } = useUpdateInternship();
+  const requestError = mode === "edit" ? updateError : addError;
   const { toast } = useToast();
   function submit(values: InternshipPostFormValues) {
     const formData = new FormData();
@@ -639,8 +657,8 @@ export default function InternshipPostForm({
                       <div className="relative">
                         <Input
                           {...field}
+                          type="date"
                           className={inputLike}
-                          placeholder="mm/dd/yyyy"
                         />
                         <span className="absolute right-4 top-1/2 -translate-y-1/2 text-[#0B2A4A]/55">
                           
@@ -654,6 +672,16 @@ export default function InternshipPostForm({
             </div>
             {/* </div> */}
 
+            {requestError && (
+              <div
+                role="alert"
+                className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-700"
+              >
+                {requestError instanceof Error
+                  ? requestError.message
+                  : "The internship request failed. Please try again."}
+              </div>
+            )}
 
             <div className="flex flex-col gap-3 pt-6 sm:flex-row sm:items-center sm:justify-between">
               <Button
@@ -682,9 +710,6 @@ export default function InternshipPostForm({
               </div>
             </div>
           </form>
-          <pre className="text-red-500 text-xs">
-            {JSON.stringify(form.formState.errors.message)} 
-          </pre>
         </Form>
       </CardContent>
     </Card>
