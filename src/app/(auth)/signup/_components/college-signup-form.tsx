@@ -70,11 +70,11 @@ export default function CollegeSignupForm() {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
-        {error ? (
-          <div className="rounded-[12px] border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
-            {"An unexpected error occurred"}
-          </div>
-        ) : null}
+      {error && (
+  <div>
+    {error.message}
+  </div>
+)}
 
         <FormField
           control={form.control}

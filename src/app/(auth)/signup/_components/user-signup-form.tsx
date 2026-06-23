@@ -67,11 +67,11 @@ export default function UserSignupForm() {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
-        {error ? (
-          <div className="rounded-[12px] border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
-            {(error as any)?.message || "An unexpected error occurred"}
-          </div>
-        ) : null}
+      {error && (
+  <div>
+    {error.message}
+  </div>
+)}
 
         {/* First + Last Name */}
         <div className="grid gap-5 md:grid-cols-2">

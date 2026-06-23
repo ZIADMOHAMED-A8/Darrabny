@@ -181,6 +181,7 @@ export const authOptions: NextAuthOptions = {
       ? "company"
       : "college";
   cookieStore.set("role",role)
+  
   console.log("Detected role from backend:", role);
 
   return {
