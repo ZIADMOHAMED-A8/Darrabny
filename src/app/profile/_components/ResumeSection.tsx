@@ -110,7 +110,7 @@ export default function ResumeSection({ isEditing }: ResumeSectionProps) {
 
             <div>
               <p className="text-xl font-semibold text-[#111f37]">{resumeDisplayName}</p>
-              <p className="text-base text-slate-500">Resume file is ready to download.</p>
+              {resume && <p className="text-base text-slate-500">Resume file is ready to download.</p>}
             </div>
           </div>
 
@@ -125,7 +125,7 @@ export default function ResumeSection({ isEditing }: ResumeSectionProps) {
               Download
             </a>
           ) : (
-            <span className="text-sm text-slate-500">Download unavailable</span>
+            <span className="text-sm text-slate-500">Please Upload Your Resume.</span>
           )}
         </div>
       ) : (

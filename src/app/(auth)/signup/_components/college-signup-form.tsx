@@ -1,10 +1,10 @@
 "use client";
 
 import * as React from "react";
-import { useFieldArray, useForm, type SubmitHandler } from "react-hook-form";
+import { useForm, type SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
-import { Eye, EyeOff, Mail, Plus, Trash2 } from "lucide-react";
+import { Eye, EyeOff, Mail } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -38,17 +38,8 @@ export default function CollegeSignupForm() {
       password: "",
       confirmPassword: "",
       address: "",
-      departments: [{ name: "", head: "" }],
     },
     mode: "onSubmit",
-  });
-
-  const { fields, append, remove } = useFieldArray<
-    CollegeSignupValues,
-    "departments"
-  >({
-    control: form.control,
-    name: "departments",
   });
 
   const onSubmit: SubmitHandler<CollegeSignupValues> = (values) => {
@@ -71,7 +62,7 @@ export default function CollegeSignupForm() {
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
       {error && (
-  <div>
+  <div className="text-red-600">
     {error.message}
   </div>
 )}
@@ -194,91 +185,6 @@ export default function CollegeSignupForm() {
             </FormItem>
           )}
         />
-
-        <div className="space-y-3 rounded-[16px] border border-black/10 bg-slate-50/80 p-4">
-          <div className="flex items-center justify-between gap-3">
-            <div>
-              <h3 className="text-sm font-semibold text-[#0B2A4A]">
-                Departments
-              </h3>
-              <p className="mt-1 text-xs text-slate-500">
-                Add one or more departments for this college.
-              </p>
-            </div>
-
-            <Button
-              type="button"
-              variant="secondary"
-              onClick={() => append({ name: "", head: "" })}
-              className="h-10 rounded-[12px] bg-white"
-            >
-              <Plus className="mr-2 h-4 w-4" /> Add
-            </Button>
-          </div>
-
-          <div className="space-y-3">
-            {fields.map((field, index) => (
-              <div key={field.id} className="flex gap-2">
-                <div className="flex-1">
-                  <FormField
-                    control={form.control}
-                    name={`departments.${index}.name` as const}
-                    render={({ field: departmentField }) => (
-                      <FormItem>
-                        <FormControl>
-                          <Input
-                            {...departmentField}
-                            placeholder={`Department ${index + 1}`}
-                            className={INPUT}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-
-                <div className="flex-1">
-                  <FormField
-                    control={form.control}
-                    name={`departments.${index}.head` as const}
-                    render={({ field: departmentHeadField }) => (
-                      <FormItem>
-                        <FormControl>
-                          <Input
-                            {...departmentHeadField}
-                            placeholder={`Head of Department ${index + 1}`}
-                            className={INPUT}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => {
-                    if (fields.length > 1) {
-                      remove(index);
-                    } else {
-                      form.setValue("departments", [{ name: "", head: "" }], {
-                        shouldDirty: true,
-                        shouldValidate: true,
-                      });
-                    }
-                  }}
-                  className="mt-2 h-12 rounded-[12px] border-black/10 bg-white px-3"
-                  aria-label={`Remove department ${index + 1}`}
-                >
-                  <Trash2 className="h-4 w-4" />
-                </Button>
-              </div>
-            ))}
-          </div>
-        </div>
 
         <Button
           type="submit"

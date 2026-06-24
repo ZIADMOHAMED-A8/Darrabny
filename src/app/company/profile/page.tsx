@@ -589,18 +589,7 @@ export default function CompanyProfilePage() {
               </h2>
 
               {/* Rating summary */}
-              <div className="mb-6 flex flex-col gap-6 sm:flex-row sm:items-center">
-                <div className="shrink-0">
-                  <p className="text-4xl font-bold text-slate-900">
-                    {company?.rating?.toFixed(1) || "4.5"}
-                  </p>
-                  <Stars rating={company?.rating || 4.5} />
-                  <p className="text-[11px] text-slate-400 mt-1">
-                    Based on {company?.totalReviews || 125} reviews
-                  </p>
-                </div>
-                <RatingBars />
-              </div>
+         
 
               {/* Individual reviews */}
               <div className="space-y-4">
@@ -635,16 +624,7 @@ export default function CompanyProfilePage() {
                         {r.comment}
                       </p>
 
-                      <div className="flex gap-4 text-[11px] text-slate-500">
-                        <button className="flex items-center gap-1.5 hover:text-slate-700 transition">
-                          <Icon d={ICONS.thumb_up} size={13} />
-                          0
-                        </button>
-                        <button className="flex items-center gap-1.5 hover:text-slate-700 transition">
-                          <Icon d={ICONS.thumb_down} size={13} />
-                          0
-                        </button>
-                      </div>
+                
                     </div>
                   )
                 )}
@@ -653,16 +633,12 @@ export default function CompanyProfilePage() {
           </div>
 
           {/* RIGHT sidebar */}
-          <div className="w-full lg:w-64 shrink-0 bg-white rounded-2xl p-5 shadow-sm border border-slate-100 space-y-5">
+          <div className="w-full lg:w-64 h-fit   shrink-0 flex flex-col justify-between bg-white rounded-2xl p-5 shadow-sm border border-slate-100 space-y-5">
             <h2 className="text-xs font-bold text-slate-800 tracking-wide uppercase">
               Company Details
             </h2>
 
-            <DetailRow
-              label="Website"
-              value={company?.website || "technova-solutions.com"}
-              isLink
-            />
+         
             <DetailRow
               label="Headquarters"
               value={
@@ -675,10 +651,7 @@ export default function CompanyProfilePage() {
               label="Size"
               value={employeeRange || "500–1000 Employees"}
             />
-            <DetailRow
-              label="Founded"
-              value={company?.foundedYear?.toString() || "2015"}
-            />
+        
 
             {company?.verificationStatus && (
               <div>

@@ -29,7 +29,7 @@ export default function AiRankedApplicantsPage() {
   const [activeId, setActiveId] = useState<string | null>(null);
 
   const { data, isLoading } = useApplicationDetails(internshipId);
-  const { mutate: updateStatus, isPending } = useApplicationStatus();
+  const { mutate: updateStatus, isPending } = useApplicationStatus(internshipId);
 
   // ✅ applications array
   const applications = useMemo(() => data?.Applications || [], [data?.Applications]);
@@ -245,9 +245,6 @@ export default function AiRankedApplicantsPage() {
                     ✓ Accept
                   </button>
 
-                  <button className="w-full border py-2 rounded-lg text-blue-600 font-medium">
-                    Message Candidate
-                  </button>
                 </div>
               </div>
             )}

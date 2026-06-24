@@ -6,9 +6,11 @@ import { signupAction } from "../_actions/signup-user.action";
 
 export default function useSignup() {
   const { mutate, isPending, error, reset } = useMutation({
-    mutationFn: (values: SignupValues) => signupAction(values),
+    mutationFn: (values: SignupValues) => signupAction(values),onSuccess:()=>{
+      window.location.href='/login'
+    }
   });
-
+  
   return {
     mutate,
     isPending,

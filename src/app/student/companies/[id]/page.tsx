@@ -394,16 +394,7 @@ export default function CompanyDetailsPage({
                           review.comment ||
                           "Review details unavailable. (dummy)"}
                       </p>
-                      <div className="mt-3 flex items-center gap-4 text-xs text-[#0b1f33]/60">
-                        <span className="inline-flex items-center gap-1">
-                          <ThumbsUp className="h-4 w-4" />{" "}
-                          {review.likes ?? 0}
-                        </span>
-                        <span className="inline-flex items-center gap-1">
-                          <MessageCircle className="h-4 w-4" />{" "}
-                          {review.comments ?? 0}
-                        </span>
-                      </div>
+              
                     </div>
                   ))}
                 </div>

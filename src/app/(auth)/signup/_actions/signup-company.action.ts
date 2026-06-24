@@ -2,6 +2,12 @@
 
 import { CompanySignupValues } from "@/lib/schemas/auth/company-signup.schema";
 
+type SignupErrorResponse = {
+  fieldErrors?: Array<{ message?: string }>;
+  errors?: Array<{ message?: string }>;
+  message?: string;
+};
+
 export async function signupCompanyAction(values: CompanySignupValues) {
   try {
     const response = await fetch(

@@ -67,10 +67,10 @@ export default function CompanySignupForm() {
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
         {/* Global server error */}
         {error && (
-  <div>
-    {error.message}
-  </div>
-)}
+          <div className="text-red-600">
+            {error.message}
+          </div>
+        )}
 
         {/* Company Name + Industry */}
         <div className="grid gap-5 md:grid-cols-2">

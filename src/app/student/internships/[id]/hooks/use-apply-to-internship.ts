@@ -2,6 +2,7 @@
 
 import { useMutation } from "@tanstack/react-query";
 import applyToInternshipAction from "../actions/apply-to-internship.action";
+import toast from "react-hot-toast";
 
 type ApplyToInternshipVariables = {
   internshipId: string;
@@ -16,17 +17,39 @@ export default function useApplyToInternship() {
       coverLetter = "",
       skills = [],
     }: ApplyToInternshipVariables) => {
-      // 1. بننادي الأكشن ونستنى النتيجة
-      const result = await applyToInternshipAction(internshipId, { coverLetter, skills });
+      const result = await applyToInternshipAction(internshipId, {
+        coverLetter,
+        skills,
+      });
 
-      // 2. لو الأكشن رجّع أوبجكت فيه إيرور، بنرميه هنا كـ Error حقيقي
-      // ده هيخلي React Query يفهم إن العملية فشلت ويروح لـ onError
       if (result?.error) {
         throw new Error(result.error);
       }
 
-      // 3. لو مفيش إيرور، هنرجع النتيجة عادي عشان تروح لـ onSuccess
       return result;
+    },
+
+    onSuccess: () => {
+      toast.success("Applied Successfully", {
+        duration: 5000,
+
+        style: {
+          minWidth: "380px",
+          padding: "16px 18px",
+          borderRadius: "16px",
+          background: "#F8FBFF",
+          color: "#0F172A",
+          border: "1px solid #BFDBFE",
+          boxShadow: "0 12px 30px rgba(26, 111, 168, 0.12)",
+          fontSize: "14px",
+          fontWeight: "500",
+        },
+
+        iconTheme: {
+          primary: "#1A6FA8",
+          secondary: "#FFFFFF",
+        },
+      });
     },
   });
 }

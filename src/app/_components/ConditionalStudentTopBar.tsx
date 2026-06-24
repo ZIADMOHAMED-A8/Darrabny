@@ -9,6 +9,7 @@ const authPathPrefixes = [
   "/otp",
   "/create-pass",
   "/forget-password",
+  '/policies'
 ];
 
 export default function ConditionalStudentTopBar() {

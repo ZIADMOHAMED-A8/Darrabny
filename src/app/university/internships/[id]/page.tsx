@@ -7,6 +7,7 @@ import { useParams, useSearchParams } from "next/navigation";
 import { useInternshipReviews } from "@/app/student/internships/[id]/hooks/use-internship-reviews";
 import { useRouter } from 'next/navigation';
 import useRespondToEndorsementRequest from "../hooks/useRespondToEndorsementRequest";
+import { showSuccessToast } from "@/lib/show-success-toast";
 
 type InternshipReview = {
   _id: string;
@@ -69,11 +70,23 @@ export default function UniversityInternshipDetailsPanel() {
   const reviews = Array.isArray(reviewsData) ? reviewsData : reviewsData?.data || [];
 
   const handleAccept = () => {
-    respondToEndorsement({ id: endorsementId, decision: "approved" });
+    respondToEndorsement(
+      { id: endorsementId, decision: "approved" },
+      {
+        onSuccess: () =>
+          showSuccessToast("Company invitation accepted successfully"),
+      },
+    );
   };
 
   const handleReject = () => {
-    respondToEndorsement({ id: endorsementId, decision: "rejected" });
+    respondToEndorsement(
+      { id: endorsementId, decision: "rejected" },
+      {
+        onSuccess: () =>
+          showSuccessToast("Company invitation rejected successfully"),
+      },
+    );
   };
 
   return (

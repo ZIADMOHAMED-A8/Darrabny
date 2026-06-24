@@ -2,6 +2,12 @@
 
 import type { CollegeSignupRequestValues } from "@/lib/schemas/auth/college-signup.schema";
 
+type SignupErrorResponse = {
+  fieldErrors?: Array<{ message?: string }>;
+  errors?: Array<{ message?: string }>;
+  message?: string;
+};
+
 export async function signupCollegeAction(values: CollegeSignupRequestValues) {
   try {
     // تم إزالة المسافة الزائدة قبل /college

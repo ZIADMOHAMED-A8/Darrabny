@@ -6,7 +6,6 @@ import {
   MapPin,
   Briefcase,
   Calendar,
-  Search,
   ChevronLeft,
   ChevronRight,
   X,
@@ -18,6 +17,7 @@ import {
 import useGetPendingEndorsements from "./hooks/useGetPendingEndorsements";
 import useRespondToEndorsementRequest from "./hooks/useRespondToEndorsementRequest";
 import { useRouter } from "next/navigation";
+import { showSuccessToast } from "@/lib/show-success-toast";
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 type InternshipStatus = "Active" | "Closed" | "Starting soon";
@@ -394,6 +394,11 @@ export default function InternshipListingsPage() {
     try {
       setBusyId(id);
       await respondMutation.mutateAsync({ id, decision });
+      showSuccessToast(
+        decision === "approved"
+          ? "Company invitation accepted successfully"
+          : "Company invitation rejected successfully",
+      );
     } finally {
       setBusyId(null);
     }
