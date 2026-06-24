@@ -210,11 +210,11 @@ export default function LoginFormCard({
               {isPending ? "Logging in..." : "Login"}
             </Button>
 
-            <div className="my-2 flex items-center gap-3">
+            {/* <div className="my-2 flex items-center gap-3">
               <Separator className="flex-1 bg-black/10" />
               <span className="text-xs text-slate-400">OR CONTINUE WITH</span>
               <Separator className="flex-1 bg-black/10" />
-            </div>
+            </div> */}
 
             {/* <div className="grid grid-cols-2 gap-4">
               <Button
